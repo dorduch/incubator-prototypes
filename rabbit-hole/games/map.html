@@ -1,249 +1,363 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" data-t-doc="doc">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<script>(function(){try{var q=new URLSearchParams(location.search).get("lang"),l=q||localStorage.getItem("rh-lang")||"en";if(l!=="he")l="en";if(q)localStorage.setItem("rh-lang",l);var h=document.documentElement;h.lang=l;h.dir=l==="he"?"rtl":"ltr"}catch(e){}})()</script>
 <title>Mission 2 · Find the Place — Rabbit Hole</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../assets/rh.css">
 <style>
-  :root{--bg:#0b0b10;--panel:#17171f;--panel2:#1e1e29;--line:#2a2a38;--ink:#ecebf3;--muted:#9a98ad;--red:#ff3b4e;--amber:#ffb547;--green:#3ee08f;--cyan:#59d5ff;
-    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(600px 400px at 50% -10%,rgba(62,224,143,.10),transparent 70%),var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
-  button{font:inherit;color:inherit;cursor:pointer}
-  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
-  .back{color:var(--ink);text-decoration:none;font-size:15px}
-  .tag{font:700 11px/1 var(--mono);letter-spacing:.18em;color:var(--red)}
-  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:22px 16px 30px}
-  h1{font-size:26px;margin:6px 0 6px;line-height:1.15}
-  .lede{color:var(--muted);margin:0 0 16px}
-  .clues{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px;counter-reset:c}
-  .clues li{counter-increment:c;display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px}
-  .clues li::before{content:counter(c);flex:none;width:24px;height:24px;border-radius:50%;background:var(--panel2);color:var(--amber);font:800 13px/24px var(--mono);text-align:center}
-  .clues li.hidden{color:var(--muted);font-style:italic}
-  .mapcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#efe6d2;box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
-  .mapcard svg{display:block;width:100%;height:auto;cursor:crosshair;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-  .feedback{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(11,11,16,.88);backdrop-filter:blur(6px);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14.5px;display:flex;gap:10px;align-items:center;transform:translateY(140%);transition:transform .3s cubic-bezier(.2,1.2,.4,1)}
-  .feedback.show{transform:none}
-  .temp{flex:none;font:800 11px/1 var(--mono);letter-spacing:.1em;padding:6px 8px;border-radius:6px;background:#2a2d3c}
-  .temp.cold{background:#1d3550;color:var(--cyan)}.temp.warm{background:#4a3410;color:var(--amber)}.temp.hot{background:#4a1520;color:var(--red)}
-  .tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center;justify-content:space-between}
-  .linkbtn{background:none;border:1px dashed #44435a;color:#bdbbd0;border-radius:8px;padding:8px 12px;font:12.5px var(--mono)}
-  .tries{font:12px var(--mono);color:var(--muted)}
-  .pin{animation:drop .45s cubic-bezier(.2,1.5,.4,1) both;transform-box:fill-box;transform-origin:50% 100%}
-  @keyframes drop{from{transform:translateY(-30px) scale(.6);opacity:0}to{transform:none;opacity:1}}
-  .ripple{transform-box:fill-box;transform-origin:center;animation:rip 1.4s ease-out infinite}
-  @keyframes rip{from{transform:scale(.3);opacity:.9}to{transform:scale(2.2);opacity:0}}
-  .glow{animation:glow 1.2s ease-in-out 3}
-  @keyframes glow{50%{stroke:#ff3b4e;stroke-width:12}}
-  .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px}
-  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
-  .win{display:none;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 18px;margin-top:16px}
-  .win.show{display:block;animation:rise .5s cubic-bezier(.2,1.3,.4,1)}
-  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  .stamp{display:inline-block;margin:6px auto 14px;border:4px solid var(--green);color:var(--green);border-radius:10px;padding:10px 18px;font:900 26px/1 var(--mono);letter-spacing:.16em;transform:rotate(-8deg);animation:stamp .5s .15s both cubic-bezier(.3,1.6,.5,1)}
-  @keyframes stamp{from{opacity:0;transform:scale(2.4) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
-  .code{font:800 22px var(--mono);letter-spacing:.14em;background:#0b0b10;border:1px dashed var(--green);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0 18px}
-  .win p{color:var(--muted);margin:0 0 16px}
-  .win .actions{display:grid;gap:10px}
-  footer{border-top:1px solid var(--line);padding:16px;text-align:center;font:12px var(--mono);letter-spacing:.05em;color:var(--amber)}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .game{padding-top:10px}
+  .game h1{font-size:24px;margin:0 0 6px}
+  .clues{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}
+  .clues li{display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.35;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+  .clues li .n{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--red);color:#fff;font:800 12px var(--mono)}
+  .clues li b{color:var(--amber)}
+  .mapbox{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 20px 50px -24px rgba(0,0,0,.9);touch-action:manipulation;user-select:none;-webkit-user-select:none;background:#efe6d2}
+  #map{display:block;width:100%;height:auto}
+  #world{transform-box:view-box;transition:transform 1.2s var(--ease2)}
+  .found #world{transform:scale(1.9)}
+  .lens{position:absolute;top:0;left:0;width:128px;height:128px;margin:-64px 0 0 -64px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(42,35,24,.7),0 14px 30px rgba(0,0,0,.45);cursor:grab;touch-action:none;transition:transform .35s var(--ease);background:#efe6d2;will-change:transform}
+  .lens.dragging{cursor:grabbing;transition:none}
+  .lens svg{width:100%;height:100%;display:block}
+  .lens::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.35),transparent 40%);pointer-events:none}
+  .lens .cross{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;pointer-events:none}
+  .lens:focus-visible{outline:3px solid var(--amber);outline-offset:4px}
+  .found .lens{opacity:0;pointer-events:none;transition:opacity .3s}
+  .lens-hint{position:absolute;left:8px;bottom:8px;background:rgba(10,10,15,.78);color:#fff;font-size:12px;padding:5px 9px;border-radius:999px;pointer-events:none;transition:opacity .4s}
+  [dir=rtl] .lens-hint{left:auto;right:8px}
+  .moved .lens-hint{opacity:0}
+  .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.1s ease-out 2}
+  @keyframes pulse{from{opacity:.9;transform:scale(.3)}to{opacity:0;transform:scale(2.4)}}
+  .ripple{transform-box:fill-box;transform-origin:center;animation:pulse 1.4s ease-out infinite}
+  .trail{stroke-dasharray:6 6;stroke-dashoffset:0;animation:trail 1.6s linear both}
+  @keyframes trail{from{stroke-dasharray:0 600}to{stroke-dasharray:600 0}}
+  .bar{display:flex;gap:10px;align-items:center;margin-top:10px}
+  .bar .btn{flex:none}
+  .meter{flex:1;min-width:0}
+  .meter .scale{position:relative;height:8px;border-radius:99px;background:linear-gradient(90deg,#59d5ff,#9a98ad 40%,#ffb547 70%,#ff3b4e)}
+  [dir=rtl] .meter .scale{background:linear-gradient(-90deg,#59d5ff,#9a98ad 40%,#ffb547 70%,#ff3b4e)}
+  .meter .needle{position:absolute;top:-4px;width:16px;height:16px;margin-inline-start:-8px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px var(--bg);transition:inset-inline-start .5s var(--ease);inset-inline-start:0;opacity:0}
+  .meter.on .needle{opacity:1}
+  .meter .tl{display:flex;justify-content:space-between;font:700 10.5px var(--mono);letter-spacing:.12em;color:var(--dim);margin-top:5px}
+  :lang(he) .meter .tl{font-family:var(--sans);font-size:12px;letter-spacing:0}
+  .fb{margin-top:8px;min-height:44px;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
+  .fb .temp{flex:none;font:800 11px/1 var(--mono);letter-spacing:.12em;padding:6px 8px;border-radius:7px;background:var(--panel2);color:var(--muted)}
+  :lang(he) .fb .temp{font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+  .fb .temp.hot{background:var(--red);color:#fff}.fb .temp.warm{background:var(--amber);color:#1a1205}.fb .temp.cool{background:#3a3e52;color:#fff}.fb .temp.cold{background:var(--cyan);color:#06222e}
+  .fb .temp:empty{display:none}
 </style>
 </head>
 <body>
-<header class="top">
-  <a class="back" href="../index.html#demo">‹ Back to chat</a>
-  <span class="tag">MISSION 2 / 3</span>
+<header class="topbar">
+  <a class="back" href="../index.html#demo"><span class="chev" aria-hidden="true">‹</span><span class="lbl" data-t="back">Back to chat</span></a>
+  <span class="tag" data-t="tag">Mission 2 / 3</span>
+  <div class="tools"><div data-langtoggle></div><button type="button" class="iconbtn" data-mute></button></div>
 </header>
 
-<main>
-  <h1>Find the Place</h1>
-  <p class="lede">Port Velour doesn't exist, but one spot on this map is very much yours. Read Vesper's clues, then tap the place.</p>
-  <ol class="clues" id="clues">
-    <li><span>It's on the same side of the river as the street you grew up on.</span></li>
-    <li><span>It's green and it has water, but it is <b>not</b> the fountain.</span></li>
-    <li class="hidden"><span id="clue3">Clue 3 is sealed. Tap the map twice to unseal it.</span></li>
+<main class="game" id="main">
+  <h1 data-t="h1">Find the Place</h1>
+  <ol class="clues" aria-label="Clues" data-t-aria="cluesAria">
+    <li><span class="n" aria-hidden="true">1</span><span data-th="c1"></span></li>
+    <li><span class="n" aria-hidden="true">2</span><span data-th="c2"></span></li>
+    <li><span class="n" aria-hidden="true">3</span><span data-th="c3"></span></li>
   </ol>
 
-  <div class="mapcard">
-    <svg id="map" viewBox="0 0 360 500" role="img" aria-label="Stylized map of the fictional city Port Velour. Tap a location.">
+  <div class="mapbox" id="mapbox">
+    <svg id="map" viewBox="0 0 360 420" role="img" data-t-aria="mapAria" aria-label="Map">
       <defs>
         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#e2d6bd" stroke-width=".6"/></pattern>
-        <pattern id="trees" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="2.2" fill="#9fc58b"/></pattern>
+        <pattern id="trees" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="2.1" fill="#9fc58b"/></pattern>
+        <symbol id="duck" viewBox="-6 -5 12 9" overflow="visible"><ellipse cx="0" cy="1" rx="4.2" ry="2.6" fill="#fff6c9" stroke="#6b5a2e" stroke-width=".5"/><circle cx="3" cy="-1.6" r="1.8" fill="#fff6c9" stroke="#6b5a2e" stroke-width=".5"/><path d="M4.6 -1.6 L6.4 -1.2 L4.6 -.8Z" fill="#f2a516"/><circle cx="3.4" cy="-2" r=".35" fill="#222"/></symbol>
+        <!-- Fine detail only visible through the magnifier -->
+        <g id="details">
+          <use href="#duck" x="57" y="296" width="6" height="5"/><use href="#duck" x="61" y="304" width="6" height="5"/><use href="#duck" x="56" y="310" width="6" height="5"/>
+          <use href="#duck" x="102" y="272" width="6" height="5"/>
+          <use href="#duck" x="146" y="300" width="6" height="5"/><use href="#duck" x="148" y="309" width="6" height="5"/>
+          <use href="#duck" x="40" y="146" width="6" height="5"/><use href="#duck" x="48" y="142" width="6" height="5"/><use href="#duck" x="56" y="147" width="6" height="5"/>
+          <use href="#duck" x="290" y="295" width="6" height="5"/><use href="#duck" x="298" y="298" width="6" height="5"/><use href="#duck" x="306" y="294" width="6" height="5"/>
+          <g font-family="system-ui,sans-serif" font-size="3.6" fill="#5b4e36" text-anchor="middle" id="plaques"></g>
+        </g>
       </defs>
-      <rect width="360" height="500" fill="#efe6d2"/>
-      <rect width="360" height="500" fill="url(#grid)"/>
-      <!-- sea -->
-      <path d="M250 500 C270 455 320 440 360 430 V500Z" fill="#9cc9d9"/>
-      <!-- city blocks -->
-      <g fill="#e4d8bf">
-        <rect x="18" y="20" width="58" height="56" rx="4"/><rect x="92" y="20" width="84" height="56" rx="4"/>
-        <rect x="18" y="128" width="58" height="56" rx="4"/><rect x="18" y="200" width="58" height="80" rx="4"/>
-        <rect x="150" y="200" width="30" height="80" rx="4"/><rect x="250" y="20" width="92" height="56" rx="4"/>
-        <rect x="250" y="128" width="40" height="70" rx="4"/><rect x="250" y="210" width="92" height="56" rx="4"/>
-        <rect x="18" y="455" width="160" height="30" rx="4"/><rect x="236" y="320" width="20" height="40" rx="4"/>
+      <g id="world">
+        <rect width="360" height="420" fill="#efe6d2"/>
+        <rect width="360" height="420" fill="url(#grid)"/>
+        <path d="M262 420 C285 392 320 380 360 372 V420Z" fill="#9cc9d9"/>
+        <g fill="#e4d8bf">
+          <rect x="12" y="10" width="76" height="48" rx="4"/><rect x="104" y="10" width="92" height="48" rx="4"/>
+          <rect x="250" y="84" width="94" height="104" rx="4"/><rect x="12" y="392" width="76" height="24" rx="4"/><rect x="104" y="392" width="92" height="24" rx="4"/>
+          <rect x="274" y="212" width="74" height="10" rx="3"/>
+        </g>
+        <g stroke="#fff" stroke-linecap="round" fill="none">
+          <path d="M0 70H210" stroke-width="12" id="hadekel"/>
+          <path d="M238 70H360" stroke-width="9"/>
+          <path d="M96 0V420" stroke-width="8"/>
+          <path d="M0 202H206M234 202H360" stroke-width="8"/>
+          <path d="M0 386H204" stroke-width="7"/>
+          <path d="M262 0V420" stroke-width="8"/>
+        </g>
+        <path id="river" d="M228 0 C206 60 240 110 220 170 C204 220 238 280 214 340 C204 372 226 400 240 420" stroke="#9cc9d9" stroke-width="26" fill="none"/>
+        <path d="M228 0 C206 60 240 110 220 170 C204 220 238 280 214 340 C204 372 226 400 240 420" stroke="#b5d8e4" stroke-width="2" stroke-dasharray="6 10" fill="none"/>
+        <g fill="#cbbd9e"><rect x="204" y="63" width="38" height="14" rx="2"/><rect x="202" y="195" width="38" height="14" rx="2"/></g>
+        <!-- Market Square + fountain -->
+        <rect x="110" y="88" width="84" height="98" rx="6" fill="#ddd0b3"/>
+        <circle cx="152" cy="132" r="13" fill="#9cc9d9" stroke="#fff" stroke-width="3"/><circle cx="152" cy="132" r="3.5" fill="#fff"/>
+        <!-- Willow Green: pond, no island -->
+        <rect x="12" y="88" width="76" height="98" rx="12" fill="#b9d8a6"/><rect x="12" y="88" width="76" height="98" rx="12" fill="url(#trees)" opacity=".7"/>
+        <ellipse cx="50" cy="140" rx="24" ry="15" fill="#9cc9d9" stroke="#86b9cc" stroke-width="1.5"/>
+        <rect x="42" y="160" width="16" height="4" rx="1.2" fill="#8a6d46"/>
+        <!-- Linden Park: pond with an island, four benches -->
+        <rect x="12" y="222" width="182" height="152" rx="16" fill="#b9d8a6"/><rect x="12" y="222" width="182" height="152" rx="16" fill="url(#trees)" opacity=".7"/>
+        <path d="M30 360 C60 340 80 344 104 350 S150 352 178 336" stroke="#e8dcc0" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="104" cy="302" rx="56" ry="33" fill="#9cc9d9" stroke="#86b9cc" stroke-width="2"/>
+        <ellipse cx="110" cy="298" rx="13" ry="8.5" fill="#b9d8a6" stroke="#9fc58b"/><circle cx="111" cy="295" r="4.5" fill="#7fae6c"/>
+        <rect x="96" y="261" width="16" height="4" rx="1.2" fill="#8a6d46"/>
+        <rect x="38" y="294" width="4" height="16" rx="1.2" fill="#8a6d46"/>
+        <rect x="166" y="296" width="4" height="16" rx="1.2" fill="#8a6d46"/>
+        <rect x="96" y="341" width="16" height="4" rx="1.2" fill="#8a6d46"/>
+        <!-- Harbor Gardens (east): also an island -->
+        <rect x="274" y="230" width="78" height="118" rx="14" fill="#b9d8a6"/><rect x="274" y="230" width="78" height="118" rx="14" fill="url(#trees)" opacity=".7"/>
+        <ellipse cx="312" cy="290" rx="28" ry="20" fill="#9cc9d9" stroke="#86b9cc" stroke-width="1.5"/>
+        <ellipse cx="316" cy="287" rx="7" ry="5" fill="#b9d8a6"/>
+        <rect x="290" y="318" width="16" height="4" rx="1.2" fill="#8a6d46"/>
+        <!-- landmarks -->
+        <g font-size="13" text-anchor="middle" font-family="system-ui,sans-serif"><text x="300" y="132">🕰️</text><text x="306" y="40">🏛️</text><text x="336" y="396">🗼</text><text x="50" y="410">🥐</text></g>
+        <g id="labels" font-family="system-ui,sans-serif" font-size="8" fill="#5b4e36" text-anchor="middle" font-weight="700"></g>
+        <g font-family="system-ui,sans-serif" text-anchor="middle"><circle cx="338" cy="22" r="13" fill="#fff" opacity=".8"/><path d="M338 11 L342 23 L338 21 L334 23Z" fill="#ff3b4e"/><text x="338" y="31" font-size="7" font-weight="800" fill="#2a2318" id="northLbl">N</text></g>
+        <g id="marks"></g>
       </g>
-      <!-- roads -->
-      <g stroke="#fff" stroke-linecap="round" fill="none">
-        <path d="M0 102H200" stroke-width="12" id="hadekel"/>
-        <path d="M232 102H360" stroke-width="12"/>
-        <path d="M84 0V500" stroke-width="9"/>
-        <path d="M0 192H200M232 192H360" stroke-width="8"/>
-        <path d="M0 438H190" stroke-width="8"/>
-        <path d="M244 0V500" stroke-width="9"/>
-        <path d="M300 102V300" stroke-width="7"/>
-      </g>
-      <!-- river -->
-      <path d="M222 0 C200 70 236 130 214 200 C196 262 236 330 210 400 C196 440 228 470 250 500" stroke="#9cc9d9" stroke-width="30" fill="none"/>
-      <path d="M222 0 C200 70 236 130 214 200 C196 262 236 330 210 400 C196 440 228 470 250 500" stroke="#b5d8e4" stroke-width="2" stroke-dasharray="6 10" fill="none"/>
-      <!-- bridges -->
-      <g fill="#cbbd9e"><rect x="196" y="95" width="40" height="14" rx="2"/><rect x="194" y="185" width="44" height="14" rx="2"/></g>
-      <!-- tram line -->
-      <path d="M0 300 H360" stroke="#ff3b4e" stroke-width="3" stroke-dasharray="8 6"/>
-      <rect x="192" y="294" width="46" height="12" rx="2" fill="#cbbd9e"/>
-      <path d="M192 300 H238" stroke="#ff3b4e" stroke-width="3" stroke-dasharray="8 6"/>
-      <!-- Market Square + fountain (decoy) -->
-      <rect x="96" y="124" width="84" height="56" rx="6" fill="#ddd0b3"/>
-      <circle cx="138" cy="152" r="14" fill="#9cc9d9" stroke="#fff" stroke-width="3"/>
-      <circle cx="138" cy="152" r="4" fill="#fff"/>
-      <!-- Linden Park (target) -->
-      <rect x="20" y="318" width="160" height="108" rx="14" fill="#b9d8a6"/>
-      <rect x="20" y="318" width="160" height="108" rx="14" fill="url(#trees)" opacity=".8"/>
-      <ellipse cx="104" cy="374" rx="44" ry="26" fill="#9cc9d9" stroke="#86b9cc" stroke-width="2"/>
-      <ellipse cx="112" cy="370" rx="9" ry="6" fill="#b9d8a6"/>
-      <rect x="54" y="400" width="18" height="5" rx="1.5" fill="#8a6d46"/>
-      <!-- Harbor Gardens (wrong side) -->
-      <rect x="262" y="318" width="84" height="100" rx="14" fill="#b9d8a6"/>
-      <rect x="262" y="318" width="84" height="100" rx="14" fill="url(#trees)" opacity=".8"/>
-      <ellipse cx="304" cy="370" rx="24" ry="16" fill="#9cc9d9" stroke="#86b9cc" stroke-width="2"/>
-      <!-- landmarks -->
-      <g font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">
-        <text x="270" y="166">🕰️</text><text x="325" y="246">🎶</text><text x="40" y="244">🥐</text><text x="320" y="476">🗼</text><text x="164" y="245">⛪</text><text x="300" y="56">🏛️</text>
-      </g>
-      <g font-family="system-ui,sans-serif" font-size="8.5" fill="#5b4e36" text-anchor="middle" font-weight="600">
-        <text x="270" y="180">Clock Tower</text><text x="296" y="260">Lantern Hall</text><text x="47" y="258">Bakery</text>
-        <text x="318" y="490">Lighthouse</text><text x="138" y="174">Market Sq.</text><text x="300" y="70">Museum</text>
-        <text x="100" y="342">LINDEN PARK</text><text x="304" y="342">HARBOR GDNS</text>
-      </g>
-      <g font-family="ui-monospace,monospace" font-size="8" fill="#8a7d63" letter-spacing="1.5" font-weight="700">
-        <text x="12" y="105.5">HADEKEL ST.</text>
-        <text x="300" y="105.5" text-anchor="middle">QUAY RD.</text>
-        <text x="12" y="195">LEMON AVE.</text>
-        <text x="12" y="296" fill="#c7404f">TRAM 3</text>
-        <text transform="translate(87 90) rotate(-90)">MILL LANE</text>
-        <text transform="translate(241 300) rotate(-90)" text-anchor="middle">HARBOUR WAY</text>
-      </g>
-      <text transform="translate(206 250) rotate(78)" font-family="Georgia,serif" font-style="italic" font-size="10" fill="#4f8aa0">River Velour</text>
-      <!-- compass + title -->
-      <g transform="translate(330 24)"><circle r="14" fill="#fffaf0" stroke="#5b4e36"/><path d="M0 -11 L4 0 L0 11 L-4 0Z" fill="#5b4e36"/><path d="M0 -11 L4 0 L-4 0Z" fill="#ff3b4e"/><text y="-17" text-anchor="middle" font-size="7" font-family="monospace" fill="#5b4e36">N</text></g>
-      <g transform="translate(14 470)"><rect width="140" height="22" rx="4" fill="#fffaf0" stroke="#5b4e36"/><text x="70" y="15" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#2a2318">Port Velour · fictional</text></g>
-      <g id="marks"></g>
     </svg>
-    <div class="feedback" id="fb" role="status" aria-live="polite"><span class="temp" id="temp">—</span><span id="fbText"></span></div>
-  </div>
-  <div class="tools">
-    <button class="linkbtn" id="showStreet" type="button">Where's Hadekel St.?</button>
-    <span class="tries" id="tries">Taps: 0</span>
+    <div class="lens" id="lens" tabindex="0" role="slider" aria-valuetext="" data-t-aria="lensAria" aria-label="Magnifier">
+      <svg id="lensSvg" viewBox="0 0 40 40" aria-hidden="true"><use href="#world"/><use href="#details"/></svg>
+      <svg class="cross" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="4" fill="none" stroke="#ff3b4e" stroke-width="1.6"/><path d="M11 0v6M11 16v6M0 11h6M16 11h6" stroke="#ff3b4e" stroke-width="1.6"/></svg>
+    </div>
+    <span class="lens-hint" data-t="lensHint">Drag the magnifier 🔍</span>
   </div>
 
-  <div class="win" id="win" role="status" aria-live="polite">
-    <div class="stamp">LOCATED</div>
-    <p><b style="color:var(--ink)">Linden Park, the bench by the duck island.</b> Three ducks would feel right at home. Show this stamp in the chat.</p>
-    <div class="code" id="code"></div>
-    <div class="actions">
-      <a class="btn" href="../index.html#demo">Back to chat →</a>
-      <button class="btn ghost" id="again" type="button">Play the map again</button>
-    </div>
+  <div class="bar">
+    <button class="btn" id="pinBtn" type="button" data-t="pin">📍 Pin it here</button>
+    <div class="meter" id="meter" aria-hidden="true"><div class="scale"><span class="needle" id="needle"></span></div><div class="tl"><span data-t="cold">COLD</span><span data-t="hot">HOT</span></div></div>
   </div>
+  <div class="fb" id="fb" role="status" aria-live="polite"><span class="temp" id="temp"></span><span id="fbText" data-t="fb0">Move the magnifier, then pin your guess.</span></div>
+
+  <div id="hints"></div>
+
+  <section class="card win" id="win" aria-live="polite" tabindex="-1">
+    <div class="stamp" id="stamp" data-t="stamp">FOUND</div>
+    <div><span class="assisted" id="assisted" hidden data-t="assisted">ASSISTED</span></div>
+    <p data-th="winText"><b>Linden Park. The west bench, facing the island.</b> Three ducks, as promised.</p>
+    <div class="code" id="code"></div>
+    <p data-t="winNext">Stamp logged. Vesper sees it the moment you're back in the chat.</p>
+    <div class="actions">
+      <a class="btn" href="../index.html#demo" data-t="toChat">Back to chat →</a>
+      <button class="btn ghost" id="again" type="button" data-t="again">Search again</button>
+    </div>
+  </section>
 </main>
 
-<footer>Prototype, demo content — all characters fictional</footer>
+<footer class="sitefoot" data-t="foot">Prototype, demo content — all characters fictional</footer>
 
+<script src="../assets/rh.js"></script>
 <script>
 (() => {
   "use strict";
-  const PROG = "rabbithole-progress-v1", KEY = "map", CODE = "RH-2-DUCKS";
-  const $ = s => document.querySelector(s);
-  const buzz = p => { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); };
-  const NS = "http://www.w3.org/2000/svg";
-  const svg = $("#map"), marks = $("#marks");
-  const getProg = () => { try { return JSON.parse(localStorage.getItem(PROG) || "{}"); } catch (e) { return {}; } };
-  const setProg = v => { try { const p = getProg(); p[KEY] = v; localStorage.setItem(PROG, JSON.stringify(p)); } catch (e) {} };
+  const { $, $$ } = RH;
+  RH.i18n({
+    en: {
+      doc: "Mission 2 · Find the Place — Rabbit Hole", back: "Back to chat", tag: "MISSION 2 / 3 · DAY 2", h1: "Find the Place", cluesAria: "Vesper's clues",
+      c1: "Same side of the river as the street you just decoded.",
+      c2: "There's water, and the water has <b>an island</b>. Fountains don't count.",
+      c3: "Sit on the bench where <b>three ducks</b> are watching. Ducks are small. Use the magnifier.",
+      mapAria: "Map of the fictional city Port Velour. Move the magnifier and pin a spot.",
+      lensAria: "Magnifier. Drag, or use arrow keys to move. Press Enter to pin.", lensHint: "Drag the magnifier 🔍",
+      pin: "📍 Pin it here", cold: "COLD", hot: "HOT", fb0: "Move the magnifier, then pin your guess.",
+      t_hot: "HOT", t_warm: "WARM", t_cool: "COOL", t_cold: "COLD",
+      dirs: ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"],
+      eastSide: "Cold. You've crossed the river. Hadekel St. is on the other side (clue 1).",
+      harbor: "An island and three ducks, nice. But it's across the river from Hadekel St. Clue 1 says no.",
+      willow: "Three ducks, sure. But look at that pond. No island (clue 2).",
+      fountain: "That's the fountain. Clue 2 literally says fountains don't count.",
+      b_north: "Right pond! But only one duck is watching this bench. Count again (clue 3).",
+      b_east: "Right pond. Two ducks here. Clue 3 said three.",
+      b_south: "Right pond, but no ducks at this bench. Clue 3.",
+      inPark: { hot: "Hot. You're at the water's edge. Now find the right bench: head {dir}.", warm: "Warm. Right park. Head {dir}." },
+      westCold: { cool: "Cool. Right side of the river, but where's the island? (clue 2)", cold: "Cold. Right side of the river. Now find water with an island (clue 2)." },
+      stamp: "FOUND", assisted: "ASSISTED", winText: "<b>Linden Park. The west bench, facing the island.</b> Three ducks, as promised.",
+      winNext: "Stamp logged. Vesper sees it the moment you're back in the chat.", toChat: "Back to chat →", again: "Search again",
+      foot: "Prototype, demo content — all characters fictional",
+      labels: { hadekel: "HADEKEL ST.", harborRd: "HARBOR RD.", market: "MARKET SQ.", willow: "WILLOW GREEN", linden: "LINDEN PARK", harbor: "HARBOR GDNS", clock: "Clock Tower", museum: "Museum", light: "Lighthouse", bakery: "Bakery", river: "VELOUR RIVER", north: "N" },
+      plaque: "bench",
+      hints: [
+        "Clue 1 rules out everything east of the river. Hadekel St. runs along the top left.",
+        "West of the river there's a fountain, a pond without an island, and one pond <b>with</b> an island: Linden Park.",
+        "Drag the magnifier around the Linden Park pond and count the ducks at each bench. It's the <b>west</b> bench."
+      ],
+      skipped: "Skipped. The ducks are disappointed in you.", found: "📍 Found it",
+    },
+    he: {
+      doc: "משימה 2 · מצאי את המקום — Rabbit Hole", back: "חזרה לצ׳אט", tag: "משימה 2 / 3 · יום 2", h1: "מצאי את המקום", cluesAria: "הרמזים של וספר",
+      c1: "באותו צד של הנהר כמו הרחוב שפענחת הרגע.",
+      c2: "יש שם מים, ובמים יש <b>אי</b>. מזרקות לא נחשבות.",
+      c3: "שבי על הספסל ש<b>שלושה ברווזים</b> מסתכלים עליו. ברווזים זה קטן, תשתמשי בזכוכית המגדלת.",
+      mapAria: "מפה של העיר הבדיונית פורט ולור. הזיזי את זכוכית המגדלת וסמני נקודה.",
+      lensAria: "זכוכית מגדלת. גררי, או הזיזי עם החצים. Enter לסימון.", lensHint: "גררי את זכוכית המגדלת 🔍",
+      pin: "📍 כאן!", cold: "קר", hot: "חם", fb0: "הזיזי את זכוכית המגדלת, ואז סמני ניחוש.",
+      t_hot: "חם", t_warm: "פושר", t_cool: "קריר", t_cold: "קר",
+      dirs: ["צפונה", "לצפון־מזרח", "מזרחה", "לדרום־מזרח", "דרומה", "לדרום־מערב", "מערבה", "לצפון־מערב"],
+      eastSide: "קר. חצית את הנהר. רחוב הדקל נמצא בצד השני (רמז 1).",
+      harbor: "אי ושלושה ברווזים, יפה. אבל זה מעבר לנהר מרחוב הדקל. רמז 1 אומר שלא.",
+      willow: "שלושה ברווזים, נכון. אבל תסתכלי על הבריכה: אין בה אי (רמז 2).",
+      fountain: "זאת המזרקה. רמז 2 אומר במפורש שמזרקות לא נחשבות.",
+      b_north: "הבריכה הנכונה! אבל רק ברווז אחד מסתכל על הספסל הזה. ספרי שוב (רמז 3).",
+      b_east: "הבריכה הנכונה. כאן יש שני ברווזים. רמז 3 אמר שלושה.",
+      b_south: "הבריכה הנכונה, אבל ליד הספסל הזה אין ברווזים בכלל. רמז 3.",
+      inPark: { hot: "חם! את על שפת המים. עכשיו הספסל הנכון: לכי {dir}.", warm: "פושר. הגן הנכון. לכי {dir}." },
+      westCold: { cool: "קריר. הצד הנכון של הנהר, אבל איפה האי? (רמז 2)", cold: "קר. הצד הנכון של הנהר. עכשיו חפשי מים עם אי (רמז 2)." },
+      stamp: "נמצא", assisted: "בעזרה קטנה", winText: "<b>גן הטיליה. הספסל המערבי, מול האי.</b> שלושה ברווזים, כמו שהובטח.",
+      winNext: "החותמת נרשמה. וספר תראה אותה ברגע שתחזרי לצ׳אט.", toChat: "חזרה לצ׳אט ←", again: "לחפש שוב",
+      foot: "אב־טיפוס, תוכן לדוגמה — כל הדמויות בדיוניות",
+      labels: { hadekel: "רח׳ הדקל", harborRd: "דרך הנמל", market: "כיכר השוק", willow: "גן הערבה", linden: "גן הטיליה", harbor: "גני הנמל", clock: "מגדל השעון", museum: "המוזיאון", light: "המגדלור", bakery: "המאפייה", river: "נהר ולור", north: "צ" },
+      plaque: "ספסל",
+      hints: [
+        "רמז 1 פוסל את כל מה שממזרח לנהר. רחוב הדקל עובר בצד שמאל למעלה.",
+        "ממערב לנהר יש מזרקה, בריכה בלי אי, ובריכה אחת <b>עם</b> אי: גן הטיליה.",
+        "גררי את זכוכית המגדלת סביב הבריכה בגן הטיליה וספרי ברווזים ליד כל ספסל. זה הספסל <b>המערבי</b>."
+      ],
+      skipped: "דילגת. הברווזים מאוכזבים ממך.", found: "📍 מצאת",
+    },
+  });
+  if (!RH.gate("map")) return;
 
-  const TARGET = { x:104, y:378, rx:62, ry:42 };        // Linden Park pond + bench
-  const DECOYS = [
-    { x:138, y:152, r:22, say:"That's the fountain. Vesper literally said not the fountain." },
-    { x:304, y:370, r:46, say:"Right idea, wrong side of the river. Hadekel St. is west." },
-    { x:300, y:250, r:30, say:"Lantern Hall. Hm. Remember that name. But not today." },
+  const CODE = "RH-2-DUCKS", W = 360, H = 420, ZOOM = 2.6;
+  const TARGET = { x: 40, y: 302 };
+  const SPOTS = [ // decoys: specific message per broken clue
+    { x: 298, y: 320, r: 15, k: "harbor", t: "cool" }, { x: 50, y: 158, r: 16, k: "willow", t: "cool" }, { x: 152, y: 132, r: 18, k: "fountain", t: "cold" },
+    { x: 104, y: 263, r: 13, k: "b_north", t: "hot" }, { x: 168, y: 304, r: 13, k: "b_east", t: "warm" }, { x: 104, y: 343, r: 13, k: "b_south", t: "warm" },
   ];
-  let taps = 0, done = false;
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = $("#map"), marks = $("#marks"), box = $("#mapbox"), lens = $("#lens"), lensSvg = $("#lensSvg");
+  const mk = (tag, a, parent = marks) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); parent.appendChild(n); return n; };
+  const L = RH.t("labels");
+  [["hadekel", 50, 66, 8.5], ["harborRd", 312, 66, 7], ["market", 152, 168, 7.5], ["willow", 50, 106, 7], ["linden", 104, 240, 8.5], ["harbor", 313, 246, 7],
+   ["clock", 300, 146, 7.5], ["museum", 306, 52, 7.5], ["light", 330, 410, 7], ["bakery", 76, 408, 7]].forEach(([k, x, y, s]) => { const t = mk("text", { x, y, "font-size": s }, $("#labels")); t.textContent = L[k]; });
+  const rv = mk("text", { x: 0, y: 0, transform: "translate(232 262) rotate(-80)", "font-size": 7, fill: "#5f8ea0", "letter-spacing": 2 }, $("#labels")); rv.textContent = L.river;
+  $("#northLbl").textContent = L.north;
+  [[104, 259], [33, 302], [176, 304], [104, 352], [50, 170], [298, 328]].forEach(([x, y]) => { const t = mk("text", { x, y }, $("#plaques")); t.textContent = RH.t("plaque"); });
 
-  function toSvg(e) {
-    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  // --- magnifier
+  let lx = 180, ly = 200, moved = false, done = false, guesses = 0;
+  const scale = () => box.clientWidth / W;
+  function placeLens() {
+    const s = scale(), vw = 128 / s / ZOOM;
+    lens.style.transform = `translate(${lx * s}px, ${ly * s}px)`;
+    lensSvg.setAttribute("viewBox", `${lx - vw / 2} ${ly - vw / 2} ${vw} ${vw}`);
+    lens.setAttribute("aria-valuetext", `${Math.round(lx)}, ${Math.round(ly)}`);
   }
-  function el(tag, attrs, parent = marks) {
-    const n = document.createElementNS(NS, tag);
-    for (const k in attrs) n.setAttribute(k, attrs[k]);
-    parent.appendChild(n); return n;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function moveTo(x, y) { lx = clamp(x, 4, W - 4); ly = clamp(y, 4, H - 4); placeLens(); if (!moved) { moved = true; box.classList.add("moved"); } }
+  let drag = null;
+  lens.addEventListener("pointerdown", e => { if (done) return; drag = { x: e.clientX, y: e.clientY, lx, ly, id: e.pointerId }; lens.classList.add("dragging"); lens.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation(); });
+  lens.addEventListener("pointermove", e => { if (!drag || drag.id !== e.pointerId) return; const s = scale(); moveTo(drag.lx + (e.clientX - drag.x) / s, drag.ly + (e.clientY - drag.y) / s); });
+  const endDrag = () => { if (!drag) return; drag = null; lens.classList.remove("dragging"); RH.sfx("tap"); };
+  lens.addEventListener("pointerup", endDrag); lens.addEventListener("pointercancel", endDrag);
+  // Tapping the map glides the lens there
+  box.addEventListener("click", e => {
+    if (done || e.target.closest(".lens")) return;
+    const r = box.getBoundingClientRect(), s = scale();
+    moveTo((e.clientX - r.left) / s, (e.clientY - r.top) / s); RH.sfx("tap");
+  });
+  lens.addEventListener("keydown", e => {
+    const d = e.shiftKey ? 20 : 6, m = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] }[e.key];
+    if (m) { e.preventDefault(); lens.classList.add("dragging"); moveTo(lx + m[0], ly + m[1]); requestAnimationFrame(() => lens.classList.remove("dragging")); }
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pin(); }
+  });
+  addEventListener("resize", placeLens);
+
+  // --- feedback
+  const riverX = y => { // approximate river centreline x at a given y
+    const pts = [[0, 228], [60, 222], [110, 224], [170, 220], [220, 220], [280, 226], [340, 214], [372, 216], [420, 240]];
+    for (let i = 1; i < pts.length; i++) if (y <= pts[i][0]) { const [y0, x0] = pts[i - 1], [y1, x1] = pts[i]; return x0 + (x1 - x0) * (y - y0) / (y1 - y0); }
+    return 240;
+  };
+  const inLinden = (x, y) => x > 12 && x < 194 && y > 222 && y < 374;
+  const dirTo = (x, y) => { const a = Math.atan2(TARGET.y - y, TARGET.x - x) * 180 / Math.PI; return RH.t("dirs")[Math.round(((a + 90) % 360 + 360) % 360 / 45) % 8]; };
+  const NEEDLE = { cold: 6, cool: 34, warm: 66, hot: 92 };
+  function feedback(temp, text) {
+    const t = $("#temp"); t.className = "temp " + temp; t.textContent = RH.t("t_" + temp);
+    $("#fbText").textContent = text;
+    $("#meter").classList.add("on"); $("#needle").style.insetInlineStart = NEEDLE[temp] + "%";
+    RH.sfx(temp === "cool" ? "cold" : temp); RH.buzz(temp === "hot" ? [15, 30, 15] : 12);
   }
-  function pin(x, y, color) {
-    const g = el("g", { transform:`translate(${x} ${y})` });
-    const inner = el("g", { class:"pin" }, g);
-    el("path", { d:"M0 0 C-3 -8 -10 -12 -10 -19 a10 10 0 1 1 20 0 C10 -12 3 -8 0 0Z", fill:color, stroke:"#fff", "stroke-width":"1.5" }, inner);
-    el("circle", { cx:0, cy:-19, r:3.5, fill:"#fff" }, inner);
+  const COL = { hot: "#ff3b4e", warm: "#ffb547", cool: "#9a98ad", cold: "#59d5ff" };
+  function drawPin(x, y, color, cls) {
+    const g = mk("g", { transform: `translate(${x} ${y})`, class: cls || "" });
+    mk("path", { d: "M0 0 C-2.4 -6 -7 -9 -7 -14 a7 7 0 1 1 14 0 C7 -9 2.4 -6 0 0Z", fill: color, stroke: "#fff", "stroke-width": 1.4 }, g);
+    mk("circle", { cy: -14, r: 2.6, fill: "#fff" }, g);
     return g;
   }
-  function feedback(kind, text) {
-    const t = $("#temp");
-    t.className = "temp " + kind; t.textContent = kind.toUpperCase();
-    $("#fbText").textContent = text;
-    $("#fb").classList.add("show");
-  }
-
-  svg.addEventListener("click", e => {
+  function pin() {
     if (done) return;
-    const p = toSvg(e);
-    taps++; $("#tries").textContent = "Taps: " + taps;
-    if (taps === 2) { const c = $("#clue3"); c.parentNode.classList.remove("hidden"); c.innerHTML = "Find the bench that faces the <b>little island</b>."; }
-    const nx = (p.x - TARGET.x) / TARGET.rx, ny = (p.y - TARGET.y) / TARGET.ry;
-    if (nx * nx + ny * ny <= 1) return win(p);
-    // keep only the latest wrong pin
-    marks.innerHTML = "";
-    pin(p.x, p.y, "#5b5f78");
-    const decoy = DECOYS.find(d => Math.hypot(p.x - d.x, p.y - d.y) <= d.r);
-    const dist = Math.hypot(p.x - TARGET.x, p.y - TARGET.y);
-    if (decoy) feedback(dist < 120 ? "warm" : "cold", decoy.say);
-    else if (dist < 90) feedback("hot", "Hot. You can almost hear the quacking.");
-    else if (dist < 170) feedback("warm", "Warm. Keep going toward the green.");
-    else feedback("cold", p.x > 210 ? "Cold. And you've crossed the river." : "Cold. Wrong part of town entirely.");
-    buzz(15);
-  });
+    const x = lx, y = ly, d = Math.hypot(x - TARGET.x, y - TARGET.y);
+    guesses++;
+    if (d <= 13) return win(true);
+    const spot = SPOTS.find(s => Math.hypot(x - s.x, y - s.y) <= s.r);
+    let temp, text;
+    if (spot) { temp = spot.t; text = RH.t(spot.k); }
+    else if (x > riverX(y) - 6) { temp = "cold"; text = RH.t("eastSide"); }
+    else if (inLinden(x, y)) { temp = d < 50 ? "hot" : "warm"; text = RH.t("inPark")[temp].replace("{dir}", dirTo(x, y)); }
+    else { temp = d < 120 ? "cool" : "cold"; text = RH.t("westCold")[temp]; }
+    // keep the last few guesses as faded pins, coloured by temperature
+    $$(".guess", marks).slice(0, -3).forEach(n => n.remove());
+    $$(".guess", marks).forEach(n => n.setAttribute("opacity", .45));
+    drawPin(x, y, COL[temp], "guess");
+    mk("circle", { cx: x, cy: y, r: 10, fill: "none", stroke: COL[temp], "stroke-width": 2.5, class: "pulse" });
+    feedback(temp, text);
+  }
+  $("#pinBtn").addEventListener("click", pin);
 
-  function win(p, fresh = true) {
+  const hints = RH.hints({ root: $("#hints"), hints: RH.t("hints"), onSkip: () => { RH.toast(RH.t("skipped")); win(true, true); } });
+
+  function win(fresh, assisted) {
     done = true;
     marks.innerHTML = "";
-    el("circle", { cx:TARGET.x, cy:TARGET.y, r:26, fill:"none", stroke:"#ff3b4e", "stroke-width":3, class:"ripple" });
-    pin(p ? p.x : 63, p ? p.y : 400, "#ff3b4e");
-    feedback("hot", "Found it. The bench by the duck island.");
-    if (fresh) { setProg({ code:CODE, at:Date.now() }); buzz([30, 40, 60]); }
+    if (fresh) RH.setProg("map", { code: CODE, at: Date.now(), assisted: !!assisted || hints.level >= 3 });
+    const p = RH.prog().map || {};
+    $("#assisted").hidden = !p.assisted;
     $("#code").textContent = CODE;
-    const w = $("#win"); w.classList.add("show");
-    if (fresh) setTimeout(() => w.scrollIntoView({ behavior:"smooth", block:"center" }), 500);
+    $("#world").style.transformOrigin = `${TARGET.x + 40}px ${TARGET.y - 20}px`;
+    // reveal: trail from Hadekel St. to the bench, ripple, zoom
+    mk("path", { d: `M50 70 H96 V262 Q70 280 ${TARGET.x - 6} ${TARGET.y - 6}`, fill: "none", stroke: "#ff3b4e", "stroke-width": 2.4, "stroke-linecap": "round", class: "trail" });
+    mk("circle", { cx: TARGET.x, cy: TARGET.y, r: 9, fill: "none", stroke: "#ff3b4e", "stroke-width": 2, class: "ripple" });
+    drawPin(TARGET.x, TARGET.y, "#ff3b4e");
+    const lbl = mk("text", { x: TARGET.x + 10, y: TARGET.y - 18, "font-size": 8, "font-weight": 800, fill: "#2a2318", "font-family": "system-ui,sans-serif" }); lbl.textContent = RH.t("found");
+    if (RH.he) lbl.setAttribute("x", TARGET.x + 52);
+    $("#mapbox").classList.add("found");
+    $("#pinBtn").disabled = true;
+    feedback("hot", RH.t("found"));
+    const w = $("#win");
+    w.classList.add("show");
+    $("#hints").style.display = "none";
+    if (fresh) {
+      [0, 260, 520].forEach(t => setTimeout(() => RH.sfx("quack"), 300 + t));
+      setTimeout(() => { RH.slam($("#stamp")); RH.sfx("win"); RH.confetti({ n: 110, y: .55 }); }, 1300);
+      setTimeout(() => { w.scrollIntoView({ behavior: RH.reduced ? "auto" : "smooth", block: "center" }); w.focus({ preventScroll: true }); }, 1500);
+    }
   }
-
-  $("#showStreet").addEventListener("click", () => {
-    const h = $("#hadekel");
-    h.classList.remove("glow"); void h.getBoundingClientRect(); h.classList.add("glow");
-  });
   $("#again").addEventListener("click", () => {
-    done = false; taps = 0; marks.innerHTML = "";
-    $("#tries").textContent = "Taps: 0"; $("#fb").classList.remove("show"); $("#win").classList.remove("show");
-    const c = $("#clue3"); c.parentNode.classList.add("hidden"); c.textContent = "Clue 3 is sealed. Tap the map twice to unseal it.";
+    done = false; guesses = 0; marks.innerHTML = "";
+    $("#mapbox").classList.remove("found"); $("#win").classList.remove("show"); $("#hints").style.display = "";
+    $("#pinBtn").disabled = false; $("#meter").classList.remove("on");
+    const t = $("#temp"); t.className = "temp"; t.textContent = ""; $("#fbText").textContent = RH.t("fb0");
+    hints.reset(); moveTo(180, 200);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  if (getProg()[KEY]) win(null, false);
+  placeLens();
+  if (RH.prog().map) win(false);
 })();
 </script>
 </body>

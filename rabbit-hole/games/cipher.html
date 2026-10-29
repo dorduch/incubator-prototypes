@@ -1,247 +1,343 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" data-t-doc="doc">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<script>(function(){try{var q=new URLSearchParams(location.search).get("lang"),l=q||localStorage.getItem("rh-lang")||"en";if(l!=="he")l="en";if(q)localStorage.setItem("rh-lang",l);var h=document.documentElement;h.lang=l;h.dir=l==="he"?"rtl":"ltr"}catch(e){}})()</script>
 <title>Mission 1 · The Wheel — Rabbit Hole</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../assets/rh.css">
 <style>
-  :root{--bg:#0b0b10;--panel:#17171f;--panel2:#1e1e29;--line:#2a2a38;--ink:#ecebf3;--muted:#9a98ad;--red:#ff3b4e;--amber:#ffb547;--green:#3ee08f;--cyan:#59d5ff;
-    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(600px 400px at 50% -10%,rgba(255,59,78,.16),transparent 70%),var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
-  button,input{font:inherit;color:inherit}
-  button{cursor:pointer}
-  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
-  .back{color:var(--ink);text-decoration:none;font-size:15px;display:inline-flex;gap:6px;align-items:center}
-  .tag{font:700 11px/1 var(--mono);letter-spacing:.18em;color:var(--red)}
-  main{flex:1;width:100%;max-width:520px;margin:0 auto;padding:22px 16px 30px}
-  h1{font-size:26px;margin:6px 0 6px;line-height:1.15}
-  .lede{color:var(--muted);margin:0 0 18px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
-  .ctext{font:800 clamp(17px,5.4vw,24px)/1.3 var(--mono);letter-spacing:.14em;text-align:center;color:var(--amber);word-spacing:.3em;text-shadow:0 0 16px rgba(255,181,71,.3)}
-  .lbl{font:700 11px/1 var(--mono);letter-spacing:.2em;color:var(--muted);margin-bottom:10px}
-  .wheel-wrap{position:relative;margin:18px auto 6px;width:min(100%,340px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
-  .wheel-wrap svg{width:100%;height:100%;display:block}
-  #inner{transform-box:view-box;transform-origin:0 0;transition:transform .35s cubic-bezier(.2,1.3,.4,1);cursor:grab}
+  body{background:radial-gradient(600px 380px at 50% -8%,rgba(255,59,78,.16),transparent 70%),var(--bg)}
+  .crib{display:flex;gap:10px;align-items:flex-start;background:rgba(89,213,255,.07);border:1px solid rgba(89,213,255,.25);border-radius:12px;padding:10px 12px;font-size:14.5px;margin:0 0 12px}
+  .crib b{color:var(--cyan)}
+  .msgtiles{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;direction:ltr}
+  [dir=rtl] .msgtiles{direction:rtl}
+  .w{display:flex;gap:3px;padding:4px;border-radius:10px}
+  .w.target{background:rgba(255,181,71,.08);box-shadow:inset 0 0 0 1px rgba(255,181,71,.35)}
+  .tile{display:grid;grid-template-rows:auto auto;gap:3px;justify-items:center}
+  .tile .c{width:30px;height:34px;display:grid;place-items:center;border-radius:7px;background:var(--bg);border:1px solid var(--line);font:800 17px var(--mono);color:var(--amber)}
+  :lang(he) .tile .c{font-family:var(--sans);font-size:19px}
+  button.tile{background:none;border:0;padding:0;min-height:44px}
+  button.tile[aria-pressed="true"] .c{border-color:var(--amber);box-shadow:0 0 0 2px rgba(255,181,71,.35)}
+  .tile .p{width:30px;height:30px;display:grid;place-items:center;border-radius:7px;border:1px dashed var(--line2);font:800 16px var(--mono);color:var(--green)}
+  :lang(he) .tile .p{font-family:var(--sans);font-size:18px}
+  .tile .p.on{border-style:solid;border-color:rgba(62,224,143,.55);background:rgba(62,224,143,.08);animation:flip .35s var(--ease)}
+  .tile .p.cur{border-color:var(--amber);border-style:solid;animation:blink 1.1s infinite}
+  .tile .p.no{border-color:var(--red);animation:shake .35s}
+  @keyframes blink{50%{box-shadow:0 0 0 3px rgba(255,181,71,.25)}}
+  @keyframes flip{0%{transform:rotateX(90deg)}100%{transform:none}}
+  .w:not(.target) .p{visibility:hidden;height:0}
+  .msgtiles.solved .w .p{visibility:visible;height:30px}
+  .bring{text-align:center;font-size:13.5px;color:var(--muted);margin:10px 0 0}
+  .bring b{color:var(--amber)}
+
+  .wheel-wrap{position:relative;margin:12px auto 0;width:min(100%,310px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+  .wheel-wrap svg{width:100%;height:100%;display:block;overflow:visible}
+  #inner{transform-box:view-box;transform-origin:0 0;transition:transform .35s var(--ease);cursor:grab}
   .dragging #inner{transition:none;cursor:grabbing}
-  .controls{display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 4px}
-  .rot{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);font-size:22px;display:grid;place-items:center}
-  .rot:active{transform:scale(.94)}
-  .shift{font:700 13px var(--mono);letter-spacing:.12em;color:var(--muted);min-width:90px;text-align:center}
-  .shift b{display:block;font-size:26px;color:var(--ink)}
-  .decoded{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;margin-top:6px}
-  .word{display:flex;gap:3px}
-  .word span{width:24px;height:32px;display:grid;place-items:center;background:#0b0b10;border:1px solid var(--line);border-radius:6px;font:800 16px var(--mono);color:#cfcde0;transition:color .2s,border-color .2s}
-  .word span.flip{animation:flip .25s}
-  @keyframes flip{50%{transform:rotateX(90deg)}}
-  .hintline{font-size:14px;color:var(--muted);margin:14px 0 0;text-align:center}
-  .answer{display:flex;gap:10px;margin-top:16px}
-  .answer input{flex:1;min-width:0;background:#0b0b10;border:1px solid var(--line);border-radius:12px;padding:14px;font:700 18px var(--mono);letter-spacing:.14em;text-transform:uppercase}
-  .answer input:focus{outline:none;border-color:var(--amber)}
-  .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px}
-  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
-  .msg{min-height:24px;margin:10px 2px 0;font-size:14.5px;color:var(--amber)}
-  .shake{animation:shake .4s}
-  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
-  .win{display:none;text-align:center;padding:26px 18px}
-  .win.show{display:block;animation:rise .5s cubic-bezier(.2,1.3,.4,1)}
-  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  .stamp{display:inline-block;margin:6px auto 14px;border:4px solid var(--green);color:var(--green);border-radius:10px;padding:10px 18px;font:900 26px/1 var(--mono);letter-spacing:.16em;transform:rotate(-8deg);animation:stamp .5s .15s both cubic-bezier(.3,1.6,.5,1)}
-  @keyframes stamp{from{opacity:0;transform:scale(2.4) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
-  .code{font:800 22px var(--mono);letter-spacing:.14em;background:#0b0b10;border:1px dashed var(--green);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0 18px}
-  .win p{color:var(--muted);margin:0 0 16px}
-  .win .actions{display:grid;gap:10px}
-  footer{border-top:1px solid var(--line);padding:16px;text-align:center;font:12px var(--mono);letter-spacing:.05em;color:var(--amber)}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .lit{fill:#1a1205!important}
+  .litbg{opacity:1!important}
+  .controls{display:flex;justify-content:center;align-items:center;gap:16px;margin:4px 0 0}
+  .rot{width:56px;height:56px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);font-size:22px;display:grid;place-items:center;transition:transform .12s}
+  .rot:active{transform:scale(.9)}
+  .shift{font:700 11px var(--mono);letter-spacing:.14em;color:var(--muted);min-width:80px;text-align:center}
+  .shift b{display:block;font-size:24px;color:var(--ink)}
+  .dragnote{font-size:13px;color:var(--dim);text-align:center;margin:6px 0 0}
+
+  .answer{margin-top:14px}
+  .answer label{display:block;font-weight:700;margin-bottom:6px}
+  .answer input{width:100%;min-height:52px;background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;font:800 18px var(--mono);letter-spacing:.3em;text-transform:uppercase;text-align:center}
+  :lang(he) .answer input{font-family:var(--sans);letter-spacing:.2em;font-size:20px}
+  .answer input:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,181,71,.2)}
+  .msg{min-height:22px;margin:8px 2px 0;font-size:14.5px;color:var(--amber);text-align:center}
 </style>
 </head>
 <body>
-<header class="top">
-  <a class="back" href="../index.html#demo">‹ Back to chat</a>
-  <span class="tag">MISSION 1 / 3</span>
+<header class="topbar">
+  <a class="back" href="../index.html#demo"><span class="chev" aria-hidden="true">‹</span><span class="lbl" data-t="back">Back to chat</span></a>
+  <span class="tag" data-t="tag">Mission 1 / 3</span>
+  <div class="tools"><div data-langtoggle></div><button type="button" class="iconbtn" data-mute></button></div>
 </header>
 
-<main>
+<main class="game" id="main">
   <div id="play">
-    <h1>The Wheel</h1>
-    <p class="lede">Intercepted this morning. Every letter took <b style="color:var(--ink)">three steps forward</b>. Turn the inner wheel to walk them back.</p>
+    <h1 data-t="h1">The Wheel</h1>
+    <p class="lede" data-th="lede">Intercepted this morning. Every letter took a few steps forward. How many? That's your problem.</p>
 
     <div class="card">
-      <div class="lbl">INTERCEPTED MESSAGE</div>
-      <div class="ctext" id="ctext"></div>
+      <div class="crib"><span aria-hidden="true">🗝️</span><span data-th="crib">Vesper's habit: <b>every message I send starts with your name.</b></span></div>
+      <div class="lbl" data-t="intercepted">Intercepted message</div>
+      <div class="msgtiles" id="tiles"></div>
+      <p class="bring" data-th="bring">Decode the <b>highlighted word</b>. Tap a letter to find it on the wheel.</p>
 
       <div class="wheel-wrap" id="wheelWrap">
-        <svg viewBox="-160 -160 320 320" id="wheel" role="img" aria-label="Cipher wheel. Outer ring: letters as written. Inner ring: what they really mean.">
-          <defs>
-            <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="objectBoundingBox"><stop offset=".6" stop-color="#1e1e29"/><stop offset="1" stop-color="#14141c"/></radialGradient>
-          </defs>
-          <circle r="156" fill="#14141c" stroke="#2a2a38" stroke-width="2"/>
+        <svg viewBox="-160 -160 320 320" id="wheel" role="img" data-t-aria="wheelAria" aria-label="Cipher wheel">
+          <circle r="156" fill="#14141c" stroke="#2a2a3a" stroke-width="2"/>
           <g id="outer"></g>
-          <path d="M-14 -158 L14 -158 L10 -72 L-10 -72 Z" fill="rgba(255,181,71,.16)" stroke="#ffb547" stroke-width="1.5"/>
+          <path d="M-15 -159 L15 -159 L10 -66 L-10 -66 Z" fill="rgba(255,181,71,.13)" stroke="#ffb547" stroke-width="1.5"/>
           <g id="inner">
-            <circle r="106" fill="#1e1e29" stroke="#ff3b4e" stroke-width="2"/>
-            <circle r="70" fill="#16161f" stroke="#2a2a38"/>
+            <circle r="106" fill="#1d1d29" stroke="#ff3b4e" stroke-width="2"/>
+            <circle r="68" fill="#15151e" stroke="#2a2a3a"/>
             <g id="innerLetters"></g>
             <circle r="26" fill="#ff3b4e"/>
-            <text y="6" text-anchor="middle" fill="#fff" font-family="monospace" font-weight="800" font-size="16">V</text>
+            <text y="6" text-anchor="middle" fill="#fff" font-family="ui-monospace,monospace" font-weight="800" font-size="16">V</text>
+            <path d="M0 -40 L5 -30 L-5 -30 Z" fill="#ff3b4e"/>
           </g>
         </svg>
       </div>
       <div class="controls">
-        <button class="rot" id="left" type="button" aria-label="Turn wheel left">↺</button>
-        <div class="shift" aria-live="polite">SHIFT<b id="shiftN">0</b></div>
-        <button class="rot" id="right" type="button" aria-label="Turn wheel right">↻</button>
+        <button class="rot" id="left" type="button" data-t-aria="turnL">↺</button>
+        <div class="shift" aria-live="polite"><span data-t="shift">SHIFT</span><b id="shiftN">0</b></div>
+        <button class="rot" id="right" type="button" data-t-aria="turnR">↻</button>
       </div>
-      <div class="lbl" style="margin-top:14px">WHAT THE WHEEL SAYS</div>
-      <div class="decoded" id="decoded" aria-live="polite"></div>
-      <p class="hintline">Drag the inner ring, or use the arrows. The outer ring is what you see, the inner ring is what it means.</p>
+      <p class="dragnote" data-t="dragnote">Outer ring = what's written. Inner ring = what it means. Drag it, or use the arrows.</p>
     </div>
 
-    <form class="answer" id="form" autocomplete="off">
-      <input id="ans" placeholder="Which street?" aria-label="Your answer: which street?" autocapitalize="characters" spellcheck="false">
-      <button class="btn" type="submit">Submit</button>
+    <form class="answer" id="form" autocomplete="off" novalidate>
+      <label for="ans" data-t="ansLabel">Commit the word, one letter at a time</label>
+      <input id="ans" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done" data-t-ph="ansPh" placeholder="Type the decoded word">
     </form>
-    <div class="msg" id="msg" role="status"></div>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+
+    <div id="hints"></div>
   </div>
 
-  <div class="card win" id="win" role="status" aria-live="polite">
-    <div class="stamp">DECODED</div>
-    <p><b style="color:var(--ink)">HADEKEL.</b> Vesper knows where you grew up. Show this stamp in the chat.</p>
+  <section class="card win" id="win" aria-live="polite" tabindex="-1">
+    <div class="stamp" id="stamp" data-t="stamp">DECODED</div>
+    <div><span class="assisted" id="assisted" hidden data-t="assisted">ASSISTED</span></div>
+    <p data-th="winText"><b>HADEKEL.</b> Vesper knows where you grew up.</p>
     <div class="code" id="code"></div>
+    <p data-t="winNext">Stamp logged. Vesper sees it the moment you're back in the chat.</p>
     <div class="actions">
-      <a class="btn" href="../index.html#demo">Back to chat →</a>
-      <button class="btn ghost" id="again" type="button">Play the wheel again</button>
+      <a class="btn" href="../index.html#demo" id="toChat" data-t="toChat">Back to chat →</a>
+      <button class="btn ghost" id="again" type="button" data-t="again">Play the wheel again</button>
     </div>
-  </div>
+  </section>
 </main>
 
-<footer>Prototype, demo content — all characters fictional</footer>
+<footer class="sitefoot" data-t="foot">Prototype, demo content — all characters fictional</footer>
 
+<script src="../assets/rh.js"></script>
 <script>
 (() => {
   "use strict";
-  const PROG = "rabbithole-progress-v1", KEY = "cipher", CODE = "RH-1-WHEEL", ANSWER = "HADEKEL";
-  const PLAIN = "YOU GREW UP ON HADEKEL", SHIFT = 3, STEP = 360 / 26;
-  const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const $ = s => document.querySelector(s);
-  const buzz = p => { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); };
-  const NS = "http://www.w3.org/2000/svg";
-  const caesar = (s, k) => s.replace(/[A-Z]/g, c => A[(A.indexOf(c) + k + 26) % 26]);
-  const CIPHER = caesar(PLAIN, SHIFT);
+  const { $, $$ } = RH;
+  RH.i18n({
+    en: {
+      doc: "Mission 1 · The Wheel — Rabbit Hole", back: "Back to chat", tag: "MISSION 1 / 3 · DAY 1", h1: "The Wheel",
+      lede: "Intercepted this morning. Every letter took a few steps forward. <b>How many?</b> That's for you to work out.",
+      crib: "Vesper's habit: <b>every message I send starts with your name.</b>",
+      intercepted: "Intercepted message", bring: "Decode the <b>highlighted word</b>. Tap a letter to spot it on the wheel.",
+      wheelAria: "Cipher wheel. Outer ring: letters as written. Inner ring: what they mean. Use the arrow buttons to turn it.",
+      turnL: "Turn inner wheel counter-clockwise", turnR: "Turn inner wheel clockwise", shift: "SHIFT",
+      dragnote: "Outer ring = what's written. Inner ring = what it means. Drag it, or use the arrows.",
+      ansLabel: "Commit the word, one letter at a time", ansPh: "Type the decoded word",
+      stamp: "DECODED", assisted: "ASSISTED", winText: "<b>HADEKEL.</b> Vesper knows where you grew up.",
+      winNext: "Stamp logged. Vesper sees it the moment you're back in the chat.", toChat: "Back to chat →", again: "Play the wheel again",
+      foot: "Prototype, demo content — all characters fictional",
+      good: ["Locked in.", "Yes.", "That's the one.", "Keep going.", "Nice.", "Almost there."],
+      bad: ["No. That letter doesn't fit. Check the wheel.", "Wrong letter. Is the wheel set right? Read your name first.", "Not that one. Find the outer letter, read the inner one."],
+      notLetter: "Letters only, Agent.", tileSel: "{c} on the outer ring means {p} at this setting.",
+      hints: [
+        "The first word is your name: <b>NOA</b>. So the first cipher letter has to turn into an N.",
+        "Turn the wheel until the inner <b>N</b> sits under the outer <b>{c0}</b>. Then the rest of the message reads itself, one letter at a time.",
+        "It's <b>{k} clicks</b> clockwise. The street starts with <b>H</b>, and you walked it a thousand times."
+      ],
+      skipped: "Skipped. Vesper will never let you forget it.",
+    },
+    he: {
+      doc: "משימה 1 · הגלגל — Rabbit Hole", back: "חזרה לצ׳אט", tag: "משימה 1 / 3 · יום 1", h1: "הגלגל",
+      lede: "יירטנו את זה הבוקר. כל אות זזה כמה צעדים קדימה. <b>כמה בדיוק?</b> את זה תצטרכי לגלות לבד.",
+      crib: "הרגל קטן של וספר: <b>כל הודעה שלי נפתחת בשם שלך.</b>",
+      intercepted: "ההודעה שיורטה", bring: "פענחי את <b>המילה המסומנת</b>. הקישי על אות כדי למצוא אותה בגלגל.",
+      wheelAria: "גלגל צופן. הטבעת החיצונית: האותיות כפי שנכתבו. הטבעת הפנימית: מה הן אומרות באמת. אפשר לסובב עם כפתורי החצים.",
+      turnL: "סיבוב הגלגל הפנימי נגד כיוון השעון", turnR: "סיבוב הגלגל הפנימי עם כיוון השעון", shift: "הזזה",
+      dragnote: "טבעת חיצונית = מה שכתוב. טבעת פנימית = מה זה אומר. גררי אותה או השתמשי בחצים.",
+      ansLabel: "הקלידי את המילה, אות אחרי אות", ansPh: "המילה המפוענחת",
+      stamp: "פוענח", assisted: "בעזרה קטנה", winText: "<b>הדקל.</b> וספר יודעת איפה גדלת.",
+      winNext: "החותמת נרשמה. וספר תראה אותה ברגע שתחזרי לצ׳אט.", toChat: "חזרה לצ׳אט ←", again: "לשחק שוב",
+      foot: "אב־טיפוס, תוכן לדוגמה — כל הדמויות בדיוניות",
+      good: ["נעול.", "כן.", "בדיוק.", "ממשיכות.", "יפה.", "כמעט שם."],
+      bad: ["לא. האות הזאת לא מסתדרת. תבדקי את הגלגל.", "אות לא נכונה. הגלגל מכוון? תתחילי מהשם שלך.", "לא זאת. מוצאים את האות בחוץ, וקוראים את מה שמתחתיה."],
+      notLetter: "רק אותיות, סוכנת.", tileSel: "{c} בטבעת החיצונית היא {p} בכיוון הנוכחי.",
+      hints: [
+        "המילה הראשונה היא השם שלך: <b>נועה</b>. כלומר האות המוצפנת הראשונה צריכה להפוך ל־נ.",
+        "סובבי עד שה־<b>נ</b> הפנימית יושבת מתחת ל־<b>{c0}</b> החיצונית. משם ההודעה נקראת לבד, אות אחרי אות.",
+        "זה <b>{k} קליקים</b> עם כיוון השעון. הרחוב מתחיל ב־<b>ה</b>, והלכת בו אלף פעם."
+      ],
+      skipped: "דילגת. וספר לא תיתן לך לשכוח את זה.",
+    },
+  });
+  if (!RH.gate("cipher")) return;
+
+  const HE = RH.he;
+  const A = HE ? "אבגדהוזחטיכלמנסעפצקרשת" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const N = A.length, STEP = 360 / N;
+  const SHIFT = HE ? 4 : 5;                     // never stated on the page: the player derives it from the crib
+  const PLAIN = HE ? "נועה גדלת ברחוב הדקל" : "NOA YOU GREW UP ON HADEKEL";
+  const ANSWER = HE ? "הדקל" : "HADEKEL";
+  const CODE = "RH-1-WHEEL";
+  const FINALS = { "ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ" };
+  const normCh = c => { c = FINALS[c] || c; return HE ? c : c.toUpperCase(); };
   const mod = (n, m) => ((n % m) + m) % m;
+  const enc = (s, k) => [...s].map(c => A.includes(c) ? A[mod(A.indexOf(c) + k, N)] : c).join("");
+  const CIPHER = enc(PLAIN, SHIFT);
+  const words = CIPHER.split(" "), plainWords = PLAIN.split(" "), T = words.length - 1;
+  const msg = $("#msg");
 
-  const getProg = () => { try { return JSON.parse(localStorage.getItem(PROG) || "{}"); } catch (e) { return {}; } };
-  const setProg = v => { try { const p = getProg(); if (v) p[KEY] = v; else delete p[KEY]; localStorage.setItem(PROG, JSON.stringify(p)); } catch (e) {} };
+  // Tiles: every word shown encrypted; only the target word has commit slots
+  $("#tiles").innerHTML = words.map((w, wi) => `<div class="w ${wi === T ? "target" : ""}" ${wi === T ? 'role="group" aria-label="' + (HE ? "המילה לפענוח" : "Word to decode") + '"' : 'aria-hidden="true"'}>${[...w].map((c, ci) =>
+    wi === T
+      ? `<button type="button" class="tile" data-ci="${ci}" aria-pressed="false" aria-label="${c}"><span class="c">${c}</span><span class="p" data-slot="${ci}"></span></button>`
+      : `<span class="tile"><span class="c">${c}</span><span class="p">${plainWords[wi][ci]}</span></span>`).join("")}</div>`).join("");
+  const slots = $$("[data-slot]");
 
-  $("#ctext").textContent = CIPHER;
-
-  // Build the rings: letter i sits i steps clockwise from 12 o'clock
-  function ring(g, r, size, fill, weight) {
-    for (let i = 0; i < 26; i++) {
-      const t = document.createElementNS(NS, "text");
-      t.setAttribute("transform", `rotate(${i * STEP}) translate(0 ${-r})`);
-      t.setAttribute("text-anchor", "middle"); t.setAttribute("dominant-baseline", "central");
-      t.setAttribute("font-family", "monospace"); t.setAttribute("font-size", size);
-      t.setAttribute("font-weight", weight); t.setAttribute("fill", fill);
-      t.textContent = A[i];
-      g.appendChild(t);
+  // Wheel rings: letter i sits i steps clockwise from 12 o'clock
+  const NS = "http://www.w3.org/2000/svg";
+  const font = HE ? "Heebo,Arial,sans-serif" : "ui-monospace,monospace";
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+  const outerBg = [], outerTx = [], innerBg = [], innerTx = [];
+  function ring(g, r, size, fill, bgArr, txArr) {
+    for (let i = 0; i < N; i++) {
+      const grp = mk("g", { transform: `rotate(${i * STEP}) translate(0 ${-r})` }, g);
+      bgArr.push(mk("circle", { r: 13, fill: "#ffb547", opacity: 0 }, grp));
+      const t = mk("text", { "text-anchor": "middle", "dominant-baseline": "central", "font-family": font, "font-size": size, "font-weight": 800, fill, transform: `rotate(${-i * STEP})` }, grp);
+      t.textContent = A[i]; txArr.push(t);
     }
   }
-  ring($("#outer"), 132, 17, "#ffb547", 800);
-  ring($("#innerLetters"), 88, 16, "#ecebf3", 700);
-  for (let i = 0; i < 26; i++) {
-    const l = document.createElementNS(NS, "line");
-    l.setAttribute("transform", `rotate(${i * STEP + STEP / 2})`);
-    l.setAttribute("y1", -106); l.setAttribute("y2", -112); l.setAttribute("stroke", "#2a2a38");
-    $("#outer").appendChild(l);
-  }
+  ring($("#outer"), 132, HE ? 18 : 16, "#ffb547", outerBg, outerTx);
+  ring($("#innerLetters"), 87, HE ? 17 : 15, "#efeef6", innerBg, innerTx);
+  for (let i = 0; i < N; i++) mk("line", { transform: `rotate(${i * STEP + STEP / 2})`, y1: -146, y2: -118, stroke: "#23232f" }, $("#outer"));
 
-  // Rotating the inner ring clockwise by k steps maps outer letter c -> c - k
-  let rot = 0, k = 0, lastDecoded = "";
+  // Inner ring rotated clockwise by k steps: outer letter at i shows inner letter i-k
+  let rot = 0, k = 0, sel = null;
   const inner = $("#inner");
-  function apply() {
-    k = mod(Math.round(rot / STEP), 26);
+  function apply(silent) {
+    const nk = mod(Math.round(rot / STEP), N);
+    if (nk !== k && !silent) { RH.sfx("tick"); RH.buzz(5); }
+    k = nk;
     inner.style.transform = `rotate(${rot}deg)`;
-    $("#shiftN").textContent = k > 13 ? k - 26 : k;
-    const dec = caesar(CIPHER, -k);
-    $("#decoded").innerHTML = dec.split(" ").map(w => `<span class="word">${[...w].map(c => `<span>${c}</span>`).join("")}</span>`).join("");
-    if (lastDecoded && lastDecoded !== dec) document.querySelectorAll(".word span").forEach(s => s.classList.add("flip"));
-    lastDecoded = dec;
+    // keep inner letters upright-ish relative to the ring
+    innerTx.forEach((t, i) => t.setAttribute("transform", `rotate(${-i * STEP - rot}) `));
+    $("#shiftN").textContent = k;
+    highlight();
   }
-  function turn(d) { rot = Math.round(rot / STEP) * STEP + d * STEP; apply(); buzz(8); }
+  function highlight() {
+    outerBg.forEach(b => b.setAttribute("opacity", 0)); innerBg.forEach(b => b.setAttribute("opacity", 0));
+    outerTx.forEach(t => t.classList.remove("lit")); innerTx.forEach(t => t.classList.remove("lit"));
+    if (sel == null) return;
+    const c = words[T][sel], i = A.indexOf(c), j = mod(i - k, N);
+    outerBg[i].setAttribute("opacity", 1); outerTx[i].classList.add("lit");
+    innerBg[j].setAttribute("opacity", .85); innerTx[j].classList.add("lit");
+  }
+  function turn(d) { rot = Math.round(rot / STEP) * STEP + d * STEP; apply(); }
   $("#left").addEventListener("click", () => turn(-1));
   $("#right").addEventListener("click", () => turn(1));
   document.addEventListener("keydown", e => {
     if (e.target.tagName === "INPUT") return;
-    if (e.key === "ArrowLeft") turn(-1);
-    if (e.key === "ArrowRight") turn(1);
+    if (e.key === "ArrowLeft") { turn(HE ? 1 : -1); e.preventDefault(); }
+    if (e.key === "ArrowRight") { turn(HE ? -1 : 1); e.preventDefault(); }
+  });
+  $("#tiles").addEventListener("click", e => {
+    const b = e.target.closest("button.tile"); if (!b) return;
+    const ci = +b.dataset.ci;
+    sel = sel === ci ? null : ci;
+    $$("button.tile").forEach(x => x.setAttribute("aria-pressed", String(+x.dataset.ci === sel)));
+    highlight(); RH.sfx("tap");
+    if (sel != null) { const c = words[T][sel]; msg.textContent = RH.t("tileSel", { c, p: A[mod(A.indexOf(c) - k, N)] }); }
   });
 
   // Drag to rotate
   const wrap = $("#wheelWrap"), svg = $("#wheel");
   let drag = null;
   const angleAt = e => { const r = svg.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
-  inner.addEventListener("pointerdown", e => {
+  wrap.addEventListener("pointerdown", e => {
     drag = { a: angleAt(e), rot, id: e.pointerId };
-    wrap.classList.add("dragging");
-    inner.setPointerCapture(e.pointerId);
-    e.preventDefault();
+    wrap.classList.add("dragging"); wrap.setPointerCapture(e.pointerId); e.preventDefault();
   });
-  inner.addEventListener("pointermove", e => {
+  wrap.addEventListener("pointermove", e => {
     if (!drag || e.pointerId !== drag.id) return;
-    let d = angleAt(e) - drag.a;
-    if (d > 180) d -= 360; if (d < -180) d += 360;
-    rot = drag.rot + d;
+    let d = angleAt(e) - drag.a; d = mod(d + 180, 360) - 180;
+    drag.a = angleAt(e); drag.rot += d; rot = drag.rot;
     inner.style.transform = `rotate(${rot}deg)`;
-    const nk = mod(Math.round(rot / STEP), 26);
-    if (nk !== k) { apply(); buzz(5); }
+    innerTx.forEach((t, i) => t.setAttribute("transform", `rotate(${-i * STEP - rot})`));
+    const nk = mod(Math.round(rot / STEP), N);
+    if (nk !== k) apply();
   });
-  const end = e => {
-    if (!drag) return;
-    drag = null; wrap.classList.remove("dragging");
-    rot = Math.round(rot / STEP) * STEP; apply();
-  };
-  inner.addEventListener("pointerup", end);
-  inner.addEventListener("pointercancel", end);
+  const end = () => { if (!drag) return; drag = null; wrap.classList.remove("dragging"); rot = Math.round(rot / STEP) * STEP; apply(true); };
+  wrap.addEventListener("pointerup", end); wrap.addEventListener("pointercancel", end);
 
-  // Answer check: case, spaces and punctuation ignored
-  const WRONG = [
-    g => `"${g}"? The wheel doesn't think so. Keep turning.`,
-    g => `Not "${g}". Read the inner ring once the words make sense.`,
-    g => `Close your eyes. Picture the walk to school. It wasn't "${g}".`,
-  ];
-  let tries = 0;
-  $("#form").addEventListener("submit", e => {
-    e.preventDefault();
-    const raw = $("#ans").value, g = raw.toUpperCase().replace(/[^A-Z]/g, "");
-    if (!g) { $("#msg").textContent = "Vesper needs a word, not silence."; return; }
-    if (g === ANSWER || g === PLAIN.replace(/ /g, "")) return win(true);
-    let m;
-    if (g === "KDGHNHO") m = "That's the cipher itself. Turn it the other way.";
-    else if (g.length !== 7) m = `Seven letters, Agent. "${raw.trim()}" isn't it.`;
-    else m = WRONG[tries % WRONG.length](raw.trim());
-    tries++;
-    $("#msg").textContent = m;
-    const f = $("#form"); f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
+  // Letter-by-letter commit: input always equals the committed prefix
+  const input = $("#ans");
+  let committed = 0, mistakes = 0, done = false;
+  function paintSlots() {
+    slots.forEach((s, i) => { s.textContent = i < committed ? ANSWER[i] : ""; s.classList.toggle("on", i < committed); s.classList.toggle("cur", i === committed && !done); });
+  }
+  input.addEventListener("input", () => {
+    const typed = [...input.value].map(normCh).filter(c => c.trim());
+    for (let i = committed; i < typed.length && !done; i++) {
+      const c = typed[i];
+      if (!A.includes(c)) { msg.textContent = RH.t("notLetter"); break; }
+      if (c === ANSWER[committed]) {
+        committed++; RH.sfx("ok"); RH.buzz(8);
+        const g = RH.t("good"); msg.textContent = g[(committed - 1) % g.length];
+        if (committed === ANSWER.length) { win(true); break; }
+      } else {
+        mistakes++; RH.sfx("bad"); RH.buzz([20, 40, 20]);
+        const s = slots[committed]; s.classList.remove("no"); void s.offsetWidth; s.classList.add("no");
+        const b = RH.t("bad"); msg.textContent = b[(mistakes - 1) % b.length];
+        break;
+      }
+    }
+    input.value = ANSWER.slice(0, committed);
+    paintSlots();
+  });
+  $("#form").addEventListener("submit", e => { e.preventDefault(); if (!done && committed < ANSWER.length) { msg.textContent = RH.t("bad")[0]; RH.sfx("bad"); } });
+  slots.forEach(s => s.addEventListener("click", () => input.focus()));
+
+  const hints = RH.hints({
+    root: $("#hints"),
+    hints: RH.t("hints").map(h => h.replace("{c0}", words[0][0]).replace("{k}", SHIFT)),
+    onSkip: () => { RH.toast(RH.t("skipped")); win(true, true); },
   });
 
-  function win(fresh) {
-    if (fresh) setProg({ code: CODE, at: Date.now() });
+  function win(fresh, assisted) {
+    done = true;
+    if (fresh) RH.setProg("cipher", { code: CODE, at: Date.now(), assisted: !!assisted || hints.level >= 3 });
+    const p = RH.prog().cipher || {};
+    committed = ANSWER.length; paintSlots();
     $("#code").textContent = CODE;
-    $("#play").style.display = "none";
-    $("#win").classList.add("show");
-    if (fresh) buzz([30, 40, 60]);
-    window.scrollTo(0, 0);
+    $("#assisted").hidden = !p.assisted;
+    $("#tiles").classList.add("solved");
+    rot = SHIFT * STEP; apply(true);
+    input.disabled = true;
+    const w = $("#win");
+    w.classList.add("show");
+    $("#play").querySelectorAll(".card, .answer, #hints").forEach(el => el.style.display = fresh ? "" : "none");
+    if (fresh) {
+      RH.slam($("#stamp")); RH.sfx("win");
+      setTimeout(() => RH.confetti({ n: 120, y: .5 }), 250);
+      setTimeout(() => { w.scrollIntoView({ behavior: RH.reduced ? "auto" : "smooth", block: "center" }); w.focus({ preventScroll: true }); }, 650);
+    } else {
+      $("#play").querySelector(".lede").style.display = "none";
+    }
   }
   $("#again").addEventListener("click", () => {
-    $("#win").classList.remove("show"); $("#play").style.display = "";
-    rot = 0; $("#ans").value = ""; $("#msg").textContent = ""; apply();
+    done = false; committed = 0; mistakes = 0; rot = 0; sel = null;
+    input.disabled = false; input.value = ""; msg.textContent = "";
+    $("#tiles").classList.remove("solved"); $("#win").classList.remove("show");
+    $$("#play > *").forEach(el => el.style.display = "");
+    $("#play").querySelectorAll(".card, .answer, #hints").forEach(el => el.style.display = "");
+    hints.reset(); apply(true); paintSlots();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  apply();
-  if (getProg()[KEY]) win(false);
+  apply(true); paintSlots();
+  if (RH.prog().cipher) win(false);
 })();
 </script>
 </body>
