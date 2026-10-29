@@ -178,7 +178,7 @@
 
   function html(m, prev, isNew) {
     const nw = isNew ? " new" : "";
-    if (m.type === "day") return `<div class="chip-day${nw}" data-mid="${m.id}">${RH.t("day." + m.day)}</div>`;
+    if (m.type === "day") return `<div class="day-stick" data-mid="${m.id}"><span class="chip-day${nw}">${RH.t("day." + m.day)}</span></div>`;
     if (m.type === "sys") return `<div class="chip-sys${nw}" data-mid="${m.id}">${RH.t(m.k)}</div>`;
     if (m.type === "teaser") return `<div class="teaser row${nw}" data-mid="${m.id}"><span class="lk" aria-hidden="true">🔒</span><span><b>${RH.t("teaser." + m.day)}</b>${RH.t("teaserSub")}</span></div>`;
     const first = !prev || prev.from !== m.from || ["day", "sys", "teaser"].includes(prev.type);
@@ -207,12 +207,20 @@
   }
   function renderAll() {
     list.innerHTML = state.msgs.map((m, i) => html(m, state.msgs[i - 1], false)).join("");
-    renderTimeline(); toBottom();
+    renderTimeline(); toBottom(); updateDayStick();
   }
   function append(m) {
     list.insertAdjacentHTML("beforeend", html(m, state.msgs[state.msgs.length - 2], true));
-    toBottom();
+    toBottom(); updateDayStick();
   }
+  // While a day label is pinned, give it a full-width tray so it doesn't sit on top of a bubble.
+  function updateDayStick() {
+    const edge = body.getBoundingClientRect().top + (parseFloat(getComputedStyle(body).paddingTop) || 0);
+    for (const stick of $$(".day-stick", list)) {
+      stick.classList.toggle("is-stuck", stick.getBoundingClientRect().top <= edge + 0.5);
+    }
+  }
+  body.addEventListener("scroll", updateDayStick, { passive: true });
   function repaintTicks(m) {
     const t = list.querySelector(`[data-mid="${m.id}"] .ticks`);
     if (t) t.outerHTML = ticks(m.status);
