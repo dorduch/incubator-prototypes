@@ -162,7 +162,9 @@ textarea.input{resize:vertical;min-height:84px}
 .chat-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:10px 10px 8px;overscroll-behavior:contain;
   background:radial-gradient(circle at 20% 20%,rgba(255,59,78,.05) 0 2px,transparent 3px) 0 0/34px 34px,radial-gradient(circle at 70% 60%,rgba(89,213,255,.05) 0 1.5px,transparent 2.5px) 0 0/26px 26px,#0f1117}
 .chip-sys{display:table;margin:8px auto;padding:5px 11px;border-radius:8px;background:#1d2030;color:#a8abc0;font-size:12.5px;text-align:center;max-width:88%;line-height:1.35}
-.chip-day{display:table;margin:14px auto 8px;padding:5px 12px;border-radius:999px;background:#262a3b;color:#e9e9f1;font:700 11.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;position:sticky;top:4px;z-index:1;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.day-stick{position:sticky;top:0;z-index:3;display:flex;justify-content:center;margin:10px 0 8px;padding:4px 0 0}
+.day-stick.is-stuck{background:#0f1117;box-shadow:0 -12px 0 #0f1117,0 12px 0 #0f1117}
+.chip-day{display:table;margin:0;padding:5px 12px;border-radius:999px;background:#262a3b;color:#e9e9f1;font:700 11.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;box-shadow:0 4px 10px rgba(0,0,0,.3)}
 :lang(he) .chip-day{font-family:var(--sans);letter-spacing:.02em;font-size:12.5px;text-transform:none}
 .teaser{display:flex;gap:10px;align-items:center;margin:6px auto;max-width:88%;padding:9px 12px;border-radius:12px;border:1px dashed #3a3e52;background:rgba(29,32,48,.6);color:#a8abc0;font-size:13.5px}
 .teaser b{display:block;color:#e9e9f1;font-size:14px}

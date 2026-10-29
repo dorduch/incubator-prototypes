@@ -36,6 +36,8 @@
   .bring b{color:var(--amber)}
 
   .wheel-wrap{position:relative;margin:12px auto 0;width:min(100%,310px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+  /* touch-action is not inherited by SVG hit targets, so a swipe on the wheel pans the page */
+  .wheel-wrap svg, .wheel-wrap svg *{touch-action:none}
   .wheel-wrap svg{width:100%;height:100%;display:block;overflow:visible}
   #inner{transform-box:view-box;transform-origin:0 0;transition:transform .35s var(--ease);cursor:grab}
   .dragging #inner{transition:none;cursor:grabbing}
@@ -251,15 +253,13 @@
     if (sel != null) { const c = words[T][sel]; msg.textContent = RH.t("tileSel", { c, p: A[mod(A.indexOf(c) - k, N)] }); }
   });
 
-  // Drag to rotate
+  // Drag to rotate. Pointer capture keeps the gesture when the finger leaves the wheel.
+  // touchmove is cancelled too: SVG children ignore the wrapper's touch-action and would scroll the page.
   const wrap = $("#wheelWrap"), svg = $("#wheel");
+  svg.style.touchAction = "none";
   let drag = null;
   const angleAt = e => { const r = svg.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
-  wrap.addEventListener("pointerdown", e => {
-    drag = { a: angleAt(e), rot, id: e.pointerId };
-    wrap.classList.add("dragging"); wrap.setPointerCapture(e.pointerId); e.preventDefault();
-  });
-  wrap.addEventListener("pointermove", e => {
+  const track = e => {
     if (!drag || e.pointerId !== drag.id) return;
     let d = angleAt(e) - drag.a; d = mod(d + 180, 360) - 180;
     drag.a = angleAt(e); drag.rot += d; rot = drag.rot;
@@ -267,9 +267,25 @@
     innerTx.forEach((t, i) => t.setAttribute("transform", `rotate(${-i * STEP - rot})`));
     const nk = mod(Math.round(rot / STEP), N);
     if (nk !== k) apply();
+  };
+  wrap.addEventListener("pointerdown", e => {
+    if (e.button !== 0) return;
+    drag = { a: angleAt(e), rot, id: e.pointerId };
+    wrap.classList.add("dragging");
+    try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
   });
-  const end = () => { if (!drag) return; drag = null; wrap.classList.remove("dragging"); rot = Math.round(rot / STEP) * STEP; apply(true); };
-  wrap.addEventListener("pointerup", end); wrap.addEventListener("pointercancel", end);
+  wrap.addEventListener("pointermove", track);
+  wrap.addEventListener("touchmove", e => { if (drag) e.preventDefault(); }, { passive: false });
+  const end = e => {
+    if (!drag || (e && e.pointerId != null && e.pointerId !== drag.id)) return;
+    drag = null;
+    rot = Math.round(rot / STEP) * STEP;
+    apply(true); // still .dragging, so the snap isn't eased from the pre-drag angle
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag) wrap.classList.remove("dragging"); }));
+  };
+  wrap.addEventListener("pointerup", end);
+  wrap.addEventListener("pointercancel", end);
 
   // Letter-by-letter commit: input always equals the committed prefix
   const input = $("#ans");
