@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mission 3 · Agent ID — Rabbit Hole</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
+<style>
+  :root{--bg:#0b0b10;--panel:#17171f;--panel2:#1e1e29;--line:#2a2a38;--ink:#ecebf3;--muted:#9a98ad;--red:#ff3b4e;--amber:#ffb547;--green:#3ee08f;--cyan:#59d5ff;--paper:#efe6d2;--paper-ink:#2a2318;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(600px 400px at 50% -10%,rgba(255,181,71,.12),transparent 70%),var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+  button,input{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .back{color:var(--ink);text-decoration:none;font-size:15px}
+  .tag{font:700 11px/1 var(--mono);letter-spacing:.18em;color:var(--red)}
+  main{flex:1;width:100%;max-width:520px;margin:0 auto;padding:22px 16px 30px}
+  h1{font-size:26px;margin:6px 0 6px;line-height:1.15}
+  .lede{color:var(--muted);margin:0 0 18px}
+
+  .badge{position:relative;background:var(--paper);color:var(--paper-ink);border-radius:16px;padding:14px;display:grid;grid-template-columns:120px 1fr;gap:14px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);overflow:hidden}
+  .badge::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(90deg,var(--red) 0 18px,#2a2318 18px 36px)}
+  .shot{position:relative;margin-top:6px;aspect-ratio:3/4;border-radius:8px;overflow:hidden;background:#d9cdb2;display:grid;place-items:center}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block}
+  .shot.spy img{filter:grayscale(1) contrast(1.25) brightness(1.05)}
+  .shot.spy::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px)}
+  .shot .ph{text-align:center;font:700 10px/1.4 var(--mono);letter-spacing:.12em;color:#7a6d55}
+  .shot .ph b{display:block;font-size:34px;line-height:1.2}
+  .shot .corner{position:absolute;width:16px;height:16px;border:2px solid #2a2318;z-index:1}
+  .c1{top:6px;left:6px;border-right:0!important;border-bottom:0!important}.c2{top:6px;right:6px;border-left:0!important;border-bottom:0!important}
+  .c3{bottom:6px;left:6px;border-right:0!important;border-top:0!important}.c4{bottom:6px;right:6px;border-left:0!important;border-top:0!important}
+  .info{margin-top:6px;font-family:var(--mono);font-size:12px;display:grid;gap:6px;align-content:start}
+  .info .org{font-weight:800;letter-spacing:.18em;font-size:11px;color:var(--red)}
+  .info dl{margin:0;display:grid;gap:4px}
+  .info dt{opacity:.55;font-size:10px;letter-spacing:.12em}
+  .info dd{margin:0 0 4px;font-weight:800;font-size:14px}
+  .barcode{height:26px;background:repeating-linear-gradient(90deg,#2a2318 0 2px,transparent 2px 4px,#2a2318 4px 5px,transparent 5px 8px,#2a2318 8px 11px,transparent 11px 12px)}
+  .cleared{position:absolute;right:12px;bottom:40px;border:3px solid #1d7a45;color:#1d7a45;font:900 18px/1 var(--mono);letter-spacing:.14em;padding:6px 10px;border-radius:6px;transform:rotate(-12deg);display:none}
+  .badge.ok .cleared{display:block;animation:stamp .5s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes stamp{from{opacity:0;transform:scale(2.4) rotate(-12deg)}to{opacity:1;transform:scale(1) rotate(-12deg)}}
+
+  .camrow{display:grid;grid-template-columns:1fr auto;gap:10px;margin:14px 0 6px}
+  .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px;text-align:center}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn:disabled{background:#2a2d3c;color:#6c6f84;cursor:not-allowed}
+  label.btn{cursor:pointer}
+  .file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .privacy{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin:6px 0 16px}
+  .privacy b{color:var(--green)}
+  .toggles{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .linkbtn{background:none;border:1px dashed #44435a;color:#bdbbd0;border-radius:8px;padding:8px 12px;font:12.5px var(--mono)}
+  .linkbtn[aria-pressed="true"]{border-style:solid;border-color:var(--amber);color:var(--amber)}
+
+  h2{font:700 12px/1 var(--mono);letter-spacing:.2em;color:var(--muted);margin:6px 0 10px}
+  .checks{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+  .checks label{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s}
+  .checks input{position:absolute;opacity:0;pointer-events:none}
+  .box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid #44435a;display:grid;place-items:center;font-size:15px;color:transparent;transition:.2s}
+  .checks .em{font-size:22px;flex:none}
+  .checks small{display:block;color:var(--muted);font-size:13px}
+  .checks input:checked + label{border-color:rgba(62,224,143,.5);background:rgba(62,224,143,.06)}
+  .checks input:checked + label .box{background:var(--green);border-color:var(--green);color:#0b0b10}
+  .checks input:focus-visible + label{outline:2px solid var(--amber);outline-offset:2px}
+  .msg{min-height:22px;margin:10px 2px 0;font-size:14.5px;color:var(--amber)}
+  #submit{width:100%}
+
+  .win{display:none;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 18px;margin-top:16px}
+  .win.show{display:block;animation:rise .5s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .code{font:800 22px var(--mono);letter-spacing:.14em;background:#0b0b10;border:1px dashed var(--green);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0 18px}
+  .win p{color:var(--muted);margin:0 0 16px}
+  .win .actions{display:grid;gap:10px}
+  .flash{position:fixed;inset:0;background:#fff;pointer-events:none;opacity:0;z-index:50}
+  .flash.go{animation:flash .5s ease-out}
+  @keyframes flash{0%{opacity:.9}100%{opacity:0}}
+  footer{border-top:1px solid var(--line);padding:16px;text-align:center;font:12px var(--mono);letter-spacing:.05em;color:var(--amber)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="../index.html#demo">‹ Back to chat</a>
+  <span class="tag">MISSION 3 / 3</span>
+</header>
+
+<main>
+  <h1>Agent ID</h1>
+  <p class="lede">Every agent needs a badge photo. Take a selfie that hits every pose on Vesper's list, tick them off, and submit.</p>
+
+  <div class="badge" id="badge">
+    <div class="shot spy" id="shot">
+      <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+      <div class="ph" id="ph"><b>🕶️</b>PHOTO<br>REQUIRED</div>
+    </div>
+    <div class="info">
+      <div class="org">RABBIT HOLE · FIELD ID</div>
+      <dl>
+        <dt>AGENT</dt><dd>NOA B.</dd>
+        <dt>CODENAME</dt><dd>NOODLE</dd>
+        <dt>CLEARANCE</dt><dd>BIRTHDAY / LVL 30</dd>
+        <dt>HANDLER</dt><dd>VESPER</dd>
+      </dl>
+      <div class="barcode" aria-hidden="true"></div>
+    </div>
+    <div class="cleared">CLEARED</div>
+  </div>
+
+  <div class="camrow">
+    <label class="btn" for="cam">📷 Take or upload a selfie</label>
+    <button class="btn ghost" id="standin" type="button" title="No camera? Use a drawn stand-in">Stand-in</button>
+  </div>
+  <input class="file" type="file" id="cam" accept="image/*" capture="user">
+  <div class="privacy">🔒 <span><b>Stays on this device.</b> Your photo is only shown here. It is never uploaded or saved, and it's gone when you leave this page.</span></div>
+  <div class="toggles">
+    <button class="linkbtn" id="spy" type="button" aria-pressed="true">Spy filter</button>
+    <button class="linkbtn" id="clear" type="button">Remove photo</button>
+  </div>
+
+  <h2>VESPER'S POSE LIST</h2>
+  <ul class="checks" id="checks">
+    <li><input type="checkbox" id="k1"><label for="k1"><span class="box">✓</span><span class="em">🕶️</span><span>Sunglasses on<small>No sunglasses? Make some with your fingers.</small></span></label></li>
+    <li><input type="checkbox" id="k2"><label for="k2"><span class="box">✓</span><span class="em">🤨</span><span>One eyebrow raised<small>Just one. Suspicious, not surprised.</small></span></label></li>
+    <li><input type="checkbox" id="k3"><label for="k3"><span class="box">✓</span><span class="em">🦆</span><span>Something yellow in the frame<small>For the ducks. You know why.</small></span></label></li>
+    <li><input type="checkbox" id="k4"><label for="k4"><span class="box">✓</span><span class="em">👉</span><span>Point straight at the camera<small>Vesper is watching. Point back.</small></span></label></li>
+  </ul>
+  <button class="btn" id="submit" type="button" disabled>Submit to Vesper</button>
+  <div class="msg" id="msg" role="status"></div>
+
+  <div class="win" id="win" role="status" aria-live="polite">
+    <p><b style="color:var(--ink)">Agent Noa, cleared for the final file.</b> The photo stayed on your phone. Vesper only gets the stamp.</p>
+    <div class="code" id="code"></div>
+    <div class="actions">
+      <a class="btn" href="../index.html#demo">Back to chat →</a>
+      <button class="btn ghost" id="again" type="button">Retake</button>
+    </div>
+  </div>
+</main>
+<div class="flash" id="flash"></div>
+
+<footer>Prototype, demo content — all characters fictional</footer>
+
+<script>
+(() => {
+  "use strict";
+  const PROG = "rabbithole-progress-v1", KEY = "photo", CODE = "RH-3-AGENT";
+  const $ = s => document.querySelector(s);
+  const buzz = p => { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); };
+  const getProg = () => { try { return JSON.parse(localStorage.getItem(PROG) || "{}"); } catch (e) { return {}; } };
+  const setProg = v => { try { const p = getProg(); p[KEY] = v; localStorage.setItem(PROG, JSON.stringify(p)); } catch (e) {} };
+
+  // A drawn stand-in for people testing without a camera (inline SVG, nothing fetched)
+  const STANDIN = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160"><rect width="120" height="160" fill="#c9b994"/><rect y="118" width="120" height="42" fill="#ffd23f"/><path d="M14 160c4-38 88-38 92 0z" fill="#2a2318"/><circle cx="60" cy="70" r="30" fill="#e9c9a4"/><path d="M30 64c0-24 60-24 60 0-8-12-52-12-60 0z" fill="#2a2318"/><rect x="35" y="66" width="22" height="11" rx="4" fill="#111"/><rect x="63" y="66" width="22" height="11" rx="4" fill="#111"/><rect x="56" y="69" width="8" height="3" fill="#111"/><path d="M38 57l16-5" stroke="#2a2318" stroke-width="3" stroke-linecap="round"/><path d="M52 88q8 4 16 0" stroke="#8a4b3a" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="98" cy="128" r="9" fill="#e9c9a4"/><rect x="95" y="104" width="6" height="22" rx="3" fill="#e9c9a4"/></svg>`);
+
+  let url = null, hasPhoto = false;
+  const shot = $("#shot");
+  function show(src) {
+    let img = shot.querySelector("img");
+    if (!img) { img = document.createElement("img"); img.alt = "Your agent photo (local preview only)"; shot.appendChild(img); }
+    img.src = src;
+    $("#ph").style.display = "none";
+    hasPhoto = true;
+    const f = $("#flash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+    update();
+  }
+  function clearPhoto() {
+    if (url) { URL.revokeObjectURL(url); url = null; }
+    const img = shot.querySelector("img"); if (img) img.remove();
+    $("#ph").style.display = ""; hasPhoto = false; $("#cam").value = "";
+    update();
+  }
+  $("#cam").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { $("#msg").textContent = "That's not a photo, Agent."; return; }
+    if (url) URL.revokeObjectURL(url);
+    url = URL.createObjectURL(file);            // local blob URL; never leaves the browser
+    show(url);
+    $("#msg").textContent = "Looking sharp. Now confirm the poses.";
+  });
+  $("#standin").addEventListener("click", () => { if (url) { URL.revokeObjectURL(url); url = null; } show(STANDIN); $("#msg").textContent = "Stand-in accepted. Vesper is pretending not to notice."; });
+  $("#clear").addEventListener("click", clearPhoto);
+  $("#spy").addEventListener("click", e => {
+    const on = e.currentTarget.getAttribute("aria-pressed") !== "true";
+    e.currentTarget.setAttribute("aria-pressed", String(on));
+    shot.classList.toggle("spy", on);
+  });
+
+  const boxes = [...document.querySelectorAll("#checks input")];
+  function update() {
+    const n = boxes.filter(b => b.checked).length;
+    $("#submit").disabled = !(hasPhoto && n === boxes.length);
+    $("#submit").textContent = !hasPhoto ? "Add a photo first" : n < boxes.length ? `Poses: ${n} / ${boxes.length}` : "Submit to Vesper";
+  }
+  boxes.forEach(b => b.addEventListener("change", update));
+
+  $("#submit").addEventListener("click", () => win(true));
+  function win(fresh) {
+    if (fresh) { setProg({ code:CODE, at:Date.now() }); buzz([30, 40, 60]); }
+    $("#badge").classList.add("ok");
+    $("#code").textContent = CODE;
+    $("#win").classList.add("show");
+    $("#msg").textContent = "";
+    if (fresh) setTimeout(() => $("#win").scrollIntoView({ behavior:"smooth", block:"center" }), 300);
+  }
+  $("#again").addEventListener("click", () => {
+    $("#badge").classList.remove("ok"); $("#win").classList.remove("show");
+    boxes.forEach(b => { b.checked = false; }); clearPhoto();
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+  window.addEventListener("pagehide", () => { if (url) URL.revokeObjectURL(url); });
+
+  update();
+  if (getProg()[KEY]) win(false);
+})();
+</script>
+</body>
+</html>

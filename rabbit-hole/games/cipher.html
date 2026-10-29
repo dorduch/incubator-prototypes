@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mission 1 · The Wheel — Rabbit Hole</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
+<style>
+  :root{--bg:#0b0b10;--panel:#17171f;--panel2:#1e1e29;--line:#2a2a38;--ink:#ecebf3;--muted:#9a98ad;--red:#ff3b4e;--amber:#ffb547;--green:#3ee08f;--cyan:#59d5ff;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(600px 400px at 50% -10%,rgba(255,59,78,.16),transparent 70%),var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+  button,input{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .back{color:var(--ink);text-decoration:none;font-size:15px;display:inline-flex;gap:6px;align-items:center}
+  .tag{font:700 11px/1 var(--mono);letter-spacing:.18em;color:var(--red)}
+  main{flex:1;width:100%;max-width:520px;margin:0 auto;padding:22px 16px 30px}
+  h1{font-size:26px;margin:6px 0 6px;line-height:1.15}
+  .lede{color:var(--muted);margin:0 0 18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+  .ctext{font:800 clamp(17px,5.4vw,24px)/1.3 var(--mono);letter-spacing:.14em;text-align:center;color:var(--amber);word-spacing:.3em;text-shadow:0 0 16px rgba(255,181,71,.3)}
+  .lbl{font:700 11px/1 var(--mono);letter-spacing:.2em;color:var(--muted);margin-bottom:10px}
+  .wheel-wrap{position:relative;margin:18px auto 6px;width:min(100%,340px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+  .wheel-wrap svg{width:100%;height:100%;display:block}
+  #inner{transform-box:view-box;transform-origin:0 0;transition:transform .35s cubic-bezier(.2,1.3,.4,1);cursor:grab}
+  .dragging #inner{transition:none;cursor:grabbing}
+  .controls{display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 4px}
+  .rot{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);font-size:22px;display:grid;place-items:center}
+  .rot:active{transform:scale(.94)}
+  .shift{font:700 13px var(--mono);letter-spacing:.12em;color:var(--muted);min-width:90px;text-align:center}
+  .shift b{display:block;font-size:26px;color:var(--ink)}
+  .decoded{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;margin-top:6px}
+  .word{display:flex;gap:3px}
+  .word span{width:24px;height:32px;display:grid;place-items:center;background:#0b0b10;border:1px solid var(--line);border-radius:6px;font:800 16px var(--mono);color:#cfcde0;transition:color .2s,border-color .2s}
+  .word span.flip{animation:flip .25s}
+  @keyframes flip{50%{transform:rotateX(90deg)}}
+  .hintline{font-size:14px;color:var(--muted);margin:14px 0 0;text-align:center}
+  .answer{display:flex;gap:10px;margin-top:16px}
+  .answer input{flex:1;min-width:0;background:#0b0b10;border:1px solid var(--line);border-radius:12px;padding:14px;font:700 18px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+  .answer input:focus{outline:none;border-color:var(--amber)}
+  .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .msg{min-height:24px;margin:10px 2px 0;font-size:14.5px;color:var(--amber)}
+  .shake{animation:shake .4s}
+  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .win{display:none;text-align:center;padding:26px 18px}
+  .win.show{display:block;animation:rise .5s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .stamp{display:inline-block;margin:6px auto 14px;border:4px solid var(--green);color:var(--green);border-radius:10px;padding:10px 18px;font:900 26px/1 var(--mono);letter-spacing:.16em;transform:rotate(-8deg);animation:stamp .5s .15s both cubic-bezier(.3,1.6,.5,1)}
+  @keyframes stamp{from{opacity:0;transform:scale(2.4) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+  .code{font:800 22px var(--mono);letter-spacing:.14em;background:#0b0b10;border:1px dashed var(--green);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0 18px}
+  .win p{color:var(--muted);margin:0 0 16px}
+  .win .actions{display:grid;gap:10px}
+  footer{border-top:1px solid var(--line);padding:16px;text-align:center;font:12px var(--mono);letter-spacing:.05em;color:var(--amber)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="../index.html#demo">‹ Back to chat</a>
+  <span class="tag">MISSION 1 / 3</span>
+</header>
+
+<main>
+  <div id="play">
+    <h1>The Wheel</h1>
+    <p class="lede">Intercepted this morning. Every letter took <b style="color:var(--ink)">three steps forward</b>. Turn the inner wheel to walk them back.</p>
+
+    <div class="card">
+      <div class="lbl">INTERCEPTED MESSAGE</div>
+      <div class="ctext" id="ctext"></div>
+
+      <div class="wheel-wrap" id="wheelWrap">
+        <svg viewBox="-160 -160 320 320" id="wheel" role="img" aria-label="Cipher wheel. Outer ring: letters as written. Inner ring: what they really mean.">
+          <defs>
+            <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="objectBoundingBox"><stop offset=".6" stop-color="#1e1e29"/><stop offset="1" stop-color="#14141c"/></radialGradient>
+          </defs>
+          <circle r="156" fill="#14141c" stroke="#2a2a38" stroke-width="2"/>
+          <g id="outer"></g>
+          <path d="M-14 -158 L14 -158 L10 -72 L-10 -72 Z" fill="rgba(255,181,71,.16)" stroke="#ffb547" stroke-width="1.5"/>
+          <g id="inner">
+            <circle r="106" fill="#1e1e29" stroke="#ff3b4e" stroke-width="2"/>
+            <circle r="70" fill="#16161f" stroke="#2a2a38"/>
+            <g id="innerLetters"></g>
+            <circle r="26" fill="#ff3b4e"/>
+            <text y="6" text-anchor="middle" fill="#fff" font-family="monospace" font-weight="800" font-size="16">V</text>
+          </g>
+        </svg>
+      </div>
+      <div class="controls">
+        <button class="rot" id="left" type="button" aria-label="Turn wheel left">↺</button>
+        <div class="shift" aria-live="polite">SHIFT<b id="shiftN">0</b></div>
+        <button class="rot" id="right" type="button" aria-label="Turn wheel right">↻</button>
+      </div>
+      <div class="lbl" style="margin-top:14px">WHAT THE WHEEL SAYS</div>
+      <div class="decoded" id="decoded" aria-live="polite"></div>
+      <p class="hintline">Drag the inner ring, or use the arrows. The outer ring is what you see, the inner ring is what it means.</p>
+    </div>
+
+    <form class="answer" id="form" autocomplete="off">
+      <input id="ans" placeholder="Which street?" aria-label="Your answer: which street?" autocapitalize="characters" spellcheck="false">
+      <button class="btn" type="submit">Submit</button>
+    </form>
+    <div class="msg" id="msg" role="status"></div>
+  </div>
+
+  <div class="card win" id="win" role="status" aria-live="polite">
+    <div class="stamp">DECODED</div>
+    <p><b style="color:var(--ink)">HADEKEL.</b> Vesper knows where you grew up. Show this stamp in the chat.</p>
+    <div class="code" id="code"></div>
+    <div class="actions">
+      <a class="btn" href="../index.html#demo">Back to chat →</a>
+      <button class="btn ghost" id="again" type="button">Play the wheel again</button>
+    </div>
+  </div>
+</main>
+
+<footer>Prototype, demo content — all characters fictional</footer>
+
+<script>
+(() => {
+  "use strict";
+  const PROG = "rabbithole-progress-v1", KEY = "cipher", CODE = "RH-1-WHEEL", ANSWER = "HADEKEL";
+  const PLAIN = "YOU GREW UP ON HADEKEL", SHIFT = 3, STEP = 360 / 26;
+  const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const $ = s => document.querySelector(s);
+  const buzz = p => { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); };
+  const NS = "http://www.w3.org/2000/svg";
+  const caesar = (s, k) => s.replace(/[A-Z]/g, c => A[(A.indexOf(c) + k + 26) % 26]);
+  const CIPHER = caesar(PLAIN, SHIFT);
+  const mod = (n, m) => ((n % m) + m) % m;
+
+  const getProg = () => { try { return JSON.parse(localStorage.getItem(PROG) || "{}"); } catch (e) { return {}; } };
+  const setProg = v => { try { const p = getProg(); if (v) p[KEY] = v; else delete p[KEY]; localStorage.setItem(PROG, JSON.stringify(p)); } catch (e) {} };
+
+  $("#ctext").textContent = CIPHER;
+
+  // Build the rings: letter i sits i steps clockwise from 12 o'clock
+  function ring(g, r, size, fill, weight) {
+    for (let i = 0; i < 26; i++) {
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("transform", `rotate(${i * STEP}) translate(0 ${-r})`);
+      t.setAttribute("text-anchor", "middle"); t.setAttribute("dominant-baseline", "central");
+      t.setAttribute("font-family", "monospace"); t.setAttribute("font-size", size);
+      t.setAttribute("font-weight", weight); t.setAttribute("fill", fill);
+      t.textContent = A[i];
+      g.appendChild(t);
+    }
+  }
+  ring($("#outer"), 132, 17, "#ffb547", 800);
+  ring($("#innerLetters"), 88, 16, "#ecebf3", 700);
+  for (let i = 0; i < 26; i++) {
+    const l = document.createElementNS(NS, "line");
+    l.setAttribute("transform", `rotate(${i * STEP + STEP / 2})`);
+    l.setAttribute("y1", -106); l.setAttribute("y2", -112); l.setAttribute("stroke", "#2a2a38");
+    $("#outer").appendChild(l);
+  }
+
+  // Rotating the inner ring clockwise by k steps maps outer letter c -> c - k
+  let rot = 0, k = 0, lastDecoded = "";
+  const inner = $("#inner");
+  function apply() {
+    k = mod(Math.round(rot / STEP), 26);
+    inner.style.transform = `rotate(${rot}deg)`;
+    $("#shiftN").textContent = k > 13 ? k - 26 : k;
+    const dec = caesar(CIPHER, -k);
+    $("#decoded").innerHTML = dec.split(" ").map(w => `<span class="word">${[...w].map(c => `<span>${c}</span>`).join("")}</span>`).join("");
+    if (lastDecoded && lastDecoded !== dec) document.querySelectorAll(".word span").forEach(s => s.classList.add("flip"));
+    lastDecoded = dec;
+  }
+  function turn(d) { rot = Math.round(rot / STEP) * STEP + d * STEP; apply(); buzz(8); }
+  $("#left").addEventListener("click", () => turn(-1));
+  $("#right").addEventListener("click", () => turn(1));
+  document.addEventListener("keydown", e => {
+    if (e.target.tagName === "INPUT") return;
+    if (e.key === "ArrowLeft") turn(-1);
+    if (e.key === "ArrowRight") turn(1);
+  });
+
+  // Drag to rotate
+  const wrap = $("#wheelWrap"), svg = $("#wheel");
+  let drag = null;
+  const angleAt = e => { const r = svg.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
+  inner.addEventListener("pointerdown", e => {
+    drag = { a: angleAt(e), rot, id: e.pointerId };
+    wrap.classList.add("dragging");
+    inner.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  inner.addEventListener("pointermove", e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    let d = angleAt(e) - drag.a;
+    if (d > 180) d -= 360; if (d < -180) d += 360;
+    rot = drag.rot + d;
+    inner.style.transform = `rotate(${rot}deg)`;
+    const nk = mod(Math.round(rot / STEP), 26);
+    if (nk !== k) { apply(); buzz(5); }
+  });
+  const end = e => {
+    if (!drag) return;
+    drag = null; wrap.classList.remove("dragging");
+    rot = Math.round(rot / STEP) * STEP; apply();
+  };
+  inner.addEventListener("pointerup", end);
+  inner.addEventListener("pointercancel", end);
+
+  // Answer check: case, spaces and punctuation ignored
+  const WRONG = [
+    g => `"${g}"? The wheel doesn't think so. Keep turning.`,
+    g => `Not "${g}". Read the inner ring once the words make sense.`,
+    g => `Close your eyes. Picture the walk to school. It wasn't "${g}".`,
+  ];
+  let tries = 0;
+  $("#form").addEventListener("submit", e => {
+    e.preventDefault();
+    const raw = $("#ans").value, g = raw.toUpperCase().replace(/[^A-Z]/g, "");
+    if (!g) { $("#msg").textContent = "Vesper needs a word, not silence."; return; }
+    if (g === ANSWER || g === PLAIN.replace(/ /g, "")) return win(true);
+    let m;
+    if (g === "KDGHNHO") m = "That's the cipher itself. Turn it the other way.";
+    else if (g.length !== 7) m = `Seven letters, Agent. "${raw.trim()}" isn't it.`;
+    else m = WRONG[tries % WRONG.length](raw.trim());
+    tries++;
+    $("#msg").textContent = m;
+    const f = $("#form"); f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
+  });
+
+  function win(fresh) {
+    if (fresh) setProg({ code: CODE, at: Date.now() });
+    $("#code").textContent = CODE;
+    $("#play").style.display = "none";
+    $("#win").classList.add("show");
+    if (fresh) buzz([30, 40, 60]);
+    window.scrollTo(0, 0);
+  }
+  $("#again").addEventListener("click", () => {
+    $("#win").classList.remove("show"); $("#play").style.display = "";
+    rot = 0; $("#ans").value = ""; $("#msg").textContent = ""; apply();
+  });
+
+  apply();
+  if (getProg()[KEY]) win(false);
+})();
+</script>
+</body>
+</html>

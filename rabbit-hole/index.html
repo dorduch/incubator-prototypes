@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rabbit Hole — A 7-day birthday mystery, run by Agent Vesper</title>
 <meta name="description" content="A 7-day birthday mystery game, run live by an AI game master who builds puzzles from your friend's life. The last clue reveals the gift.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#0b0b10; --bg2:#12121a; --panel:#17171f; --panel2:#1e1e29; --line:#2a2a38;
@@ -158,117 +159,100 @@
   .tier.selected{box-shadow:0 0 0 2px var(--amber)}
   .tier .btn{justify-content:center}
 
-  /* demo */
+  /* demo: chat preview */
   .demo{background:linear-gradient(180deg,var(--bg),#0e0e15);border-top:1px solid var(--line)}
-  .demo-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
-  .demo-bar .who{font:13px var(--mono);color:var(--muted)}
-  .demo-bar .who b{color:var(--ink)}
-  .progress{display:flex;gap:6px;align-items:center;font:12px var(--mono);color:var(--muted)}
-  .progress i{width:28px;height:6px;border-radius:3px;background:var(--line);display:block}
-  .progress i.on{background:var(--green)}
-  .progress i.cur{background:var(--amber);animation:pulse 1.4s infinite}
-  @keyframes pulse{50%{opacity:.4}}
+  .demo-grid{display:grid;grid-template-columns:minmax(0,400px) 1fr;gap:48px;align-items:start;justify-content:center}
+  @media (max-width:880px){.demo-grid{grid-template-columns:1fr;gap:24px}}
+  .preview-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .preview-label span{border:1px dashed var(--line);border-radius:999px;padding:6px 10px;color:var(--amber)}
 
-  .mail{display:grid;grid-template-columns:340px 1fr;height:680px;background:#f6f5f2;color:#1d1c22;border-radius:18px;overflow:hidden;box-shadow:0 40px 100px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06)}
-  .mail-side{border-right:1px solid #e3e1db;display:flex;flex-direction:column;min-height:0;background:#fbfaf7}
-  .mail-top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #e3e1db}
-  .mail-top b{font-size:17px}
-  .pill{font:700 11px/1 var(--mono);background:var(--red);color:#fff;padding:5px 8px;border-radius:999px}
-  .pill.zero{background:#d9d6cf;color:#6b6879}
-  .mail-list{list-style:none;margin:0;padding:0;overflow-y:auto;flex:1}
-  .mail-item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid #ecebe6;padding:14px 18px 14px 26px;position:relative}
-  .mail-item:hover{background:#f1efea}
-  .mail-item.active{background:#ece9ff}
-  .mail-item.unread::before{content:"";position:absolute;left:10px;top:21px;width:8px;height:8px;border-radius:50%;background:var(--red)}
-  .mail-item .row{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:#77748a}
-  .mail-item .from{font-weight:600;color:#1d1c22}
-  .mail-item.unread .from,.mail-item.unread .subj{font-weight:800}
-  .mail-item .subj{font-size:14.5px;margin:3px 0 2px;color:#1d1c22;display:flex;align-items:center;min-width:0}
-  .mail-item .subj span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-  .mail-item .prev{font-size:13px;color:#8a8799;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .mail-item .tag{flex:none;display:inline-block;font:700 10px/1 var(--mono);letter-spacing:.08em;padding:3px 5px;border-radius:4px;margin-right:6px;vertical-align:1px}
-  .tag.t-puzzle{background:#ffe7c2;color:#8a4b00}
-  .tag.t-solved{background:#d2f6e2;color:#11663c}
-  .tag.t-reply{background:#e5e3ee;color:#5a5770}
-  .mail-item.new{animation:slidein .5s ease}
-  @keyframes slidein{from{opacity:0;transform:translateX(-14px);background:#fff4d6}to{opacity:1}}
-  .typing{padding:12px 18px;font-size:13px;color:#77748a;display:none;align-items:center;gap:8px;border-bottom:1px solid #ecebe6;background:#fff8e6}
-  .typing.show{display:flex}
-  .dots span{display:inline-block;width:5px;height:5px;margin:0 1px;border-radius:50%;background:#77748a;animation:bob 1s infinite}
-  .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
-  @keyframes bob{50%{transform:translateY(-4px)}}
-
-  .mail-read{overflow-y:auto;min-height:0;position:relative;background:#fff}
-  .mail-empty{height:100%;display:grid;place-items:center;color:#9a97a8;text-align:center;padding:30px;font-size:15px}
-  .msg{padding:28px 34px 40px;max-width:720px}
-  @media (max-width:520px){.msg{padding:20px 18px 32px}}
-  .back{display:none;background:none;border:0;padding:12px 16px 0;color:#5a43d6;font-weight:600;font-size:15px}
-  .msg h3{font-size:22px;margin-bottom:14px;letter-spacing:-.01em}
-  .msg-head{display:flex;gap:12px;align-items:center;padding-bottom:16px;border-bottom:1px solid #ecebe6;margin-bottom:20px}
-  .avatar{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#16151d;color:var(--red);font:800 16px var(--mono)}
-  .avatar.me{background:#d9e8ff;color:#2a4a8a}
-  .msg-head .meta{font-size:13px;color:#77748a;line-height:1.4}
-  .msg-head .meta b{color:#1d1c22;font-size:15px}
-  .msg-body{font-size:16px;line-height:1.65;color:#2b2a33}
-  .msg-body p{margin:0 0 14px}
-  .msg-body .sig{margin-top:22px;font-family:var(--type);color:#16151d}
-  .msg-body .sig small{display:block;color:#8a8799;font-family:var(--mono);font-size:11px;letter-spacing:.1em;margin-top:2px}
-  .quote{border-left:3px solid #d9d6cf;padding:4px 0 4px 14px;color:#6b6879;font-size:14px;margin:0 0 18px}
-
-  .puzzle{margin:22px 0;border-radius:14px;background:#16151d;color:var(--ink);padding:22px;position:relative;overflow:hidden}
-  .puzzle::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);pointer-events:none}
-  .puzzle .lbl{font:700 11px/1 var(--mono);letter-spacing:.2em;color:var(--red);margin-bottom:14px}
-  .cipher-text{font:800 clamp(26px,6vw,40px)/1 var(--mono);letter-spacing:.24em;color:var(--amber);text-align:center;padding:18px 0;text-shadow:0 0 18px rgba(255,181,71,.35);word-break:break-all}
-  .alpha{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin:8px 0 2px;font:12px/1 var(--mono)}
-  .alpha span{display:grid;place-items:center;background:#22212c;border-radius:4px;padding:6px 0;color:#bdbbd0}
-  .alpha span.k{background:#3a2a10;color:var(--amber)}
-  .clue-list{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14.5px;color:#d6d4e4;position:relative;z-index:1}
-  .clue-list li{display:grid;grid-template-columns:30px 1fr;gap:6px}
-  .clue-list li b{font-family:var(--mono);color:var(--amber)}
-  .answer{display:flex;gap:10px;margin-top:18px;position:relative;z-index:1;flex-wrap:wrap}
-  .answer input{flex:1;min-width:160px;background:#0b0b10;border:1px solid #33323f;border-radius:10px;padding:13px 14px;font:700 18px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-  .answer input:focus{outline:none;border-color:var(--amber)}
-  .answer .btn{padding:12px 20px}
-  .puzzle .tools{display:flex;gap:10px;margin-top:12px;position:relative;z-index:1;flex-wrap:wrap}
-  .linkbtn{background:none;border:1px dashed #44435a;color:#bdbbd0;border-radius:8px;padding:7px 11px;font:12px var(--mono);letter-spacing:.06em}
-  .linkbtn:hover{border-color:var(--amber);color:var(--amber)}
-  .hint{display:none;margin-top:12px;font-size:14px;color:#d6d4e4;background:#22212c;border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 8px 8px 0;position:relative;z-index:1}
-  .hint.show{display:block;animation:drop .3s ease}
-  .shake{animation:shake .4s}
-  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
-  .solved-banner{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;background:rgba(62,224,143,.12);border:1px solid rgba(62,224,143,.4);border-radius:10px;color:var(--green);font:700 14px var(--mono);letter-spacing:.06em;position:relative;z-index:1}
-
-  .lock{display:flex;justify-content:center;gap:10px;margin:14px 0 4px;position:relative;z-index:1}
-  .dial{display:flex;flex-direction:column;align-items:center;gap:4px}
-  .dial button{width:52px;height:30px;border-radius:8px;border:1px solid #33323f;background:#22212c;color:#bdbbd0;font-size:13px}
-  .dial button:hover{border-color:var(--amber);color:var(--amber)}
-  .dial input{width:52px;height:64px;border-radius:10px;border:1px solid #44435a;background:linear-gradient(#0b0b10,#1a1922 50%,#0b0b10);text-align:center;font:800 32px var(--mono);color:var(--amber)}
-  .dial input:focus{outline:none;border-color:var(--amber)}
-  .lock-wrap.open .dial input{color:var(--green);border-color:var(--green)}
-
-  .teaser{margin:22px 0 4px;border-radius:16px;padding:26px;text-align:center;color:#fff;background:radial-gradient(400px 200px at 50% 0,rgba(255,59,78,.35),transparent 70%),#16151d;position:relative;overflow:hidden}
-  .teaser .lbl{font:700 11px var(--mono);letter-spacing:.24em;color:var(--red)}
-  .teaser h4{font-size:24px;margin:10px 0 4px}
-  .teaser p{color:#bdbbd0;margin:0 0 16px;font-size:15px}
-  .count{display:flex;justify-content:center;gap:10px}
-  .count div{background:#0b0b10;border:1px solid #33323f;border-radius:10px;padding:10px 0;width:74px}
-  .count b{display:block;font:800 30px/1 var(--mono);color:var(--amber)}
-  .count small{font:10px var(--mono);letter-spacing:.16em;color:#8a8799}
-  .teaser .locked{margin-top:16px;font:12px var(--mono);color:#8a8799;letter-spacing:.08em}
-
-  .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,140%);z-index:60;background:#16151d;color:var(--ink);border:1px solid #33323f;border-radius:14px;padding:12px 14px 12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 20px 50px -10px rgba(0,0,0,.8);transition:transform .35s cubic-bezier(.2,1.2,.4,1);max-width:calc(100% - 32px)}
-  .toast.show{transform:translate(-50%,0)}
-  .toast .avatar{width:34px;height:34px;font-size:13px}
-  .toast div{font-size:14px;line-height:1.35}
-  .toast div small{display:block;color:var(--muted);font-size:12px}
-
-  @media (max-width:820px){
-    .mail{grid-template-columns:1fr;height:640px}
-    .mail .mail-read{display:none}
-    .mail.reading .mail-side{display:none}
-    .mail.reading .mail-read{display:block}
-    .back{display:block}
+  .phone{position:relative;height:740px;max-height:86vh;min-height:560px;border-radius:44px;padding:12px;background:#050507;box-shadow:0 40px 100px -30px rgba(0,0,0,.9),0 0 0 1px #2a2a38,inset 0 0 0 2px #1a1a22}
+  .phone::before{content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);width:96px;height:24px;border-radius:14px;background:#050507;z-index:3}
+  .chat{height:100%;display:flex;flex-direction:column;border-radius:34px;overflow:hidden;background:#0f1117;color:#e9e9f1;font-size:15px}
+  @media (max-width:520px){
+    .demo .wrap{padding:0 10px}
+    .phone{height:calc(100svh - 120px);max-height:none;min-height:520px;border-radius:22px;padding:0;background:none;box-shadow:0 0 0 1px #2a2a38}
+    .phone::before{display:none}
+    .chat{border-radius:22px}
   }
+
+  .chat-top{height:28px;flex:none;background:#171a23}
+  @media (max-width:520px){.chat-top{display:none}}
+  .chat-head{flex:none;display:flex;align-items:center;gap:10px;padding:10px 12px 10px 8px;background:#171a23;border-bottom:1px solid #232634;z-index:2}
+  .chat-head .chev{width:28px;height:28px;display:grid;place-items:center;color:#8f93a8;font-size:22px;line-height:1}
+  .c-ava{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,#3a1520,#14121a);color:var(--red);font:800 16px var(--mono);box-shadow:0 0 0 2px #232634;position:relative}
+  .c-ava::after{content:"";position:absolute;right:0;bottom:0;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 2px #171a23}
+  .chat-head .who{flex:1;min-width:0;line-height:1.25}
+  .chat-head .who b{display:block;font-size:16px}
+  .chat-head .who small{display:block;font-size:12.5px;color:#8f93a8;transition:color .2s}
+  .chat-head .who small.typing{color:var(--green)}
+  .chat-head .menu{color:#8f93a8;font-size:20px;padding:0 6px}
+
+  .chat-body{flex:1;min-height:0;overflow-y:auto;padding:12px 10px 8px;scroll-behavior:smooth;
+    background:
+      radial-gradient(circle at 20% 20%,rgba(255,59,78,.05) 0 2px,transparent 3px) 0 0/34px 34px,
+      radial-gradient(circle at 70% 60%,rgba(89,213,255,.05) 0 1.5px,transparent 2.5px) 0 0/26px 26px,
+      #0f1117}
+  .chip-sys{display:table;margin:6px auto 10px;padding:5px 11px;border-radius:8px;background:#1d2030;color:#9da1b6;font-size:12px;text-align:center;max-width:86%}
+  .row{display:flex;margin:2px 0}
+  .row.n{justify-content:flex-end}
+  .row.first{margin-top:10px}
+  .bub{position:relative;max-width:82%;padding:7px 10px 6px;border-radius:14px;line-height:1.4;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,.25)}
+  .row.v .bub{background:#1f2331;border-top-left-radius:14px}
+  .row.n .bub{background:#6b2232;color:#fff}
+  .row.v.first .bub{border-top-left-radius:4px}
+  .row.n.first .bub{border-top-right-radius:4px}
+  .bub p{margin:0}
+  .bub .meta{float:right;margin:6px 0 -2px 10px;font-size:11px;color:#8f93a8;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+  .row.n .bub .meta{color:#e7b9c2}
+  .ticks{font-size:12px;letter-spacing:-.32em;padding-right:.32em;color:#e7b9c2;transition:color .3s}
+  .ticks.read{color:var(--cyan)}
+  .row.new .bub{animation:pop .28s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+
+  .bub.has-lp{padding:4px 4px 6px;width:82%}
+  .lp{display:block;text-decoration:none;color:inherit;border-radius:10px;overflow:hidden;background:#151823;border-left:3px solid var(--red)}
+  .lp:hover .lp-art{filter:brightness(1.15)}
+  .lp-art{position:relative;height:118px;display:grid;place-items:center;overflow:hidden;transition:filter .2s}
+  .lp-art svg{width:100%;height:100%;display:block}
+  .lp-art .done{position:absolute;top:8px;right:8px;background:var(--green);color:#0b0b10;font:800 10.5px/1 var(--mono);letter-spacing:.08em;padding:5px 7px;border-radius:6px}
+  .lp-meta{padding:8px 10px 9px;display:grid;gap:2px}
+  .lp-meta small{font-size:11px;color:#8f93a8;text-transform:lowercase}
+  .lp-meta b{font-size:14.5px}
+  .lp-meta span{font-size:13px;color:#b5b8ca;line-height:1.35}
+  .lp-url{display:block;padding:6px 6px 0;font-size:13.5px;color:var(--cyan);word-break:break-all}
+
+  .typing-row{display:none;margin-top:10px}
+  .typing-row.show{display:flex}
+  .typing-bub{background:#1f2331;border-radius:14px;border-top-left-radius:4px;padding:11px 13px;display:flex;gap:4px}
+  .typing-bub i{width:7px;height:7px;border-radius:50%;background:#8f93a8;animation:tdot 1.2s infinite}
+  .typing-bub i:nth-child(2){animation-delay:.15s}.typing-bub i:nth-child(3){animation-delay:.3s}
+  @keyframes tdot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+
+  .choices{flex:none;display:flex;gap:8px;overflow-x:auto;padding:0 10px;max-height:0;transition:max-height .25s,padding .25s;scrollbar-width:none}
+  .choices.show{max-height:60px;padding:8px 10px}
+  .choices button{flex:none;border:1px solid #3a3e52;background:#171a23;color:#e9e9f1;border-radius:999px;padding:8px 14px;font-size:14px;white-space:nowrap;animation:pop .3s both}
+  .choices button:hover{border-color:var(--red);color:#fff}
+  .composer{flex:none;display:flex;gap:8px;align-items:center;padding:8px 10px 12px;background:#0f1117}
+  .composer input{flex:1;min-width:0;background:#1f2331;border:1px solid transparent;border-radius:999px;padding:11px 16px;font-size:15px;color:#e9e9f1}
+  .composer input:focus{outline:none;border-color:#3a3e52}
+  .composer button{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--red);color:#fff;display:grid;place-items:center;transition:transform .15s}
+  .composer button:active{transform:scale(.92)}
+  .composer button:disabled{background:#2a2d3c;color:#6c6f84}
+
+  .side{display:grid;gap:18px;align-content:start}
+  .side .lede{font-size:16px}
+  .missions{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .missions li{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .missions .ic{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);font-size:17px}
+  .missions .tx{flex:1;min-width:0;line-height:1.3}
+  .missions .tx b{display:block;font-size:15px}
+  .missions .tx small{color:var(--muted);font-size:13px}
+  .missions .st{font:700 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim)}
+  .missions li.done{border-color:rgba(62,224,143,.4)}
+  .missions li.done .st{color:var(--green)}
+  .missions li.live .st{color:var(--amber)}
+  .side-actions{display:flex;gap:10px;flex-wrap:wrap}
 
   footer{border-top:1px solid var(--line);padding:36px 0 50px;color:var(--muted);font-size:14px}
   footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
@@ -299,13 +283,13 @@
     <div>
       <div class="eyebrow">// Classified birthday operation</div>
       <h1>Your friend's birthday<br>just became a <em>case file</em>.</h1>
-      <p class="lede">For seven days, <b style="color:var(--ink)">Agent Vesper</b> — an AI game master — emails them puzzles built from their own life: the street they grew up on, the joke only you two get. The final clue reveals <span class="redact" id="redact">your gift</span>.</p>
+      <p class="lede">For seven days, <b style="color:var(--ink)">Agent Vesper</b> — an AI game master — messages them on their phone with puzzles built from their own life: the street they grew up on, the joke only you two get. The final clue reveals <span class="redact" id="redact">your gift</span>.</p>
       <div class="hero-cta">
         <a href="#dossier" class="btn btn-red">Open a case file →</a>
         <a href="#demo" class="btn btn-ghost">Play as the giftee</a>
       </div>
       <div class="hero-meta">
-        <div><b>7 days</b>one clue each morning</div>
+        <div><b>7 days</b>one chat drop each morning</div>
         <div><b>5 acts</b>pick the genre</div>
         <div><b>1 reveal</b>the gift, at last</div>
       </div>
@@ -323,7 +307,7 @@
           <dt>Payload</dt><dd><span class="bar" style="width:120px"></span></dd>
           <dt>Handler</dt><dd>Agent Vesper</dd>
         </dl>
-        <div class="note">"She will think it's spam for about four hours. Then she won't be able to stop." — Vesper, field note</div>
+        <div class="note">"She will think it's a wrong number for about four hours. Then she won't be able to stop." — Vesper, field note</div>
       </div>
     </div>
   </div>
@@ -339,7 +323,7 @@
     <div class="steps">
       <div class="step"><div class="n">01 / BRIEF</div><h3>Build the dossier</h3><p>Tell us about your friend: nicknames, old addresses, inside jokes, what they're obsessed with.</p></div>
       <div class="step"><div class="n">02 / GENRE</div><h3>Choose the story</h3><p>Spy thriller, haunted archive, time heist… five acts, one arc, written around them.</p></div>
-      <div class="step"><div class="n">03 / PLAY</div><h3>Vesper makes contact</h3><p>Daily in-character emails with puzzles only they can solve. Vesper replies live, nudges, and adapts.</p></div>
+      <div class="step"><div class="n">03 / PLAY</div><h3>Vesper makes contact</h3><p>Daily in-character chat messages, each linking to a mini-game page built only for them. Vesper replies live, nudges, and adapts.</p></div>
       <div class="step"><div class="n">04 / REVEAL</div><h3>The final clue</h3><p>The last solution points to your gift — a code, a place, or a box you've hidden.</p></div>
     </div>
   </div>
@@ -428,10 +412,10 @@
         <h3>Field Agent</h3>
         <div class="price">$79 <small>/ one operation</small></div>
         <ul>
-          <li>5-day mystery, one email a day</li>
+          <li>5-day mystery, one chat drop a day</li>
           <li>All five acts, condensed</li>
           <li>Live in-character replies and nudges from Vesper</li>
-          <li>Digital finale: code, link or message reveals the gift</li>
+          <li>Digital finale: a reveal page unlocks the gift</li>
         </ul>
         <button class="btn btn-ghost" type="button" data-pick="field">Choose Field Agent</button>
       </div>
@@ -442,6 +426,7 @@
         <ul>
           <li>7-day mystery, timed to land on the birthday</li>
           <li>Five acts plus two bonus side-quests</li>
+          <li>Mini-game pages: cipher wheels, maps, photo missions</li>
           <li>Live in-character replies and nudges from Vesper</li>
           <li>Physical finale coordination: we plan the hidden box, the drop or the meetup with you</li>
           <li>Afterwards: a keepsake case-file PDF of the whole game</li>
@@ -456,42 +441,55 @@
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">Playable demo · You are the giftee</div>
-      <h2>You're Noa. Check your inbox.</h2>
-      <p class="lede">Your friend Maya booked a Rabbit Hole for your 30th. This is Day 1. Solve Vesper's puzzles right here, and expect replies to whatever you guess.</p>
-    </div>
-    <div class="demo-bar">
-      <div class="who">Signed in as <b>noa.b@example.com</b></div>
-      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-        <div class="progress" aria-label="Progress"><span>ACT</span><i id="p1"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i><i id="p5"></i></div>
-        <button class="btn btn-ghost btn-sm" id="resetBtn" type="button">↺ Reset demo</button>
-      </div>
+      <h2>You're Noa. Your phone just buzzed.</h2>
+      <p class="lede">Your friend Maya booked a Rabbit Hole for your 30th. Vesper messages you, you reply, and each mission opens as a mini-game page on your phone. Finish all three and the gift is revealed.</p>
     </div>
 
-    <div class="mail" id="mail">
-      <aside class="mail-side">
-        <div class="mail-top"><b>Inbox</b><span class="pill" id="unread">0</span></div>
-        <div class="typing" id="typing" aria-live="polite"><span class="dots"><span></span><span></span><span></span></span> <span>Agent Vesper is writing…</span></div>
-        <ul class="mail-list" id="mailList"></ul>
-      </aside>
-      <div class="mail-read" id="mailRead" aria-live="polite">
-        <div class="mail-empty"><div><div style="font-size:40px">✉︎</div>Pick a message to read.<br><small>Start with the oldest one.</small></div></div>
+    <div class="demo-grid">
+      <div>
+        <div class="preview-label">Chat preview <span>Demo · not a real app</span></div>
+        <div class="phone">
+          <div class="chat" id="chat">
+            <div class="chat-top" aria-hidden="true"></div>
+            <div class="chat-head">
+              <span class="chev" aria-hidden="true">‹</span>
+              <div class="c-ava" aria-hidden="true">V</div>
+              <div class="who"><b>Vesper</b><small id="status">online</small></div>
+              <span class="menu" aria-hidden="true">⋮</span>
+            </div>
+            <div class="chat-body" id="chatBody" aria-live="polite" aria-label="Conversation with Vesper">
+              <div class="chip-sys">Today</div>
+              <div class="chip-sys">Vesper is a fictional game character. Demo conversation.</div>
+              <div id="msgs"></div>
+              <div class="row v typing-row" id="typing"><div class="typing-bub" aria-label="Vesper is typing"><i></i><i></i><i></i></div></div>
+            </div>
+            <div class="choices" id="choices" role="group" aria-label="Quick replies"></div>
+            <form class="composer" id="composer" autocomplete="off">
+              <input id="chatInput" placeholder="Message" aria-label="Message Vesper" maxlength="200">
+              <button type="submit" id="sendBtn" aria-label="Send" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6l-.01 6.53L15 12 3.39 13.87z"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <p class="lede">Reply with the quick-reply buttons or type anything. Vesper stays in character. Tap a link card to open a mission. When you solve it, tap <b style="color:var(--ink)">Back to chat</b> and Vesper sends the next one.</p>
+        <ul class="missions" id="missions"></ul>
+        <div class="side-actions">
+          <button class="btn btn-ghost btn-sm" id="resetBtn" type="button">↺ Reset demo</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
 </main>
 
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <div class="avatar">V</div>
-  <div><b id="toastTitle">New message</b><small id="toastSub"></small></div>
-  <button class="btn btn-red btn-sm" id="toastOpen" type="button">Open</button>
-</div>
-
 <footer>
   <div class="wrap">
     <div>© Rabbit Hole · A birthday mystery, run by Agent Vesper</div>
-    <div class="proto">Prototype — all names and content are fictional sample data</div>
-    <div class="proto">Prototype, demo content</div>
+    <div class="proto">Prototype, demo content — all characters fictional</div>
   </div>
 </footer>
 
@@ -509,7 +507,7 @@
   /* ---------------- Buyer flow ---------------- */
   const THEMES = [
     { id:"spy", name:"Spy Thriller", ico:"🕵️", c:"#ff3b4e", g:"linear-gradient(135deg,#ff3b4e,transparent 70%)",
-      blurb:"Dead drops, burner emails, a double agent who knows too much about their childhood.",
+      blurb:"Dead drops, burner phones, a double agent who knows too much about their childhood.",
       acts:["Contact: a stranger knows your old address","The dead drop","A double agent surfaces","Burn notice","Extraction: the gift"] },
     { id:"haunted", name:"Haunted Archive", ico:"🕯️", c:"#b28cff", g:"linear-gradient(135deg,#7b4dff,transparent 70%)",
       blurb:"An archivist ghost is filing their memories, and some files are missing.",
@@ -588,7 +586,7 @@
     $("#c-cipher").textContent = enc || "—";
     $("#c-gift").textContent = v("gift");
     const hobby = v("hobbies").split(/,|;| and /)[0].trim();
-    $("#c-vesper").textContent = `"${nick || name} won't know what hit them. Day 1 opens with their old street, shifted three letters to the right${hobby ? `, and I'm working ${hobby.toLowerCase()} into Act III` : ""}. Leave it with me." — Agent Vesper`;
+    $("#c-vesper").textContent = `"${nick || name} won't know what hit them. Day 1 opens with a message on their phone and a cipher wheel hiding their old street${hobby ? `, and I'm working ${hobby.toLowerCase()} into Act III` : ""}. Leave it with me." — Agent Vesper`;
     const c = $("#confirm");
     c.classList.remove("show"); void c.offsetWidth; c.classList.add("show");
     c.focus({ preventScroll:true });
@@ -598,390 +596,280 @@
 
   renderTheme(); renderTier();
 
-  /* ---------------- Playable demo ---------------- */
-  const ACT1_ANSWER = "HADEKEL";       // shifted +3 → KDGHNHO
-  const ACT1_CIPHER = caesar(ACT1_ANSWER, 3);
-  const ACT2_ANSWER = "7937";
-  const STORE = "rabbithole-demo-v1";
 
-  const sig = `<div class="sig">— V.<small>AGENT VESPER · RABBIT HOLE OPERATIONS</small></div>`;
-  const alphaRow = () => {
-    const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    return `<div class="alpha" aria-hidden="true">${A.map(l => `<span class="${"KDGHNO".includes(l) ? "k" : ""}">${l}</span>`).join("")}</div>`;
+  /* ---------------- Chat preview demo ---------------- */
+  const STORE = "rabbithole-chat-v2";
+  const PROG = "rabbithole-progress-v1";
+  const DOMAIN = "rabbithole.example";
+
+  const ART = {
+    cipher: `<svg viewBox="0 0 300 118" preserveAspectRatio="xMidYMid slice"><rect width="300" height="118" fill="#16121c"/><g transform="translate(150 59)" fill="none"><circle r="48" stroke="#ff3b4e" stroke-width="2"/><circle r="34" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 5"/><circle r="6" fill="#ff3b4e"/></g><text x="22" y="66" fill="#ffb547" font-family="monospace" font-size="20" font-weight="700" letter-spacing="3">KDGH</text><text x="212" y="66" fill="#6c6a80" font-family="monospace" font-size="20" font-weight="700" letter-spacing="3">NHO</text></svg>`,
+    map: `<svg viewBox="0 0 300 118" preserveAspectRatio="xMidYMid slice"><rect width="300" height="118" fill="#efe6d2"/><path d="M175 0 C150 40 200 70 165 118" stroke="#8fc3d6" stroke-width="18" fill="none"/><g stroke="#fff" stroke-width="6"><path d="M0 34H300M0 84H300M60 0V118M240 0V118"/></g><rect x="78" y="48" width="64" height="30" rx="8" fill="#b9d8a6"/><ellipse cx="110" cy="63" rx="16" ry="8" fill="#8fc3d6"/><path d="M226 30a10 10 0 1 1 20 0c0 9-10 20-10 20s-10-11-10-20z" fill="#ff3b4e"/><circle cx="236" cy="30" r="4" fill="#fff"/></svg>`,
+    photo: `<svg viewBox="0 0 300 118" preserveAspectRatio="xMidYMid slice"><rect width="300" height="118" fill="#1a1622"/><rect x="104" y="14" width="92" height="90" rx="10" fill="#efe6d2"/><circle cx="150" cy="50" r="17" fill="#2a2318"/><path d="M120 98c4-20 56-20 60 0z" fill="#2a2318"/><rect x="133" y="45" width="34" height="8" rx="3" fill="#111"/><text x="150" y="112" text-anchor="middle" fill="#ff3b4e" font-family="monospace" font-size="9" font-weight="700" letter-spacing="2">AGENT ID</text><circle cx="250" cy="34" r="12" fill="none" stroke="#ffb547" stroke-width="2"/><circle cx="250" cy="34" r="4" fill="#ffb547"/></svg>`,
+    reveal: `<svg viewBox="0 0 300 118" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="rg" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#5a1d2a"/><stop offset="1" stop-color="#0b0b10"/></radialGradient></defs><rect width="300" height="118" fill="url(#rg)"/><circle cx="150" cy="59" r="44" fill="#2a2d3c" stroke="#8f93a8" stroke-width="3"/><circle cx="150" cy="59" r="14" fill="none" stroke="#ffb547" stroke-width="3"/><path d="M150 25v20M150 73v20M116 59h20M164 59h20" stroke="#ffb547" stroke-width="3"/><text x="150" y="112" text-anchor="middle" fill="#ffb547" font-family="monospace" font-size="9" font-weight="700" letter-spacing="3">EYES ONLY</text></svg>`,
+  };
+  const GAMES = {
+    cipher: { href:"games/cipher.html", slug:"m/cipher", ic:"🔐", name:"Mission 1 · The Wheel", title:"Mission 1 · The Wheel", desc:"A message only you can read. Turn the wheel until it talks.", stage:1 },
+    map:    { href:"games/map.html", slug:"m/map", ic:"🗺️", name:"Mission 2 · Find the Place", title:"Mission 2 · Find the Place", desc:"Port Velour, 1:5000. One spot on this map belongs to you.", stage:3 },
+    photo:  { href:"games/photo.html", slug:"m/agent-id", ic:"📸", name:"Mission 3 · Agent ID", title:"Mission 3 · Agent ID", desc:"Every agent needs a badge photo. Strike the pose.", stage:5 },
+    reveal: { href:"games/reveal.html", slug:"vault", ic:"🎁", name:"Final file · The Vault", title:"Final file · EYES ONLY", desc:"Clearance granted. Someone left something in the vault.", stage:7 },
+  };
+  const ORDER = ["cipher", "map", "photo", "reveal"];
+
+  // Every beat: Vesper's lines (strings or {link}), then where the story goes next.
+  const BEATS = {
+    intro: { stage:0, await:"intro", lines:[
+      "Noa.",
+      "Don't panic. And please don't block this number, I've had a long week.",
+      "I'm Vesper. Someone who knows you annoyingly well hired me for your birthday. 🎂",
+      "Three missions, each one built from your own life. Solve them all and the last door opens.",
+      "Ready?" ] },
+    sendCipher: { stage:1, await:"wait", lines:[
+      "Mission 1. This came in this morning, encrypted. It's about you.",
+      { link:"cipher" },
+      "Turn the wheel until it talks. Bring me the word." ] },
+    cipherDone: { stage:2, await:"afterCipher", lines: p => [
+      "HADEKEL. 📍",
+      "The street with the squeaky gate and the lemon tree. You used to count the cracks on the way to school.",
+      `Stamp <b>${esc(p.cipher.code)}</b> logged. One down.` ] },
+    sendMap: { stage:3, await:"wait", lines:[
+      "Mission 2. A map of a city that doesn't exist. One spot on it is very much about you.",
+      { link:"map" },
+      "Read the clues, tap the place. Don't overthink the ducks." ] },
+    mapDone: { stage:4, await:"afterMap", lines: p => [
+      "Linden Park. The bench by the duck island. 🦆🦆🦆",
+      "Three ducks. You know which joke. I'm not putting it in writing.",
+      `Stamp <b>${esc(p.map.code)}</b> logged. Two down.` ] },
+    sendPhoto: { stage:5, await:"wait", lines:[
+      "Mission 3. Every agent needs an ID, and I need yours.",
+      { link:"photo" },
+      "Follow the pose list exactly. The photo never leaves your phone. I only need to know you did it." ] },
+    photoDone: { stage:6, await:"afterPhoto", lines: p => [
+      "Agent Noa. Cleared. 📸",
+      "That eyebrow work is frankly professional.",
+      `Stamp <b>${esc(p.photo.code)}</b> logged. Three for three.` ] },
+    sendReveal: { stage:7, await:"wait", lines:[
+      "Someone left something in the vault for you. They've been planning this for weeks.",
+      { link:"reveal" },
+      "Open it somewhere you're allowed to scream a little." ] },
+    revealDone: { stage:8, await:"end", lines:[
+      "So. Now you know. 🎶",
+      "Mission complete, Agent Noa. Happy birthday.",
+      "Go say thank you. And save me a dance. — V." ] },
   };
 
-  const NUDGE1 = [
-    g => `<p>"${esc(g)}"? Bold. Wrong, but bold.</p><p>The note said three steps <i>forward</i>. To read it you walk them back. K was once H.</p>`,
-    g => `<p>Still no. "${esc(g)}" isn't a street I have on file for you.</p><p>Take each letter and count three back through the alphabet. The strip under the cipher will help, and so will the hint button if your pride can take it.</p>`,
-    g => `<p>"${esc(g)}". I've seen worse. Not much worse.</p><p>K→H. D→A. G→D. Keep going. You walked this street a thousand times on the way home from school.</p>`,
-  ];
-  const NUDGE2 = [
-    g => `<p>The lock clicks, then doesn't. ${esc(g)} is wrong.</p><p>Four digits, four questions, and every answer is already in your inbox. Start with the easy one: how many letters in the street you just named?</p>`,
-    g => `<p>${esc(g)}. Still locked. Re-read my reply about Hadekel; I told you what was on the gate. Then find what Maya said about the ducks.</p>`,
-    g => `<p>${esc(g)}? Closer to a phone number than a code. Last one: when my first message arrived, how many days were left until your birthday? It's in the first line.</p>`,
-  ];
-
-  const T = {
-    welcome: () => ({
-      from:"Agent Vesper", subject:"You don't know me. I know you.", tag:null,
-      preview:"Seven days until you turn thirty. Someone hired me to make them count.",
-      body:`
-        <p>Noa,</p>
-        <p>Seven days from today you turn thirty. Someone who loves you, and who talks about you a <i>lot</i>, has hired me to make those days count.</p>
-        <p>I've been given a file on you. Old addresses. Nicknames you'd prefer forgotten (hello, Noodle). Jokes involving waterfowl. At the end of this there is something waiting for you, and the only way to reach it is to solve your own life.</p>
-        <p>One message a day. Reply when you have an answer. Don't tell anyone, though I suspect one person already knows.</p>
-        <p>Your first assignment is in the next message.</p>${sig}`
-    }),
-    act1: () => ({
-      from:"Agent Vesper", subject:"Act I · The street that raised you", tag:"puzzle",
-      preview:"An encrypted note was found taped under a mailbox…",
-      body:`
-        <p>An envelope was found taped under an old mailbox. Inside, one word, and a note in handwriting I'd recognise anywhere:</p>
-        <p class="quote">"Every letter took three steps forward so the grown-ups couldn't read it."</p>
-        <p>Decode it. Tell me where you grew up.</p>
-        <div class="puzzle" data-puzzle="1">
-          <div class="lbl">◆ ENCRYPTED · CAESAR · ACT I</div>
-          <div class="cipher-text" aria-label="Cipher text ${ACT1_CIPHER.split("").join(" ")}">${ACT1_CIPHER}</div>
-          ${alphaRow()}
-          <div class="answer">
-            <label class="sr" for="ans1">Your answer</label>
-            <input id="ans1" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Decoded word">
-            <button class="btn btn-red" type="button" data-submit="1">Send to Vesper</button>
-          </div>
-          <div class="tools">
-            <button class="linkbtn" type="button" data-hint="1a">Hint 1</button>
-            <button class="linkbtn" type="button" data-hint="1b">Hint 2</button>
-          </div>
-          <div class="hint" id="hint-1a">Shift each letter <b>3 back</b> in the alphabet: K→H, D→A, G→D…</div>
-          <div class="hint" id="hint-1b">It's a street name, 7 letters, and it starts with <b>HAD</b>.</div>
-        </div>
-        <p>Answers are case-insensitive. Spaces don't count. Neither do excuses.</p>${sig}`
-    }),
-    me1: d => ({ from:"You", me:true, subject:"Re: Act I · The street that raised you", tag:"reply", preview:d.g, body:`<p>${esc(d.g)}</p>` }),
-    nudge1: d => ({
-      from:"Agent Vesper", subject:"Re: Act I · Not quite", tag:"reply",
-      preview:"Wrong, but bold…",
-      body: (d.special || NUDGE1[d.n % NUDGE1.length](d.g)) + `<p>Try again in the Act I message.</p>${sig}`
-    }),
-    win1: () => ({
-      from:"Agent Vesper", subject:"Re: Act I · Hadekel Street. Correct.", tag:"solved",
-      preview:"Number 9. The one with the lemon tree.",
-      body:`
-        <p><b>Hadekel.</b> Correct.</p>
-        <p>Number 9, the one with the lemon tree out front. I'm told the brass <b>9</b> on the gate hung upside down for a whole summer and you insisted it was a 6, just to confuse the mailman.</p>
-        <p>Remember that number. You'll need it sooner than you think.</p>
-        <p>Act II is already on its way.</p>${sig}`
-    }),
-    act2: () => ({
-      from:"Agent Vesper", subject:"Act II · The four-digit lock", tag:"puzzle",
-      preview:"A lockbox. Four dials. Everything you need is already in your inbox.",
-      body:`
-        <p>Good. Now the harder part.</p>
-        <p>There's a lockbox. Four dials. I won't give you the code, but your friend left a scrap of paper with it:</p>
-        <p class="quote">"tell her the ducks say hi. all three of them. she'll know." — M.</p>
-        <div class="puzzle" data-puzzle="2">
-          <div class="lbl">◆ COMBINATION LOCK · ACT II</div>
-          <ul class="clue-list">
-            <li><b>I.</b><span>How many letters are in the street you just decoded?</span></li>
-            <li><b>II.</b><span>What number hung on the gate there?</span></li>
-            <li><b>III.</b><span>How many ducks are in the joke nobody else gets?</span></li>
-            <li><b>IV.</b><span>When I first wrote to you, how many days were left until your birthday?</span></li>
-          </ul>
-          <div class="lock-wrap">
-            <div class="lock" role="group" aria-label="Four-digit combination">
-              ${[0,1,2,3].map(i => `
-                <div class="dial">
-                  <button type="button" data-dial="${i}" data-d="1" aria-label="Dial ${i+1} up">▲</button>
-                  <input inputmode="numeric" maxlength="1" value="0" data-digit="${i}" aria-label="Digit ${i+1}">
-                  <button type="button" data-dial="${i}" data-d="-1" aria-label="Dial ${i+1} down">▼</button>
-                </div>`).join("")}
-            </div>
-          </div>
-          <div class="answer" style="justify-content:center">
-            <button class="btn btn-red" type="button" data-submit="2">Try the lock</button>
-          </div>
-          <div class="tools" style="justify-content:center">
-            <button class="linkbtn" type="button" data-hint="2a">Hint</button>
-          </div>
-          <div class="hint" id="hint-2a">Every digit is already in your inbox. Re-read my first message (IV), my reply about Hadekel (II), and Maya's note just above (III).</div>
-        </div>${sig}`
-    }),
-    me2: d => ({ from:"You", me:true, subject:"Re: Act II · The four-digit lock", tag:"reply", preview:d.g, body:`<p>Trying: <b style="font-family:var(--mono);letter-spacing:.2em">${esc(d.g)}</b></p>` }),
-    nudge2: d => ({
-      from:"Agent Vesper", subject:"Re: Act II · Still locked", tag:"reply",
-      preview:"The lock clicks, then doesn't…",
-      body: NUDGE2[d.n % NUDGE2.length](d.g) + `<p>The dials are still in the Act II message.</p>${sig}`
-    }),
-    win2: () => ({
-      from:"Agent Vesper", subject:"Re: Act II · Click.", tag:"solved",
-      preview:"7-9-3-7. The lid lifts. Inside: a ticket stub, torn in half.",
-      body:`
-        <p><b>7 — 9 — 3 — 7.</b> The lid lifts.</p>
-        <p>Inside is half of a ticket stub. The date and the venue are on the half you don't have yet. Someone tore it on purpose.</p>
-        <p>That's enough for today, Noodle. Sleep on it. Act III will find you in the morning.</p>
-        <div class="teaser">
-          <div class="lbl">◆ TRANSMISSION SCHEDULED</div>
-          <h4>Day 2 unlocks tomorrow</h4>
-          <p>Act III: "A double agent surfaces"</p>
-          <div class="count" aria-live="off">
-            <div><b data-cd="h">00</b><small>HRS</small></div>
-            <div><b data-cd="m">00</b><small>MIN</small></div>
-            <div><b data-cd="s">00</b><small>SEC</small></div>
-          </div>
-          <div class="locked">🔒 2 of 7 days complete · 5 to go</div>
-        </div>${sig}`
-    }),
+  // Quick replies: label, Vesper's answer, and keywords that map free text onto the choice.
+  const CHOICES = {
+    intro: { next:"sendCipher", opts:[
+      { id:"in", label:"Ok… I'm in 🕵️", kw:/\b(ok|okay|yes|yep|sure|in|ready|go|fine|let'?s)\b/, say:["Good. I knew I liked you."] },
+      { id:"who", label:"Who IS this?", kw:/\b(who|what|how|why)\b/, say:["Someone with your childhood address and very little shame.", "That's all you get. For now."] },
+      { id:"maya", label:"Maya, is that you? 😂", kw:/maya/, say:["I never name clients. But I'll tell them you guessed. They'll be insufferable about it."] } ] },
+    afterCipher: { next:"sendMap", opts:[
+      { id:"how", label:"How do you know that?!", kw:/\b(how|who|creepy|what)\b/, say:["I know a lot of things. Most of them came from someone who loves you."] },
+      { id:"next", label:"Too easy. Next.", kw:/\b(easy|next|more|go|ok|okay)\b/, say:["Confident. Let's fix that."] } ] },
+    afterMap: { next:"sendPhoto", opts:[
+      { id:"joke", label:"Tell me the ending 😂", kw:/\b(joke|ending|duck|ducks|tell)\b/, say:["Absolutely not. That joke is above my clearance."] },
+      { id:"next", label:"What's next?", kw:/\b(next|more|go|ok|okay|what)\b/, say:["Eager. Good."] } ] },
+    afterPhoto: { next:"sendReveal", opts:[
+      { id:"why", label:"So… what was it all for?", kw:/\b(why|what|for|gift|present)\b/, say:["Patience was never your thing, was it?"] },
+      { id:"over", label:"Wait, is it over?", kw:/\b(over|done|end|finished)\b/, say:["Almost. One door left."] } ] },
+    end: { next:null, opts:[
+      { id:"ty", label:"Thank you Vesper 🥹", kw:/\b(thank|thanks|ty|love|amazing|wow)\b/, say:["It was an honour. This number will now self-destruct.", "(It won't. But it's dramatic.)"] },
+      { id:"again", label:"Can I play again?", kw:/\b(again|replay|restart|reset|more)\b/, say:["Tap ↺ Reset demo and I'll pretend we've never met."] } ] },
   };
 
-  let state, idSeq;
-  function fresh() {
-    return { msgs: [], stage: 1, w1: 0, w2: 0, hints: {}, dial: [0,0,0,0], open: null };
-  }
-  function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
-  function load() {
-    try { const s = JSON.parse(localStorage.getItem(STORE)); if (s && Array.isArray(s.msgs)) return s; } catch (e) {}
-    return null;
-  }
-  const clock = () => { const d = new Date(); return d.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }); };
+  const HINTS = {
+    cipher: ["Every letter took three steps forward. Walk them back: turn the inner wheel until the outer K sits over an H.", "It's a street. Seven letters. You walked it a thousand times."],
+    map: ["Same side of the river as the street you grew up on.", "Water, but not the fountain. Somewhere a duck would be happy."],
+    photo: ["It's a selfie, Noa. You've taken thousands. This one just has rules.", "No camera handy? There's a stand-in option on the page. I won't tell."],
+    reveal: ["It's open. Go. I'll wait here."],
+  };
+  const BANTER = [
+    "Noted. The mission is still waiting, though. Tap the card above.",
+    "I'd love to chat, but I'm on the clock. The link is right up there.",
+    "Interesting. Filed. Now go solve it.",
+    "You're stalling. I can tell. I can always tell.",
+  ];
+  const ACKS = ["I'll take that as a yes.", "Noted. Moving on.", "Bold. I respect it."];
+  const AFTER = ["Still here. Still fictional.", "Happy birthday, Noa. Go enjoy it.", "The file is closed, but I'm proud of you."];
 
-  function addMsg(key, data = {}, time) {
-    const m = { id: ++idSeq, key, data, time: time || clock(), read: key.startsWith("me") };
-    state.msgs.push(m);
+  const loadJSON = (k) => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
+  const prog = () => loadJSON(PROG) || {};
+  const fresh = () => ({ msgs:[], queue:[], stage:-1, awaiting:null, hint:0, banter:0, seen:{} });
+  let state = Object.assign(fresh(), loadJSON(STORE) || {});
+  let idSeq = state.msgs.reduce((a, m) => Math.max(a, m.id), 0);
+  let timers = [], pumping = false, newId = 0;
+  const later = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} };
+  const hhmm = t => new Date(t).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+  const pick = (arr, key) => { const i = state[key] % arr.length; state[key]++; return arr[i]; };
+
+  const body = $("#chatBody"), list = $("#msgs"), typingRow = $("#typing"), statusEl = $("#status");
+  const choicesEl = $("#choices"), input = $("#chatInput"), sendBtn = $("#sendBtn");
+
+  function renderMsg(m, prev) {
+    const first = !prev || prev.from !== m.from;
+    const cls = `row ${m.from} ${first ? "first" : ""} ${m.id === newId ? "new" : ""}`;
+    const meta = `<span class="meta">${hhmm(m.t)}${m.from === "n" ? ` <span class="ticks ${m.status === "read" ? "read" : ""}" aria-label="${m.status}">${m.status === "sent" ? "✓" : "✓✓"}</span>` : ""}</span>`;
+    if (m.link) {
+      const g = GAMES[m.link], done = prog()[m.link];
+      return `<div class="${cls}"><div class="bub has-lp">
+        <a class="lp" href="${g.href}">
+          <div class="lp-art">${ART[m.link]}${done ? `<span class="done">✓ ${m.link === "reveal" ? "OPENED" : "SOLVED"}</span>` : ""}</div>
+          <div class="lp-meta"><small>${DOMAIN}</small><b>${g.title}</b><span>${g.desc}</span></div>
+        </a>
+        <a class="lp-url" href="${g.href}">https://${DOMAIN}/${g.slug}</a>${meta}</div></div>`;
+    }
+    const text = m.from === "n" ? esc(m.text) : m.text; // Vesper's lines are authored HTML; Noa's are escaped
+    return `<div class="${cls}"><div class="bub"><p>${text}${meta}</p></div></div>`;
+  }
+  function render() {
+    list.innerHTML = state.msgs.map((m, i) => renderMsg(m, state.msgs[i - 1])).join("");
+    renderMissions();
+    requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
+  }
+  function renderMissions() {
+    const p = prog(), live = ORDER.find(k => !p[k] && state.stage >= GAMES[k].stage);
+    $("#missions").innerHTML = ORDER.map(k => {
+      const g = GAMES[k], done = !!p[k];
+      const st = done ? (k === "reveal" ? "OPENED" : "SOLVED") : k === live ? "IN PROGRESS" : state.stage >= g.stage ? "OPEN" : "LOCKED";
+      return `<li class="${done ? "done" : k === live ? "live" : ""}"><span class="ic" aria-hidden="true">${g.ic}</span>
+        <span class="tx"><b>${g.name}</b><small>${done && p[k].code ? `Stamp ${esc(p[k].code)}` : g.desc}</small></span><span class="st">${st}</span></li>`;
+    }).join("");
+  }
+  function setTyping(on) {
+    typingRow.classList.toggle("show", on);
+    statusEl.textContent = on ? "typing…" : "online";
+    statusEl.classList.toggle("typing", on);
+    if (on) body.scrollTop = body.scrollHeight;
+  }
+  function addMsg(m) {
+    m.id = ++idSeq; m.t = Date.now();
+    state.msgs.push(m); newId = m.id;
+    save(); render();
     return m;
   }
-  function seed() {
-    state = fresh(); idSeq = 0;
-    addMsg("welcome", {}, "08:00");
-    addMsg("act1", {}, "08:01");
-    save();
+
+  function renderChoices() {
+    const set = !state.queue.length && !pumping && CHOICES[state.awaiting];
+    choicesEl.classList.toggle("show", !!set);
+    choicesEl.innerHTML = set ? set.opts.map(o => `<button type="button" data-choice="${o.id}">${esc(o.label)}</button>`).join("") : "";
   }
 
-  const list = $("#mailList"), read = $("#mailRead"), mail = $("#mail");
+  // Queue Vesper's lines and play them one by one with a typing indicator.
+  function play(beatKey, prefix = []) {
+    const b = BEATS[beatKey];
+    const lines = typeof b.lines === "function" ? b.lines(prog()) : b.lines;
+    state.stage = b.stage; state.awaiting = b.await; state.hint = 0;
+    state.queue.push(...prefix.map(text => ({ text })), ...lines.map(l => typeof l === "string" ? { text:l } : l));
+    save(); renderChoices(); renderMissions(); pump();
+  }
+  function say(lines) { state.queue.push(...lines.map(text => ({ text }))); save(); pump(); }
 
-  function renderList(newId) {
-    const items = [...state.msgs].reverse();
-    list.innerHTML = items.map(m => {
-      const t = T[m.key](m.data);
-      const solved = (m.key === "act1" && state.stage > 1) || (m.key === "act2" && state.stage > 2);
-      const tag = solved ? `<span class="tag t-solved">SOLVED</span>` : t.tag === "puzzle" ? `<span class="tag t-puzzle">PUZZLE</span>` : "";
-      return `<li><button type="button" class="mail-item ${m.read ? "" : "unread"} ${state.open === m.id ? "active" : ""} ${m.id === newId ? "new" : ""}" data-id="${m.id}">
-        <div class="row"><span class="from">${esc(t.from)}</span><span>${esc(m.time)}</span></div>
-        <div class="subj">${tag}<span>${esc(t.subject)}</span></div>
-        <div class="prev">${esc(t.preview)}</div>
-      </button></li>`;
-    }).join("");
-    const unread = state.msgs.filter(m => !m.read).length;
-    const pill = $("#unread");
-    pill.textContent = unread ? `${unread} new` : "0";
-    pill.classList.toggle("zero", !unread);
-    // progress: acts 1..5
-    for (let i = 1; i <= 5; i++) {
-      const el = $("#p" + i);
-      el.className = i < state.stage ? "on" : (i === state.stage && state.stage <= 2 ? "cur" : "");
-    }
+  function pump() {
+    if (pumping) return;
+    if (!state.queue.length) { renderChoices(); checkProgress(); return; }
+    pumping = true; renderChoices();
+    // Vesper "reads" Noa's messages before typing
+    let changed = false;
+    state.msgs.forEach(m => { if (m.from === "n" && m.status !== "read") { m.status = "read"; changed = true; } });
+    if (changed) { save(); render(); }
+    const item = state.queue[0];
+    const plain = (item.text || "").replace(/<[^>]+>/g, "");
+    const delay = item.link ? 1300 : Math.min(2400, 550 + plain.length * 18);
+    later(() => setTyping(true), 250);
+    later(() => {
+      setTyping(false);
+      state.queue.shift();
+      addMsg(Object.assign({ from:"v" }, item));
+      pumping = false;
+      later(pump, 420);
+    }, 250 + delay);
   }
 
-  function openMsg(id, opts = {}) {
-    const m = state.msgs.find(x => x.id === id); if (!m) return;
-    m.read = true; state.open = id;
-    $("#toast").classList.remove("show");
-    const t = T[m.key](m.data);
-    read.innerHTML = `
-      <button class="back" type="button" data-back>← Inbox</button>
-      <article class="msg">
-        <h3>${esc(t.subject)}</h3>
-        <div class="msg-head">
-          <div class="avatar ${t.me ? "me" : ""}">${t.me ? "N" : "V"}</div>
-          <div class="meta"><b>${esc(t.from)}</b> ${t.me ? "&lt;noa.b@example.com&gt;" : "&lt;vesper@rabbithole.example&gt;"}<br>to ${t.me ? "Agent Vesper" : "Noa"} · ${esc(m.time)}</div>
-        </div>
-        <div class="msg-body">${t.body}</div>
-      </article>`;
-    read.scrollTop = 0;
-    mail.classList.add("reading");
-    decoratePuzzles();
-    renderList();
-    save();
-    if (window.matchMedia("(max-width:820px)").matches && !opts.noScroll) mail.scrollIntoView({ behavior:"smooth", block:"start" });
+  function sendNoa(text) {
+    const m = addMsg({ from:"n", text, status:"sent" });
+    later(() => { if (m.status === "sent") { m.status = "delivered"; save(); render(); } }, 350);
   }
 
-  // restore puzzle UI state inside the open message
-  function decoratePuzzles() {
-    Object.keys(state.hints).forEach(h => { const el = $("#hint-" + h, read); if (el) el.classList.add("show"); });
-    const p1 = $('[data-puzzle="1"]', read);
-    if (p1 && state.stage > 1) markSolved(p1, ACT1_ANSWER);
-    const p2 = $('[data-puzzle="2"]', read);
-    if (p2) {
-      const dial = state.stage > 2 ? ACT2_ANSWER.split("").map(Number) : state.dial;
-      $$("[data-digit]", p2).forEach((inp, i) => inp.value = dial[i]);
-      if (state.stage > 2) { $(".lock-wrap", p2).classList.add("open"); markSolved(p2, "7 · 9 · 3 · 7"); }
-    }
-    startCountdown();
-  }
-  function markSolved(p, label) {
-    $$("input,button", p).forEach(el => el.disabled = true);
-    $$(".answer, .tools", p).forEach(el => el.style.display = "none");
-    const inp = $(".answer input", p); if (inp) inp.value = label;
-    if (!$(".solved-banner", p)) p.insertAdjacentHTML("beforeend", `<div class="solved-banner">✓ SOLVED · ${esc(label)}</div>`);
+  function choose(setKey, opt) {
+    const set = CHOICES[setKey];
+    state.awaiting = null; save(); renderChoices();
+    const lines = opt ? opt.say : [pick(ACKS, "banter")];
+    later(() => {
+      if (set.next) play(set.next, lines);
+      else { state.awaiting = "done"; say(lines); }
+    }, 700);
   }
 
-  // countdown to next local midnight
-  let cdTimer = null;
-  function startCountdown() {
-    clearInterval(cdTimer);
-    if (!$("[data-cd]", read)) return;
-    const tick = () => {
-      const now = new Date(), mid = new Date(now); mid.setHours(24, 0, 0, 0);
-      let s = Math.max(0, Math.floor((mid - now) / 1000));
-      const pad = n => String(n).padStart(2, "0");
-      const set = (k, v) => { const el = $(`[data-cd="${k}"]`, read); if (el) el.textContent = pad(v); };
-      set("h", Math.floor(s / 3600)); set("m", Math.floor(s % 3600 / 60)); set("s", s % 60);
-    };
-    tick(); cdTimer = setInterval(tick, 1000);
+  function handleText(text) {
+    const t = text.toLowerCase();
+    const set = CHOICES[state.awaiting];
+    if (set) return choose(state.awaiting, set.opts.find(o => o.kw.test(t)));
+    let reply;
+    const game = ORDER.find(k => GAMES[k].stage === state.stage);
+    if (state.stage < 0) reply = ["Patience. I'll message you first."];
+    else if (state.awaiting === "done") reply = [pick(AFTER, "banter")];
+    else if (/hadekel/.test(t.replace(/\s/g, "")) && game === "cipher") reply = ["Ha. Right word. But do it on the wheel, I want the stamp."];
+    else if (/\b(hint|help|stuck|clue|idea)\b|\?$/.test(t) && game) reply = [HINTS[game][state.hint++ % HINTS[game].length]];
+    else if (/maya/.test(t)) reply = ["No comment. Professional discretion."];
+    else if (/^(hi|hey|hello|yo|hiya)\b/.test(t)) reply = ["Hello, Noa. The mission is still waiting."];
+    else reply = [pick(BANTER, "banter")];
+    later(() => say(reply), 600);
   }
 
-  // toast
-  let toastTimer, toastId;
-  function toast(m) {
-    const t = T[m.key](m.data);
-    $("#toastTitle").textContent = t.from;
-    $("#toastSub").textContent = t.subject;
-    toastId = m.id;
-    const el = $("#toast"); el.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 5000);
-  }
-  $("#toastOpen").addEventListener("click", () => { $("#toast").classList.remove("show"); if (toastId) { openMsg(toastId); mail.scrollIntoView({ behavior:"smooth", block:"center" }); } });
-
-  // Vesper "writes" for a moment, then the message lands
-  let busy = false, pending = [];
-  function vesperSends(steps) {
-    busy = true;
-    const typing = $("#typing");
-    const run = (i) => {
-      if (i >= steps.length) { busy = false; return; }
-      const s = steps[i];
-      typing.classList.add("show");
-      pending.push(setTimeout(() => {
-        typing.classList.remove("show");
-        const m = addMsg(s.key, s.data || {});
-        save();
-        renderList(m.id);
-        if (s.open) openMsg(m.id, { noScroll:true }); else toast(m);
-        run(i + 1);
-      }, s.delay || 1200));
-    };
-    run(0);
+  // When a mini-game reports success, Noa checks in and Vesper moves the story along.
+  function checkProgress() {
+    if (pumping || state.queue.length) return;
+    const p = prog();
+    const game = ORDER.find(k => GAMES[k].stage === state.stage);
+    if (!game || !p[game] || state.seen[game]) return;
+    state.seen[game] = true;
+    sendNoa(game === "reveal" ? "I OPENED IT 😭😭😭" : `Done ✅ Stamp: ${p[game].code}`);
+    later(() => play(game + "Done"), 900);
   }
 
-  function submit1(input) {
-    if (busy || state.stage !== 1) return;
-    const raw = input.value.trim();
-    if (!raw) { input.focus(); return; }
-    const g = norm(raw);
-    addMsg("me1", { g: raw }); input.value = "";
-    if (g === ACT1_ANSWER) {
-      state.stage = 2;
-      renderList(); openMsg(state.open, { noScroll:true });
-      vesperSends([{ key:"win1", open:true, delay:1300 }, { key:"act2", delay:2600 }]);
-    } else {
-      const p = input.closest(".puzzle"); p.classList.remove("shake"); void p.offsetWidth; p.classList.add("shake");
-      let special = null;
-      if (g === ACT1_CIPHER) special = `<p>You've sent my own cipher back to me. Cute. I already know what it says, Noa. The point is that <i>you</i> find out.</p>`;
-      else if (g === caesar(ACT1_CIPHER, 3)) special = `<p>"${esc(raw)}". You shifted the right number of steps in the wrong direction. The letters already walked forward, so walk them <i>back</i>.</p>`;
-      else if (g.length && g.length !== 7) special = `<p>"${esc(raw)}" has ${g.length} letter${g.length === 1 ? "" : "s"}. The cipher has seven. A Caesar shift swaps letters; it doesn't add or remove them.</p>`;
-      save(); renderList();
-      vesperSends([{ key:"nudge1", data:{ g: raw, n: state.w1++, special }, delay:1100 }]);
-    }
-  }
-
-  function submit2(p) {
-    if (busy || state.stage !== 2) return;
-    const g = $$("[data-digit]", p).map(i => i.value).join("");
-    addMsg("me2", { g });
-    if (norm(g) === ACT2_ANSWER) {
-      state.stage = 3;
-      $(".lock-wrap", p).classList.add("open");
-      save(); renderList();
-      setTimeout(() => openMsg(state.open, { noScroll:true }), 500);
-      vesperSends([{ key:"win2", open:true, delay:1600 }]);
-    } else {
-      p.classList.remove("shake"); void p.offsetWidth; p.classList.add("shake");
-      save(); renderList();
-      vesperSends([{ key:"nudge2", data:{ g, n: state.w2++ }, delay:1100 }]);
-    }
-  }
-
-  // event delegation in reading pane
-  read.addEventListener("click", e => {
-    const b = e.target.closest("button"); if (!b) return;
-    if (b.hasAttribute("data-back")) { mail.classList.remove("reading"); state.open = null; renderList(); save(); return; }
-    if (b.dataset.hint) { $("#hint-" + b.dataset.hint, read).classList.add("show"); state.hints[b.dataset.hint] = 1; save(); return; }
-    if (b.dataset.submit === "1") return submit1($("#ans1", read));
-    if (b.dataset.submit === "2") return submit2(b.closest(".puzzle"));
-    if (b.dataset.dial) {
-      const i = +b.dataset.dial, d = +b.dataset.d;
-      state.dial[i] = (state.dial[i] + d + 10) % 10;
-      $(`[data-digit="${i}"]`, read).value = state.dial[i];
-      save();
-    }
+  choicesEl.addEventListener("click", e => {
+    const b = e.target.closest("[data-choice]"); if (!b) return;
+    const key = state.awaiting, opt = CHOICES[key].opts.find(o => o.id === b.dataset.choice);
+    sendNoa(opt.label);
+    choose(key, opt);
   });
-  read.addEventListener("keydown", e => {
-    if (e.key === "Enter" && e.target.id === "ans1") { e.preventDefault(); submit1(e.target); }
-    if (e.target.dataset && e.target.dataset.digit !== undefined) {
-      const i = +e.target.dataset.digit;
-      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-        e.preventDefault();
-        state.dial[i] = (state.dial[i] + (e.key === "ArrowUp" ? 1 : -1) + 10) % 10;
-        e.target.value = state.dial[i]; save();
-      } else if (e.key === "Enter") { e.preventDefault(); submit2(e.target.closest(".puzzle")); }
-    }
-  });
-  read.addEventListener("input", e => {
-    if (e.target.dataset && e.target.dataset.digit !== undefined) {
-      const i = +e.target.dataset.digit;
-      const d = e.target.value.replace(/\D/g, "").slice(-1);
-      e.target.value = d;
-      if (d !== "") {
-        state.dial[i] = +d; save();
-        const next = $(`[data-digit="${i + 1}"]`, read); if (next) { next.focus(); next.select(); }
-      }
-    }
-  });
-  read.addEventListener("focusin", e => { if (e.target.dataset && e.target.dataset.digit !== undefined) e.target.select(); });
-  read.addEventListener("focusout", e => {
-    if (e.target.dataset && e.target.dataset.digit !== undefined && e.target.value === "") e.target.value = state.dial[+e.target.dataset.digit];
+  input.addEventListener("input", () => { sendBtn.disabled = !input.value.trim(); });
+  $("#composer").addEventListener("submit", e => {
+    e.preventDefault();
+    const text = input.value.trim(); if (!text) return;
+    input.value = ""; sendBtn.disabled = true;
+    sendNoa(text);
+    handleText(text);
   });
 
-  list.addEventListener("click", e => {
-    const b = e.target.closest(".mail-item"); if (b) openMsg(+b.dataset.id);
-  });
-
-  function showEmpty() {
-    read.innerHTML = `<div class="mail-empty"><div><div style="font-size:40px">✉︎</div>Pick a message to read.<br><small>Start with the oldest one.</small></div></div>`;
+  function start() {
+    if (state.stage < 0 && !state.queue.length && !pumping) play("intro");
   }
+  function refresh() { render(); checkProgress(); }
+  window.addEventListener("storage", e => { if (e.key === PROG) refresh(); });
+  window.addEventListener("pageshow", refresh);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
 
   $("#resetBtn").addEventListener("click", () => {
-    pending.forEach(clearTimeout); pending = []; busy = false;
-    clearInterval(cdTimer);
-    $("#typing").classList.remove("show"); $("#toast").classList.remove("show");
-    try { localStorage.removeItem(STORE); } catch (e) {}
-    seed();
-    mail.classList.remove("reading");
-    showEmpty(); renderList();
+    timers.forEach(clearTimeout); timers = []; pumping = false;
+    try { localStorage.removeItem(STORE); localStorage.removeItem(PROG); } catch (e) {}
+    state = fresh(); idSeq = 0;
+    setTyping(false); render(); renderChoices();
+    later(start, 400);
   });
 
-  // boot
-  const saved = load();
-  if (saved) {
-    state = Object.assign(fresh(), saved);
-    idSeq = state.msgs.reduce((a, m) => Math.max(a, m.id), 0);
-    // if a reload interrupted the Act II delivery, deliver it now
-    if (state.stage >= 2 && !state.msgs.some(m => m.key === "win1")) addMsg("win1");
-    if (state.stage >= 2 && !state.msgs.some(m => m.key === "act2")) addMsg("act2");
-    if (state.stage >= 3 && !state.msgs.some(m => m.key === "win2")) addMsg("win2");
-  } else seed();
-  renderList();
-  if (state.open && state.msgs.some(m => m.id === state.open) && !window.matchMedia("(max-width:820px)").matches) openMsg(state.open, { noScroll:true });
-  else { state.open = null; showEmpty(); }
+  // boot: resume any half-played beat, otherwise start when the demo scrolls into view
+  render();
+  if (state.queue.length) pump(); else { renderChoices(); checkProgress(); }
+  if (state.stage < 0) {
+    if (location.hash === "#demo" || !("IntersectionObserver" in window)) start();
+    else {
+      const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { io.disconnect(); start(); } }, { threshold:.35 });
+      io.observe($("#chat"));
+    }
+  }
 })();
 </script>
 </body>

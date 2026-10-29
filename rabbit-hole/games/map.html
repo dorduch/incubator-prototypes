@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mission 2 · Find the Place — Rabbit Hole</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
+<style>
+  :root{--bg:#0b0b10;--panel:#17171f;--panel2:#1e1e29;--line:#2a2a38;--ink:#ecebf3;--muted:#9a98ad;--red:#ff3b4e;--amber:#ffb547;--green:#3ee08f;--cyan:#59d5ff;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Courier New",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(600px 400px at 50% -10%,rgba(62,224,143,.10),transparent 70%),var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .back{color:var(--ink);text-decoration:none;font-size:15px}
+  .tag{font:700 11px/1 var(--mono);letter-spacing:.18em;color:var(--red)}
+  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:22px 16px 30px}
+  h1{font-size:26px;margin:6px 0 6px;line-height:1.15}
+  .lede{color:var(--muted);margin:0 0 16px}
+  .clues{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px;counter-reset:c}
+  .clues li{counter-increment:c;display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px}
+  .clues li::before{content:counter(c);flex:none;width:24px;height:24px;border-radius:50%;background:var(--panel2);color:var(--amber);font:800 13px/24px var(--mono);text-align:center}
+  .clues li.hidden{color:var(--muted);font-style:italic}
+  .mapcard{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#efe6d2;box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+  .mapcard svg{display:block;width:100%;height:auto;cursor:crosshair;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+  .feedback{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(11,11,16,.88);backdrop-filter:blur(6px);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14.5px;display:flex;gap:10px;align-items:center;transform:translateY(140%);transition:transform .3s cubic-bezier(.2,1.2,.4,1)}
+  .feedback.show{transform:none}
+  .temp{flex:none;font:800 11px/1 var(--mono);letter-spacing:.1em;padding:6px 8px;border-radius:6px;background:#2a2d3c}
+  .temp.cold{background:#1d3550;color:var(--cyan)}.temp.warm{background:#4a3410;color:var(--amber)}.temp.hot{background:#4a1520;color:var(--red)}
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center;justify-content:space-between}
+  .linkbtn{background:none;border:1px dashed #44435a;color:#bdbbd0;border-radius:8px;padding:8px 12px;font:12.5px var(--mono)}
+  .tries{font:12px var(--mono);color:var(--muted)}
+  .pin{animation:drop .45s cubic-bezier(.2,1.5,.4,1) both;transform-box:fill-box;transform-origin:50% 100%}
+  @keyframes drop{from{transform:translateY(-30px) scale(.6);opacity:0}to{transform:none;opacity:1}}
+  .ripple{transform-box:fill-box;transform-origin:center;animation:rip 1.4s ease-out infinite}
+  @keyframes rip{from{transform:scale(.3);opacity:.9}to{transform:scale(2.2);opacity:0}}
+  .glow{animation:glow 1.2s ease-in-out 3}
+  @keyframes glow{50%{stroke:#ff3b4e;stroke-width:12}}
+  .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .win{display:none;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 18px;margin-top:16px}
+  .win.show{display:block;animation:rise .5s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .stamp{display:inline-block;margin:6px auto 14px;border:4px solid var(--green);color:var(--green);border-radius:10px;padding:10px 18px;font:900 26px/1 var(--mono);letter-spacing:.16em;transform:rotate(-8deg);animation:stamp .5s .15s both cubic-bezier(.3,1.6,.5,1)}
+  @keyframes stamp{from{opacity:0;transform:scale(2.4) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+  .code{font:800 22px var(--mono);letter-spacing:.14em;background:#0b0b10;border:1px dashed var(--green);border-radius:10px;padding:10px 14px;display:inline-block;margin:4px 0 18px}
+  .win p{color:var(--muted);margin:0 0 16px}
+  .win .actions{display:grid;gap:10px}
+  footer{border-top:1px solid var(--line);padding:16px;text-align:center;font:12px var(--mono);letter-spacing:.05em;color:var(--amber)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="../index.html#demo">‹ Back to chat</a>
+  <span class="tag">MISSION 2 / 3</span>
+</header>
+
+<main>
+  <h1>Find the Place</h1>
+  <p class="lede">Port Velour doesn't exist, but one spot on this map is very much yours. Read Vesper's clues, then tap the place.</p>
+  <ol class="clues" id="clues">
+    <li><span>It's on the same side of the river as the street you grew up on.</span></li>
+    <li><span>It's green and it has water, but it is <b>not</b> the fountain.</span></li>
+    <li class="hidden"><span id="clue3">Clue 3 is sealed. Tap the map twice to unseal it.</span></li>
+  </ol>
+
+  <div class="mapcard">
+    <svg id="map" viewBox="0 0 360 500" role="img" aria-label="Stylized map of the fictional city Port Velour. Tap a location.">
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#e2d6bd" stroke-width=".6"/></pattern>
+        <pattern id="trees" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="2.2" fill="#9fc58b"/></pattern>
+      </defs>
+      <rect width="360" height="500" fill="#efe6d2"/>
+      <rect width="360" height="500" fill="url(#grid)"/>
+      <!-- sea -->
+      <path d="M250 500 C270 455 320 440 360 430 V500Z" fill="#9cc9d9"/>
+      <!-- city blocks -->
+      <g fill="#e4d8bf">
+        <rect x="18" y="20" width="58" height="56" rx="4"/><rect x="92" y="20" width="84" height="56" rx="4"/>
+        <rect x="18" y="128" width="58" height="56" rx="4"/><rect x="18" y="200" width="58" height="80" rx="4"/>
+        <rect x="150" y="200" width="30" height="80" rx="4"/><rect x="250" y="20" width="92" height="56" rx="4"/>
+        <rect x="250" y="128" width="40" height="70" rx="4"/><rect x="250" y="210" width="92" height="56" rx="4"/>
+        <rect x="18" y="455" width="160" height="30" rx="4"/><rect x="236" y="320" width="20" height="40" rx="4"/>
+      </g>
+      <!-- roads -->
+      <g stroke="#fff" stroke-linecap="round" fill="none">
+        <path d="M0 102H200" stroke-width="12" id="hadekel"/>
+        <path d="M232 102H360" stroke-width="12"/>
+        <path d="M84 0V500" stroke-width="9"/>
+        <path d="M0 192H200M232 192H360" stroke-width="8"/>
+        <path d="M0 438H190" stroke-width="8"/>
+        <path d="M244 0V500" stroke-width="9"/>
+        <path d="M300 102V300" stroke-width="7"/>
+      </g>
+      <!-- river -->
+      <path d="M222 0 C200 70 236 130 214 200 C196 262 236 330 210 400 C196 440 228 470 250 500" stroke="#9cc9d9" stroke-width="30" fill="none"/>
+      <path d="M222 0 C200 70 236 130 214 200 C196 262 236 330 210 400 C196 440 228 470 250 500" stroke="#b5d8e4" stroke-width="2" stroke-dasharray="6 10" fill="none"/>
+      <!-- bridges -->
+      <g fill="#cbbd9e"><rect x="196" y="95" width="40" height="14" rx="2"/><rect x="194" y="185" width="44" height="14" rx="2"/></g>
+      <!-- tram line -->
+      <path d="M0 300 H360" stroke="#ff3b4e" stroke-width="3" stroke-dasharray="8 6"/>
+      <rect x="192" y="294" width="46" height="12" rx="2" fill="#cbbd9e"/>
+      <path d="M192 300 H238" stroke="#ff3b4e" stroke-width="3" stroke-dasharray="8 6"/>
+      <!-- Market Square + fountain (decoy) -->
+      <rect x="96" y="124" width="84" height="56" rx="6" fill="#ddd0b3"/>
+      <circle cx="138" cy="152" r="14" fill="#9cc9d9" stroke="#fff" stroke-width="3"/>
+      <circle cx="138" cy="152" r="4" fill="#fff"/>
+      <!-- Linden Park (target) -->
+      <rect x="20" y="318" width="160" height="108" rx="14" fill="#b9d8a6"/>
+      <rect x="20" y="318" width="160" height="108" rx="14" fill="url(#trees)" opacity=".8"/>
+      <ellipse cx="104" cy="374" rx="44" ry="26" fill="#9cc9d9" stroke="#86b9cc" stroke-width="2"/>
+      <ellipse cx="112" cy="370" rx="9" ry="6" fill="#b9d8a6"/>
+      <rect x="54" y="400" width="18" height="5" rx="1.5" fill="#8a6d46"/>
+      <!-- Harbor Gardens (wrong side) -->
+      <rect x="262" y="318" width="84" height="100" rx="14" fill="#b9d8a6"/>
+      <rect x="262" y="318" width="84" height="100" rx="14" fill="url(#trees)" opacity=".8"/>
+      <ellipse cx="304" cy="370" rx="24" ry="16" fill="#9cc9d9" stroke="#86b9cc" stroke-width="2"/>
+      <!-- landmarks -->
+      <g font-family="system-ui,sans-serif" font-size="15" text-anchor="middle">
+        <text x="270" y="166">🕰️</text><text x="325" y="246">🎶</text><text x="40" y="244">🥐</text><text x="320" y="476">🗼</text><text x="164" y="245">⛪</text><text x="300" y="56">🏛️</text>
+      </g>
+      <g font-family="system-ui,sans-serif" font-size="8.5" fill="#5b4e36" text-anchor="middle" font-weight="600">
+        <text x="270" y="180">Clock Tower</text><text x="296" y="260">Lantern Hall</text><text x="47" y="258">Bakery</text>
+        <text x="318" y="490">Lighthouse</text><text x="138" y="174">Market Sq.</text><text x="300" y="70">Museum</text>
+        <text x="100" y="342">LINDEN PARK</text><text x="304" y="342">HARBOR GDNS</text>
+      </g>
+      <g font-family="ui-monospace,monospace" font-size="8" fill="#8a7d63" letter-spacing="1.5" font-weight="700">
+        <text x="12" y="105.5">HADEKEL ST.</text>
+        <text x="300" y="105.5" text-anchor="middle">QUAY RD.</text>
+        <text x="12" y="195">LEMON AVE.</text>
+        <text x="12" y="296" fill="#c7404f">TRAM 3</text>
+        <text transform="translate(87 90) rotate(-90)">MILL LANE</text>
+        <text transform="translate(241 300) rotate(-90)" text-anchor="middle">HARBOUR WAY</text>
+      </g>
+      <text transform="translate(206 250) rotate(78)" font-family="Georgia,serif" font-style="italic" font-size="10" fill="#4f8aa0">River Velour</text>
+      <!-- compass + title -->
+      <g transform="translate(330 24)"><circle r="14" fill="#fffaf0" stroke="#5b4e36"/><path d="M0 -11 L4 0 L0 11 L-4 0Z" fill="#5b4e36"/><path d="M0 -11 L4 0 L-4 0Z" fill="#ff3b4e"/><text y="-17" text-anchor="middle" font-size="7" font-family="monospace" fill="#5b4e36">N</text></g>
+      <g transform="translate(14 470)"><rect width="140" height="22" rx="4" fill="#fffaf0" stroke="#5b4e36"/><text x="70" y="15" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#2a2318">Port Velour · fictional</text></g>
+      <g id="marks"></g>
+    </svg>
+    <div class="feedback" id="fb" role="status" aria-live="polite"><span class="temp" id="temp">—</span><span id="fbText"></span></div>
+  </div>
+  <div class="tools">
+    <button class="linkbtn" id="showStreet" type="button">Where's Hadekel St.?</button>
+    <span class="tries" id="tries">Taps: 0</span>
+  </div>
+
+  <div class="win" id="win" role="status" aria-live="polite">
+    <div class="stamp">LOCATED</div>
+    <p><b style="color:var(--ink)">Linden Park, the bench by the duck island.</b> Three ducks would feel right at home. Show this stamp in the chat.</p>
+    <div class="code" id="code"></div>
+    <div class="actions">
+      <a class="btn" href="../index.html#demo">Back to chat →</a>
+      <button class="btn ghost" id="again" type="button">Play the map again</button>
+    </div>
+  </div>
+</main>
+
+<footer>Prototype, demo content — all characters fictional</footer>
+
+<script>
+(() => {
+  "use strict";
+  const PROG = "rabbithole-progress-v1", KEY = "map", CODE = "RH-2-DUCKS";
+  const $ = s => document.querySelector(s);
+  const buzz = p => { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); };
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = $("#map"), marks = $("#marks");
+  const getProg = () => { try { return JSON.parse(localStorage.getItem(PROG) || "{}"); } catch (e) { return {}; } };
+  const setProg = v => { try { const p = getProg(); p[KEY] = v; localStorage.setItem(PROG, JSON.stringify(p)); } catch (e) {} };
+
+  const TARGET = { x:104, y:378, rx:62, ry:42 };        // Linden Park pond + bench
+  const DECOYS = [
+    { x:138, y:152, r:22, say:"That's the fountain. Vesper literally said not the fountain." },
+    { x:304, y:370, r:46, say:"Right idea, wrong side of the river. Hadekel St. is west." },
+    { x:300, y:250, r:30, say:"Lantern Hall. Hm. Remember that name. But not today." },
+  ];
+  let taps = 0, done = false;
+
+  function toSvg(e) {
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function el(tag, attrs, parent = marks) {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n); return n;
+  }
+  function pin(x, y, color) {
+    const g = el("g", { transform:`translate(${x} ${y})` });
+    const inner = el("g", { class:"pin" }, g);
+    el("path", { d:"M0 0 C-3 -8 -10 -12 -10 -19 a10 10 0 1 1 20 0 C10 -12 3 -8 0 0Z", fill:color, stroke:"#fff", "stroke-width":"1.5" }, inner);
+    el("circle", { cx:0, cy:-19, r:3.5, fill:"#fff" }, inner);
+    return g;
+  }
+  function feedback(kind, text) {
+    const t = $("#temp");
+    t.className = "temp " + kind; t.textContent = kind.toUpperCase();
+    $("#fbText").textContent = text;
+    $("#fb").classList.add("show");
+  }
+
+  svg.addEventListener("click", e => {
+    if (done) return;
+    const p = toSvg(e);
+    taps++; $("#tries").textContent = "Taps: " + taps;
+    if (taps === 2) { const c = $("#clue3"); c.parentNode.classList.remove("hidden"); c.innerHTML = "Find the bench that faces the <b>little island</b>."; }
+    const nx = (p.x - TARGET.x) / TARGET.rx, ny = (p.y - TARGET.y) / TARGET.ry;
+    if (nx * nx + ny * ny <= 1) return win(p);
+    // keep only the latest wrong pin
+    marks.innerHTML = "";
+    pin(p.x, p.y, "#5b5f78");
+    const decoy = DECOYS.find(d => Math.hypot(p.x - d.x, p.y - d.y) <= d.r);
+    const dist = Math.hypot(p.x - TARGET.x, p.y - TARGET.y);
+    if (decoy) feedback(dist < 120 ? "warm" : "cold", decoy.say);
+    else if (dist < 90) feedback("hot", "Hot. You can almost hear the quacking.");
+    else if (dist < 170) feedback("warm", "Warm. Keep going toward the green.");
+    else feedback("cold", p.x > 210 ? "Cold. And you've crossed the river." : "Cold. Wrong part of town entirely.");
+    buzz(15);
+  });
+
+  function win(p, fresh = true) {
+    done = true;
+    marks.innerHTML = "";
+    el("circle", { cx:TARGET.x, cy:TARGET.y, r:26, fill:"none", stroke:"#ff3b4e", "stroke-width":3, class:"ripple" });
+    pin(p ? p.x : 63, p ? p.y : 400, "#ff3b4e");
+    feedback("hot", "Found it. The bench by the duck island.");
+    if (fresh) { setProg({ code:CODE, at:Date.now() }); buzz([30, 40, 60]); }
+    $("#code").textContent = CODE;
+    const w = $("#win"); w.classList.add("show");
+    if (fresh) setTimeout(() => w.scrollIntoView({ behavior:"smooth", block:"center" }), 500);
+  }
+
+  $("#showStreet").addEventListener("click", () => {
+    const h = $("#hadekel");
+    h.classList.remove("glow"); void h.getBoundingClientRect(); h.classList.add("glow");
+  });
+  $("#again").addEventListener("click", () => {
+    done = false; taps = 0; marks.innerHTML = "";
+    $("#tries").textContent = "Taps: 0"; $("#fb").classList.remove("show"); $("#win").classList.remove("show");
+    const c = $("#clue3"); c.parentNode.classList.add("hidden"); c.textContent = "Clue 3 is sealed. Tap the map twice to unseal it.";
+  });
+
+  if (getProg()[KEY]) win(null, false);
+})();
+</script>
+</body>
+</html>
