@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Gazette — Your friend group's weekly roast tabloid</title>
+<style>
+  :root {
+    --ink: #141414;
+    --paper: #f4efe3;
+    --paper-2: #ebe3d0;
+    --red: #d7141a;
+    --red-dark: #a50e12;
+    --yellow: #ffd21f;
+    --felt: #0f5c3a;
+    --muted: #5d574c;
+    --rule: #141414;
+    --head: Impact, "Anton", "Haettenschweiler", "Arial Narrow Bold", "Oswald", sans-serif;
+    --serif: Georgia, "Times New Roman", Times, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --he-serif: "Frank Ruhl Libre", "David", "Narkisim", "Times New Roman", serif;
+    --he-sans: "Heebo", "Arial Hebrew", "Segoe UI", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- LANDING ---------- */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px; max-width: 1120px; margin: 0 auto;
+  }
+  .logo {
+    font-family: var(--head); font-size: 28px; letter-spacing: .5px;
+    background: var(--red); color: #fff; padding: 2px 12px 0; transform: rotate(-2deg);
+    display: inline-block; text-decoration: none;
+  }
+  .topbar nav a { margin-left: 18px; font-weight: 600; text-decoration: none; font-size: 15px; }
+  .topbar nav a:hover { color: var(--red); }
+
+  .hero {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0/14px 14px,
+      linear-gradient(135deg, #1a1a1a, #2b0a0b 70%);
+    color: #fff; position: relative; overflow: hidden;
+  }
+  .hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; padding-top: 70px; padding-bottom: 80px; }
+  .kicker {
+    display: inline-block; background: var(--yellow); color: var(--ink); font-weight: 800;
+    text-transform: uppercase; font-size: 13px; letter-spacing: 1.5px; padding: 4px 10px; transform: rotate(-1deg);
+  }
+  .hero h1 {
+    font-family: var(--head); font-weight: 400; font-size: clamp(44px, 7vw, 88px);
+    line-height: .95; margin: 18px 0 18px; text-transform: uppercase;
+  }
+  .hero h1 em { font-style: normal; color: var(--yellow); }
+  .hero p.lead { font-size: 19px; max-width: 540px; color: #e8e2d6; margin: 0 0 28px; }
+  .btn {
+    display: inline-block; font-family: var(--head); font-size: 22px; letter-spacing: .5px; text-transform: uppercase;
+    background: var(--red); color: #fff; border: 3px solid var(--ink); padding: 10px 24px 8px;
+    text-decoration: none; cursor: pointer; box-shadow: 5px 5px 0 var(--ink); transition: transform .1s, box-shadow .1s;
+  }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+  .btn:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn.alt { background: var(--yellow); color: var(--ink); }
+  .hero .btn { border-color: #fff; box-shadow: 5px 5px 0 var(--yellow); }
+  .hero .btn.alt { box-shadow: 5px 5px 0 var(--red); margin-left: 12px; }
+  .hero-paper {
+    background: var(--paper); color: var(--ink); padding: 16px; transform: rotate(3deg);
+    box-shadow: 0 25px 50px rgba(0,0,0,.5); border: 1px solid #000; max-width: 380px; justify-self: center; width: 100%;
+  }
+  .hero-paper .mini-mast { font-family: var(--head); font-size: 34px; text-align: center; border-bottom: 3px double var(--ink); line-height: 1; padding-bottom: 6px; }
+  .hero-paper .mini-head { background: var(--red); color: #fff; font-family: var(--head); font-size: 30px; line-height: 1; padding: 10px; margin: 10px 0; text-transform: uppercase; }
+  .hero-paper .mini-photo { height: 120px; display: grid; place-items: center; font-size: 60px; background: repeating-radial-gradient(circle at 50% 50%, #c9c0aa 0 2px, #e3dccb 2px 5px); border: 2px solid var(--ink); }
+  .hero-paper .mini-lines span { display: block; height: 8px; background: #cfc6b2; margin: 7px 0; }
+  .hero-paper .mini-lines span:nth-child(2) { width: 85%; }
+  .hero-paper .mini-lines span:nth-child(3) { width: 60%; }
+  .stamp {
+    position: absolute; top: -14px; right: -18px; background: var(--yellow); color: var(--ink);
+    font-family: var(--head); font-size: 18px; padding: 16px 10px; border-radius: 50%; transform: rotate(14deg);
+    text-align: center; line-height: 1; width: 92px; height: 92px; display: grid; place-items: center; border: 3px solid var(--ink);
+  }
+  .hero-paper-wrap { position: relative; }
+
+  section.band { padding: 80px 0; border-bottom: 3px solid var(--ink); }
+  .section-title {
+    font-family: var(--head); font-weight: 400; text-transform: uppercase;
+    font-size: clamp(34px, 5vw, 56px); line-height: 1; margin: 0 0 10px;
+  }
+  .section-sub { color: var(--muted); font-size: 18px; margin: 0 0 40px; max-width: 640px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
+  .step { background: #fff; border: 3px solid var(--ink); padding: 26px 22px; position: relative; box-shadow: 6px 6px 0 var(--ink); }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; top: -22px; left: 18px; font-family: var(--head); font-size: 30px;
+    background: var(--red); color: #fff; width: 44px; height: 44px; display: grid; place-items: center; border: 3px solid var(--ink);
+  }
+  .step .ico { font-size: 40px; }
+  .step h3 { font-family: var(--head); font-weight: 400; font-size: 26px; text-transform: uppercase; margin: 8px 0 6px; }
+  .step p { margin: 0; color: #333; }
+
+  .uses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .use { border: 3px solid var(--ink); background: var(--paper-2); overflow: hidden; }
+  .use .use-top { padding: 22px; color: #fff; font-family: var(--head); font-size: 30px; text-transform: uppercase; line-height: 1; display: flex; justify-content: space-between; align-items: center; }
+  .use .use-top span { font-size: 46px; }
+  .use.poker .use-top { background: var(--felt); }
+  .use.dnd .use-top { background: #5b2a86; }
+  .use.book .use-top { background: #b5651d; }
+  .use .use-body { padding: 18px 22px 22px; }
+  .use .fake-head { font-family: var(--serif); font-weight: 700; font-style: italic; font-size: 19px; margin: 0 0 8px; }
+  .use p { margin: 0; color: #444; font-size: 15px; }
+
+  .pricing { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); gap: 30px; justify-content: center; }
+  .price { background: #fff; border: 3px solid var(--ink); padding: 30px; text-align: center; position: relative; box-shadow: 8px 8px 0 var(--ink); }
+  .price.featured { background: var(--yellow); }
+  .price .tag { position: absolute; top: -16px; left: 50%; transform: translateX(-50%) rotate(-3deg); background: var(--red); color: #fff; font-weight: 800; font-size: 12px; letter-spacing: 1.5px; padding: 5px 12px; text-transform: uppercase; white-space: nowrap; }
+  .price h3 { font-family: var(--head); font-weight: 400; font-size: 28px; text-transform: uppercase; margin: 0; }
+  .price .amt { font-family: var(--head); font-size: 76px; line-height: 1; margin: 10px 0 0; }
+  .price .per { color: var(--muted); font-weight: 600; margin-bottom: 18px; }
+  .price ul { list-style: none; padding: 0; margin: 0 0 24px; text-align: left; }
+  .price li { padding: 7px 0; border-bottom: 1px dashed #999; }
+  .price li::before { content: "★ "; color: var(--red); }
+
+  .cta-band { background: var(--red); color: #fff; text-align: center; padding: 70px 20px; border-bottom: 3px solid var(--ink); }
+  .cta-band h2 { font-family: var(--head); font-weight: 400; font-size: clamp(36px, 6vw, 70px); line-height: 1; text-transform: uppercase; margin: 0 0 14px; }
+  .cta-band p { font-size: 19px; margin: 0 0 28px; }
+  .cta-band .btn { background: var(--yellow); color: var(--ink); }
+  .arrow-bounce { display: block; font-size: 34px; margin-top: 18px; animation: bounce 1.4s infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(10px);} }
+
+  /* ---------- SAMPLE ISSUE ---------- */
+  #sample { padding: 50px 0 80px; background: #2a2a2a; background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 8px 8px; }
+  .sample-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; color: #fff; }
+  .sample-bar .label { font-family: var(--head); font-size: 24px; text-transform: uppercase; letter-spacing: .5px; }
+  .sample-bar .label small { font-family: var(--sans); font-size: 14px; color: #bbb; text-transform: none; margin-left: 8px; letter-spacing: 0; }
+  .lang-toggle { display: inline-flex; border: 3px solid #fff; background: #111; position: sticky; top: 10px; z-index: 20; }
+  .lang-toggle button {
+    font: 800 15px var(--sans); padding: 8px 16px; border: 0; background: transparent; color: #fff; cursor: pointer;
+  }
+  .lang-toggle button[lang="he"] { font-family: var(--he-sans); }
+  .lang-toggle button.active { background: var(--yellow); color: var(--ink); }
+  .toggle-float { position: sticky; top: 10px; z-index: 30; display: flex; justify-content: flex-end; pointer-events: none; height: 0; }
+  .toggle-float .lang-toggle { pointer-events: auto; transform: translateY(-4px); box-shadow: 4px 4px 0 var(--red); }
+
+  .issue {
+    background: var(--paper);
+    background-image:
+      radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px),
+      linear-gradient(180deg, #f7f2e6, #efe8d6);
+    background-size: 4px 4px, 100% 100%;
+    max-width: 1080px; margin: 0 auto; padding: 22px 28px 34px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.6);
+    font-family: var(--serif);
+  }
+  .issue[hidden] { display: none; }
+  .issue[lang="he"] { font-family: var(--he-serif); }
+  .issue[lang="he"] .masthead h1,
+  .issue[lang="he"] .screamer,
+  .issue[lang="he"] .h-sec,
+  .issue[lang="he"] .h-big { font-family: var(--he-sans); font-weight: 900; letter-spacing: 0; }
+
+  .ear-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-family: var(--sans); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .issue[lang="he"] .ear-row { font-family: var(--he-sans); letter-spacing: 0; }
+  .ear { border: 2px solid var(--ink); padding: 6px 10px; max-width: 200px; line-height: 1.2; text-align: center; }
+  .ear.hot { background: var(--yellow); }
+  .masthead { text-align: center; border-bottom: 6px double var(--rule); padding: 6px 0 8px; }
+  .masthead h1 {
+    font-family: var(--head); font-weight: 400; margin: 0; line-height: .9; text-transform: uppercase;
+    font-size: clamp(46px, 10vw, 118px); color: var(--red);
+    text-shadow: 3px 3px 0 var(--ink);
+    letter-spacing: 1px;
+  }
+  .masthead .motto { font-style: italic; font-size: 15px; margin-top: 4px; }
+  .dateline {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; font-family: var(--sans); font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--rule); padding: 6px 0; margin-bottom: 14px;
+  }
+  .issue[lang="he"] .dateline { font-family: var(--he-sans); letter-spacing: 0; }
+
+  .exclusive { display: inline-block; background: var(--ink); color: var(--yellow); font-family: var(--sans); font-weight: 900; font-size: 14px; padding: 4px 10px; text-transform: uppercase; letter-spacing: 2px; }
+  .issue[lang="he"] .exclusive { font-family: var(--he-sans); letter-spacing: 0; }
+  .screamer {
+    font-family: var(--head); font-weight: 400; text-transform: uppercase; line-height: .88;
+    font-size: clamp(52px, 11vw, 136px); margin: 8px 0 6px; color: var(--ink);
+  }
+  .screamer .red { color: var(--red); }
+  .screamer .hl { background: var(--yellow); padding: 0 .08em; }
+  .deck { font-size: clamp(18px, 2.4vw, 24px); font-weight: 700; font-style: italic; margin: 0 0 16px; border-bottom: 2px solid var(--rule); padding-bottom: 12px; }
+
+  .front { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+  .photo {
+    position: relative; border: 3px solid var(--ink); display: grid; place-items: center; overflow: hidden;
+    background: repeating-radial-gradient(circle at 30% 40%, #bdb39c 0 1.5px, #ddd5c1 1.5px 4px);
+    min-height: 200px;
+  }
+  .photo.felt { background: radial-gradient(circle at 50% 45%, #1a8a57, #0b4a2e 75%); }
+  .photo.dark { background: repeating-linear-gradient(45deg, #2c2c2c 0 6px, #333 6px 12px); }
+  .photo .emoji { font-size: clamp(70px, 12vw, 130px); filter: grayscale(.15) contrast(1.1); line-height: 1; }
+  .photo .emoji.small { font-size: 60px; }
+  .photo .circle { position: absolute; border: 4px solid var(--red); border-radius: 50%; width: 46%; height: 60%; top: 14%; left: 27%; transform: rotate(-8deg); }
+  .photo .arrow-note { position: absolute; bottom: 10px; right: 10px; background: var(--red); color: #fff; font: 900 13px var(--sans); padding: 4px 8px; transform: rotate(-4deg); text-transform: uppercase; }
+  .issue[lang="he"] .photo .arrow-note { right: auto; left: 10px; font-family: var(--he-sans); }
+  .photo .chips { position: absolute; bottom: 12px; left: 14px; font-size: 30px; letter-spacing: -8px; }
+  .issue[lang="he"] .photo .chips { left: auto; right: 14px; }
+  .caption { font-family: var(--sans); font-size: 12.5px; font-style: italic; padding: 6px 0 0; color: #333; }
+  .issue[lang="he"] .caption { font-family: var(--he-sans); }
+  .caption b { font-style: normal; text-transform: uppercase; }
+
+  .story p { margin: 0 0 12px; font-size: 16.5px; text-align: justify; hyphens: auto; }
+  .story p.drop::first-letter { font-family: var(--head); float: left; font-size: 64px; line-height: .85; padding: 4px 8px 0 0; color: var(--red); }
+  .issue[lang="he"] .story p.drop::first-letter { float: right; padding: 4px 0 0 8px; font-family: var(--he-sans); font-weight: 900; }
+  .byline { font-family: var(--sans); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; color: var(--red); }
+  .issue[lang="he"] .byline { font-family: var(--he-sans); letter-spacing: 0; }
+  .pullquote { border-top: 4px solid var(--ink); border-bottom: 4px solid var(--ink); font-family: var(--head); font-size: 28px; line-height: 1.05; text-transform: uppercase; padding: 10px 0; margin: 14px 0; text-align: center; }
+  .issue[lang="he"] .pullquote { font-family: var(--he-sans); font-weight: 900; }
+
+  .rule-thick { border: 0; border-top: 5px solid var(--rule); margin: 26px 0 6px; }
+  .rule-thin { border: 0; border-top: 1px solid var(--rule); margin: 0 0 18px; }
+  .h-sec {
+    font-family: var(--head); font-weight: 400; text-transform: uppercase; font-size: 30px; line-height: 1;
+    margin: 0 0 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .h-sec .tab { background: var(--red); color: #fff; padding: 4px 10px 2px; }
+  .h-sec .tab.blk { background: var(--ink); color: var(--yellow); }
+  .h-sec .tab.yel { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); }
+
+  .grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .col-rule { border-left: 1px solid var(--rule); padding-left: 24px; }
+  .issue[lang="he"] .col-rule { border-left: 0; padding-left: 0; border-right: 1px solid var(--rule); padding-right: 24px; }
+
+  .roast { background: #fff; border: 3px solid var(--ink); padding: 18px; position: relative; }
+  .roast .mug { float: right; width: 74px; height: 74px; border-radius: 50%; border: 3px solid var(--ink); display: grid; place-items: center; font-size: 40px; background: var(--yellow); margin: 0 0 8px 12px; }
+  .issue[lang="he"] .roast .mug { float: left; margin: 0 12px 8px 0; }
+  .roast h3, .gossip h3 { font-size: 22px; line-height: 1.1; margin: 0 0 8px; font-style: italic; }
+  .roast p, .gossip p { margin: 0 0 10px; font-size: 15.5px; }
+
+  .gossip .item { padding: 10px 0; border-bottom: 1px dashed #777; font-size: 15.5px; }
+  .gossip .item:last-child { border-bottom: 0; }
+  .gossip .item b { color: var(--red); }
+  .blind { background: var(--ink); color: #fff; padding: 12px 14px; margin-top: 10px; font-size: 15px; }
+  .blind b { color: var(--yellow); font-family: var(--sans); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; display: block; }
+  .issue[lang="he"] .blind b { font-family: var(--he-sans); letter-spacing: 0; }
+
+  .ranks { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 14.5px; background: #fff; border: 3px solid var(--ink); }
+  .issue[lang="he"] .ranks { font-family: var(--he-sans); }
+  .ranks th { background: var(--ink); color: #fff; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; padding: 8px 10px; text-align: left; }
+  .issue[lang="he"] .ranks th { text-align: right; letter-spacing: 0; }
+  .ranks td { padding: 9px 10px; border-bottom: 1px solid #ccc; vertical-align: middle; }
+  .ranks tr:nth-child(even) td { background: #faf6ec; }
+  .ranks .rk { font-family: var(--head); font-size: 26px; width: 44px; text-align: center; }
+  .ranks .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+  .issue[lang="he"] .ranks .num { text-align: left; }
+  .ranks .up { color: #138a3c; font-weight: 900; }
+  .ranks .down { color: var(--red); font-weight: 900; }
+  .ranks .same { color: #888; font-weight: 900; }
+  .ranks .who { font-weight: 800; }
+  .ranks .note { display: block; font-weight: 400; font-size: 12.5px; color: #555; font-style: italic; }
+  .ranks tr.shame td { background: #ffe3e3 !important; }
+  .bar { height: 8px; background: #e3dccb; margin-top: 4px; min-width: 60px; }
+  .bar i { display: block; height: 100%; background: var(--felt); }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  .statboxes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+  .statbox { border: 3px solid var(--ink); background: var(--yellow); padding: 10px; text-align: center; font-family: var(--sans); }
+  .issue[lang="he"] .statbox { font-family: var(--he-sans); }
+  .statbox:nth-child(2) { background: #fff; }
+  .statbox:nth-child(3) { background: var(--red); color: #fff; }
+  .statbox:nth-child(4) { background: var(--felt); color: #fff; }
+  .statbox .big { font-family: var(--head); font-size: 34px; line-height: 1; display: block; }
+  .statbox small { font-size: 12px; font-weight: 700; text-transform: uppercase; }
+
+  .tips-wrap { background: var(--ink); color: #fff; padding: 22px; border: 3px solid var(--ink); }
+  .tips-wrap .h-sec .tab { background: var(--yellow); color: var(--ink); }
+  .tips-intro { font-family: var(--sans); font-size: 14px; color: #ccc; margin: -4px 0 14px; }
+  .issue[lang="he"] .tips-intro { font-family: var(--he-sans); }
+  .tips { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .tip {
+    background: #fffbe0; color: var(--ink); padding: 14px 14px 10px; font-size: 15px; position: relative;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.4); transform: rotate(var(--r, -1deg));
+    font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", var(--sans);
+  }
+  .issue[lang="he"] .tip { font-family: var(--he-sans); }
+  .tip::before { content: ""; position: absolute; top: -8px; left: 50%; width: 60px; height: 16px; margin-left: -30px; background: rgba(255,210,31,.75); transform: rotate(-3deg); }
+  .tip .meta { display: flex; justify-content: space-between; font-family: var(--sans); font-size: 11px; font-weight: 800; text-transform: uppercase; color: #777; margin-top: 8px; letter-spacing: .5px; }
+  .issue[lang="he"] .tip .meta { font-family: var(--he-sans); letter-spacing: 0; }
+  .tip .verdict { color: var(--red); }
+  .tip.new { animation: pop .5s ease-out; background: #e2ffe8; }
+  @keyframes pop { 0% { transform: scale(.6) rotate(-8deg); opacity: 0; } 70% { transform: scale(1.05) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(var(--r, -1deg)); } }
+
+  .tip-form { margin-top: 20px; display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: stretch; background: #222; padding: 14px; border: 2px dashed var(--yellow); }
+  .tip-form label { grid-column: 1 / -1; font-family: var(--head); font-size: 20px; text-transform: uppercase; color: var(--yellow); }
+  .issue[lang="he"] .tip-form label { font-family: var(--he-sans); font-weight: 900; }
+  .tip-form textarea, .tip-form select {
+    font: 15px var(--sans); padding: 10px; border: 2px solid #fff; background: #fff; color: var(--ink); border-radius: 0;
+  }
+  .issue[lang="he"] .tip-form textarea, .issue[lang="he"] .tip-form select { font-family: var(--he-sans); }
+  .tip-form textarea { resize: vertical; min-height: 48px; }
+  .tip-form .btn { font-size: 18px; padding: 8px 16px 6px; box-shadow: 3px 3px 0 var(--yellow); border-color: #fff; }
+  .issue[lang="he"] .tip-form .btn { font-family: var(--he-sans); font-weight: 900; }
+  .form-msg { grid-column: 1 / -1; font-family: var(--sans); font-size: 13px; color: #9ef0b4; min-height: 1em; margin: 0; }
+  .issue[lang="he"] .form-msg { font-family: var(--he-sans); }
+  .form-msg.err { color: #ff9a9a; }
+
+  .horo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+  .horo div { font-size: 14.5px; }
+  .horo b { display: block; font-family: var(--sans); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+  .issue[lang="he"] .horo b { font-family: var(--he-sans); letter-spacing: 0; }
+  .classifieds { columns: 2; column-gap: 16px; column-rule: 1px solid var(--rule); }
+  .ad { break-inside: avoid; border: 2px solid var(--ink); padding: 8px 10px; margin-bottom: 12px; font-size: 14px; background: #fff; }
+  .ad b { font-family: var(--head); font-weight: 400; font-size: 18px; text-transform: uppercase; display: block; line-height: 1.05; }
+  .issue[lang="he"] .ad b { font-family: var(--he-sans); font-weight: 900; }
+  .ad.inv { background: var(--ink); color: #fff; }
+  .ad.inv b { color: var(--yellow); }
+
+  .corrections { margin-top: 24px; border: 2px solid var(--ink); padding: 10px 14px; font-size: 14px; font-style: italic; background: var(--paper-2); }
+  .corrections b { font-style: normal; font-family: var(--sans); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+  .issue[lang="he"] .corrections b { font-family: var(--he-sans); letter-spacing: 0; }
+  .issue-foot { margin-top: 18px; border-top: 6px double var(--rule); padding-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--sans); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .issue[lang="he"] .issue-foot { font-family: var(--he-sans); letter-spacing: 0; }
+
+  .below-sample { text-align: center; color: #fff; margin-top: 40px; }
+  .below-sample p { font-size: 18px; margin: 0 0 18px; }
+
+  footer.site { background: var(--ink); color: #bbb; text-align: center; padding: 26px 20px; font-size: 14px; }
+  footer.site strong { color: var(--yellow); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 880px) {
+    .hero .wrap { grid-template-columns: 1fr; padding-top: 40px; padding-bottom: 60px; }
+    .hero-paper { max-width: 300px; }
+    .steps, .uses { grid-template-columns: 1fr; gap: 34px; }
+    .pricing { grid-template-columns: 1fr; }
+    .front, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .col-rule, .issue[lang="he"] .col-rule { border: 0; padding: 0; border-top: 1px solid var(--rule); padding-top: 18px; }
+    .statboxes { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .topbar nav a:not(:last-child) { display: none; }
+    .issue { padding: 14px 14px 24px; }
+    .ear-row .ear:last-child { display: none; }
+    .ear { max-width: none; flex: 1; }
+    .hero .btn.alt { margin: 14px 0 0; }
+    .tip-form { grid-template-columns: 1fr; }
+    .classifieds { columns: 1; }
+    .horo { grid-template-columns: 1fr; }
+    .ranks { font-size: 13px; }
+    .ranks .hide-sm { display: none; }
+    .dateline { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .arrow-bounce, .tip.new { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== LANDING =================== -->
+<header class="hero">
+  <div class="topbar">
+    <a class="logo" href="#">THE GAZETTE</a>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#uses">Use cases</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#sample">Sample issue</a>
+    </nav>
+  </div>
+  <div class="wrap">
+    <div>
+      <span class="kicker">🗞️ Extra! Extra!</span>
+      <h1>Your friends.<br>Their worst moments.<br><em>Front page news.</em></h1>
+      <p class="lead">The Gazette is a weekly roast tabloid for your friend group. Members drop anonymous tips all week; our AI editor turns them into a full-blown scandal sheet — headlines, power rankings, gossip and all.</p>
+      <a class="btn" href="#sample">Read a sample issue</a>
+      <a class="btn alt" href="#pricing">See pricing</a>
+    </div>
+    <div class="hero-paper-wrap">
+      <div class="hero-paper" aria-hidden="true">
+        <div class="mini-mast">THE FELT TIMES</div>
+        <div class="mini-head">Yossi's bluff: a nation mourns</div>
+        <div class="mini-photo">🃏</div>
+        <div class="mini-lines"><span></span><span></span><span></span></div>
+      </div>
+      <div class="stamp">100%<br>LIBEL-<br>FREE*</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="band" id="how">
+    <div class="wrap">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Three steps from "you had to be there" to "it's in print forever."</p>
+      <div class="steps">
+        <div class="step">
+          <div class="ico">🕵️</div>
+          <h3>Members drop tips</h3>
+          <p>Everyone in the group gets a private link. All week long, submit anonymous tips: the bad beat, the late arrival, the suspicious snack choices.</p>
+        </div>
+        <div class="step">
+          <div class="ico">🤖</div>
+          <h3>The AI editor gets to work</h3>
+          <p>Our agent fact-checks (loosely), cross-references, invents dramatic quotes from "sources close to the situation" and lays out a full tabloid issue.</p>
+        </div>
+        <div class="step">
+          <div class="ico">📬</div>
+          <h3>Issue drops every week</h3>
+          <p>A shareable, gloriously unhinged issue lands in your group chat — power rankings, roast column, gossip, horoscopes. Friendships tested. Bonds strengthened.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="uses" style="background: var(--paper-2);">
+    <div class="wrap">
+      <h2 class="section-title">Built for any crew</h2>
+      <p class="section-sub">If your group has a recurring thing and at least one person who can't let anything go, you need a Gazette.</p>
+      <div class="uses">
+        <div class="use poker">
+          <div class="use-top">Poker night <span>♠️</span></div>
+          <div class="use-body">
+            <p class="fake-head">"LOCAL MAN SHOVES WITH 7-2, CALLS IT 'A READ'"</p>
+            <p>Chip-count power rankings, bad-beat investigations and a weekly "Fish of the Week" exposé.</p>
+          </div>
+        </div>
+        <div class="use dnd">
+          <div class="use-top">D&amp;D table <span>🐉</span></div>
+          <div class="use-body">
+            <p class="fake-head">"BARD SEDUCES DRAGON; PARTY DEMANDS ANSWERS"</p>
+            <p>In-world tabloid from the Realm Herald: critical-fail coverage, party drama and DM conspiracy theories.</p>
+          </div>
+        </div>
+        <div class="use book">
+          <div class="use-top">Book club <span>📚</span></div>
+          <div class="use-body">
+            <p class="fake-head">"WOMAN CLAIMS SHE 'SKIMMED.' WITNESSES SAY SHE READ THE BACK COVER."</p>
+            <p>Who actually finished the book, wine-to-discussion ratio rankings, and spoiler scandals.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="pricing">
+    <div class="wrap">
+      <h2 class="section-title" style="text-align:center;">Pricing</h2>
+      <p class="section-sub" style="text-align:center; margin-left:auto; margin-right:auto;">Cheaper than the drinks you'll buy to apologize.</p>
+      <div class="pricing">
+        <div class="price">
+          <h3>Single issue</h3>
+          <div class="amt">$3</div>
+          <div class="per">per issue · whole group</div>
+          <ul>
+            <li>One full tabloid issue</li>
+            <li>Unlimited anonymous tips</li>
+            <li>English or Hebrew edition</li>
+            <li>Shareable link + printable PDF</li>
+          </ul>
+          <a class="btn alt" href="#sample">Try it</a>
+        </div>
+        <div class="price featured">
+          <div class="tag">Most popular · save 37%</div>
+          <h3>The season</h3>
+          <div class="amt">$19</div>
+          <div class="per">10 weekly issues · whole group</div>
+          <ul>
+            <li>Everything in single issue</li>
+            <li>Season-long power rankings &amp; stats</li>
+            <li>Running storylines &amp; feuds</li>
+            <li>Season finale "Year in Shame" special</li>
+          </ul>
+          <a class="btn" href="#sample">Start a season</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Don't take our word for it.<br>Read the evidence.</h2>
+    <p>Here's a real*-looking issue for a fictional poker group. (*Not real.)</p>
+    <a class="btn" href="#sample">Show me the sample issue</a>
+    <span class="arrow-bounce" aria-hidden="true">⬇</span>
+  </section>
+
+  <!-- =================== SAMPLE ISSUE =================== -->
+  <section id="sample">
+    <div class="wrap">
+      <div class="sample-bar">
+        <div class="label">Sample issue <small>Fictional poker group · generated from 9 tips</small></div>
+      </div>
+      <div class="toggle-float">
+        <div class="lang-toggle" role="group" aria-label="Issue language">
+          <button type="button" class="active" data-lang="en" lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="he" lang="he" aria-pressed="false">עברית</button>
+        </div>
+      </div>
+
+      <!-- ========== ENGLISH EDITION ========== -->
+      <article class="issue" id="issue-en" lang="en" dir="ltr">
+        <div class="ear-row">
+          <div class="ear hot">🔥 Inside: Who ate all the hummus? p.4</div>
+          <div class="ear">Price: 1 small blind</div>
+        </div>
+        <header class="masthead">
+          <h1>The Felt Times</h1>
+          <div class="motto">"All the news that's fit to fold" · Est. the night Avi lost his car keys in the pot</div>
+        </header>
+        <div class="dateline">
+          <span>Issue No. 12</span>
+          <span>Thursday Night Edition</span>
+          <span>Moshe's Living Room, Table 1</span>
+          <span>Blinds: 5/10</span>
+        </div>
+
+        <span class="exclusive">World Exclusive</span>
+        <h2 class="screamer">Yossi's <span class="hl">bluff</span><br><span class="red">ends in disaster!</span></h2>
+        <p class="deck">Local man shoves all-in with seven-deuce offsuit, stares down table for 4 full minutes, then visibly sweats through his lucky hoodie. Witnesses: "We could hear his heartbeat."</p>
+
+        <div class="front">
+          <div>
+            <div class="photo felt" style="min-height: 320px;">
+              <span class="emoji" aria-hidden="true">😰</span>
+              <span class="circle" aria-hidden="true"></span>
+              <span class="chips" aria-hidden="true">🔴🔴🔵⚫⚫</span>
+              <span class="arrow-note">Sweat: confirmed</span>
+            </div>
+            <div class="caption"><b>Pictured:</b> An artist's reconstruction of Yossi at the exact moment Dana said "call." The hoodie has since been retired.</div>
+          </div>
+          <div class="story">
+            <div class="byline">By our Senior Felt Correspondent</div>
+            <p class="drop">It was 11:47pm, the pot was 2,400 chips, and Yossi Ben-Ami had a plan. The plan, sources confirm, was "vibes."</p>
+            <p>Holding the worst starting hand in poker, Yossi pushed his entire stack into the middle, leaned back, and attempted what three separate witnesses describe as "a casual whistle." No sound came out.</p>
+            <div class="pullquote">"He looked me dead in the eye and said 'I've never been more sure of anything.'" — Dana</div>
+            <p>Dana, holding pocket queens, called instantly. Yossi then turned over his cards "like he was defusing a bomb," per Itai, who has since asked to be named as a hero in this story. He is not.</p>
+            <p>At press time, Yossi was claiming the bluff was "a long-term investment in table image." Our analysts estimate the return on that investment at negative 2,400 chips. <i>Continued on p.2 → "Is Yossi OK?"</i></p>
+          </div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="grid-3">
+          <div>
+            <h3 class="h-sec"><span class="tab">The Roast</span></h3>
+            <div class="roast">
+              <div class="mug" aria-hidden="true">🧮</div>
+              <h3>Moshe "The Calculator" folds again — to nobody's surprise</h3>
+              <p>Moshe has now folded 94% of hands this season. He brings a spreadsheet. He brings a pot-odds chart. He brings snacks that have been weighed. What he does not bring is courage.</p>
+              <p>Last Thursday, Moshe folded pocket kings preflop because, quote, "the room felt aggressive." The room was Noa eating pretzels.</p>
+              <p>Moshe, we love you. You are hosting. But at some point the Calculator has to press "=".</p>
+            </div>
+          </div>
+          <div class="col-rule gossip">
+            <h3 class="h-sec"><span class="tab blk">Felt Gossip</span></h3>
+            <div class="item"><b>SPOTTED:</b> Avi Googling "how to tell if someone is bluffing" in the bathroom at 10:15pm. He came back and called everything. He lost everything.</div>
+            <div class="item"><b>TROUBLE IN PARADISE?</b> Noa and Shira arrived in separate cars. Sources say it's "about the dealer button." Neither will comment. Both glared.</div>
+            <div class="item"><b>WHO WORE IT BETTER:</b> Itai debuted mirrored sunglasses indoors. He then walked into the fridge.</div>
+            <div class="blind"><b>Blind item</b> Which regular "accidentally" brought a deck with a suspiciously bent ace of spades? The deck has been seized as evidence.</div>
+          </div>
+          <div class="col-rule">
+            <h3 class="h-sec"><span class="tab yel">Photo desk</span></h3>
+            <div class="photo" style="min-height: 150px;">
+              <span class="emoji small" aria-hidden="true">🕶️🥶</span>
+            </div>
+            <div class="caption"><b>Exclusive:</b> Itai's sunglasses, moments before the fridge incident.</div>
+            <div class="photo dark" style="min-height: 150px; margin-top: 14px;">
+              <span class="emoji small" aria-hidden="true">🥣❓</span>
+            </div>
+            <div class="caption"><b>Crime scene:</b> The hummus bowl, found empty at 9:02pm. Investigation ongoing.</div>
+          </div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <h3 class="h-sec"><span class="tab">Power Rankings</span> <span style="font-size:18px;">Week 12 · Season chip counts</span></h3>
+        <div class="table-wrap">
+          <table class="ranks">
+            <thead>
+              <tr><th>#</th><th>Player</th><th class="hide-sm">Trend</th><th>Chips</th><th class="hide-sm">Wk ±</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="rk">1</td><td class="who">Dana "The Closer" <span class="note">Called Yossi's bluff without blinking. Probably a robot.</span></td><td class="hide-sm"><span class="up">▲ 1</span><div class="bar"><i style="width:100%"></i></div></td><td class="num">18,450</td><td class="num hide-sm up">+4,200</td></tr>
+              <tr><td class="rk">2</td><td class="who">Shira <span class="note">Quietly dangerous. Refuses to discuss the dealer button.</span></td><td class="hide-sm"><span class="down">▼ 1</span><div class="bar"><i style="width:84%"></i></div></td><td class="num">15,600</td><td class="num hide-sm down">−900</td></tr>
+              <tr><td class="rk">3</td><td class="who">Noa <span class="note">Won 3 pots while eating pretzels. Terrifying multitasker.</span></td><td class="hide-sm"><span class="up">▲ 2</span><div class="bar"><i style="width:71%"></i></div></td><td class="num">13,100</td><td class="num hide-sm up">+2,750</td></tr>
+              <tr><td class="rk">4</td><td class="who">Moshe "The Calculator" <span class="note">Folded his way to the middle. Mathematically unremarkable.</span></td><td class="hide-sm"><span class="same">● 0</span><div class="bar"><i style="width:58%"></i></div></td><td class="num">10,700</td><td class="num hide-sm">+50</td></tr>
+              <tr><td class="rk">5</td><td class="who">Itai <span class="note">Sunglasses: +0 chips, −1 dignity.</span></td><td class="hide-sm"><span class="down">▼ 1</span><div class="bar"><i style="width:45%"></i></div></td><td class="num">8,300</td><td class="num hide-sm down">−1,100</td></tr>
+              <tr><td class="rk">6</td><td class="who">Avi <span class="note">Bathroom research did not pay off.</span></td><td class="hide-sm"><span class="same">● 0</span><div class="bar"><i style="width:31%"></i></div></td><td class="num">5,750</td><td class="num hide-sm down">−2,600</td></tr>
+              <tr class="shame"><td class="rk">7</td><td class="who">Yossi 🤡 <span class="note">See front page. See also: therapy.</span></td><td class="hide-sm"><span class="down">▼ 3</span><div class="bar"><i style="width:12%"></i></div></td><td class="num">2,200</td><td class="num hide-sm down">−2,400</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="statboxes">
+          <div class="statbox"><span class="big">4:02</span><small>Longest tank (Yossi)</small></div>
+          <div class="statbox"><span class="big">94%</span><small>Moshe fold rate</small></div>
+          <div class="statbox"><span class="big">0</span><small>Hummus remaining</small></div>
+          <div class="statbox"><span class="big">2,400</span><small>Biggest pot (RIP)</small></div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="tips-wrap">
+          <h3 class="h-sec"><span class="tab">Tips submitted this week</span></h3>
+          <p class="tips-intro">Raw, unedited, 100% anonymous. The editor's verdict is final and legally meaningless.</p>
+          <ul class="tips" data-tips></ul>
+          <form class="tip-form" data-form novalidate>
+            <label for="tip-en">🕵️ Submit a tip</label>
+            <textarea id="tip-en" name="tip" maxlength="220" placeholder="e.g. Shira has been practicing her poker face in the car mirror…" required></textarea>
+            <select name="who" aria-label="Tip is about">
+              <option value="">About… (optional)</option>
+              <option>Yossi</option><option>Dana</option><option>Moshe</option><option>Noa</option><option>Shira</option><option>Itai</option><option>Avi</option>
+            </select>
+            <button class="btn" type="submit">Leak it</button>
+            <p class="form-msg" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="grid-2">
+          <div>
+            <h3 class="h-sec"><span class="tab blk">Horoscopes</span></h3>
+            <div class="horo">
+              <div><b>♠ Spades</b>The stars say fold. The stars always say fold. You are basically Moshe.</div>
+              <div><b>♥ Hearts</b>Romance is in the air — specifically between Avi and the snack table.</div>
+              <div><b>♦ Diamonds</b>A tall stranger will raise you. It is Dana. You will lose.</div>
+              <div><b>♣ Clubs</b>Mercury is in retrograde, which is why your flush didn't come. Definitely not math.</div>
+              <div><b>🃏 Jokers</b>Hi Yossi. Take a week off. Hydrate.</div>
+              <div><b>🎲 The Dealer</b>Power corrupts. Shuffle twice anyway.</div>
+            </div>
+          </div>
+          <div class="col-rule">
+            <h3 class="h-sec"><span class="tab yel">Classifieds</span></h3>
+            <div class="classifieds">
+              <div class="ad"><b>For sale: lucky hoodie</b>Lightly sweated. No longer lucky. Ask for Yossi. Will accept chips.</div>
+              <div class="ad inv"><b>Missing: hummus</b>Last seen 8:55pm. Answers to "the good one from the shuk." Reward: one free fold.</div>
+              <div class="ad"><b>Lessons offered</b>Learn to bluff in 3 easy steps! Instructor: Yossi. Results not guaranteed. Results, in fact, guaranteed bad.</div>
+              <div class="ad"><b>Wanted: courage</b>Will pay in spreadsheets. Contact: The Calculator.</div>
+              <div class="ad inv"><b>Lost &amp; found</b>One pair of mirrored sunglasses, found inside the fridge. Slightly chilled.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="corrections"><b>Corrections:</b> Last week's issue stated Avi "almost won a hand." The Felt Times regrets the error. Avi did not almost win a hand.</div>
+
+        <div class="issue-foot">
+          <span>The Felt Times · Issue 12</span>
+          <span>Generated by The Gazette AI Editor</span>
+          <span>Next issue: Thursday, after the river</span>
+        </div>
+      </article>
+
+      <!-- ========== HEBREW EDITION ========== -->
+      <article class="issue" id="issue-he" lang="he" dir="rtl" hidden>
+        <div class="ear-row">
+          <div class="ear hot">🔥 בפנים: מי חיסל את כל החומוס? עמ' 4</div>
+          <div class="ear">מחיר: בליינד קטן אחד</div>
+        </div>
+        <header class="masthead">
+          <h1>ידיעות הלבד</h1>
+          <div class="motto">"כל החדשות שראויות לפולד" · נוסד בלילה שאבי איבד את מפתחות האוטו בקופה</div>
+        </header>
+        <div class="dateline">
+          <span>גיליון מס' 12</span>
+          <span>מהדורת יום חמישי בלילה</span>
+          <span>הסלון של משה, שולחן 1</span>
+          <span>בליינדים: 5/10</span>
+        </div>
+
+        <span class="exclusive">בלעדי עולמי</span>
+        <h2 class="screamer">הבלוף של <span class="hl">יוסי</span><br><span class="red">נגמר באסון!</span></h2>
+        <p class="deck">תושב מקומי דחף אול-אין עם שבע-שתיים לא באותה צורה, בהה בשולחן ארבע דקות שלמות, ואז הזיע באופן גלוי דרך הקפוצ'ון המזל שלו. עדים: "שמענו לו את הדופק."</p>
+
+        <div class="front">
+          <div>
+            <div class="photo felt" style="min-height: 320px;">
+              <span class="emoji" aria-hidden="true">😰</span>
+              <span class="circle" aria-hidden="true"></span>
+              <span class="chips" aria-hidden="true">🔴🔴🔵⚫⚫</span>
+              <span class="arrow-note">זיעה: אומתה</span>
+            </div>
+            <div class="caption"><b>בתמונה:</b> שחזור אמנותי של יוסי ברגע המדויק שבו דנה אמרה "קול". הקפוצ'ון הוצא מאז לגמלאות.</div>
+          </div>
+          <div class="story">
+            <div class="byline">מאת כתבנו הבכיר לענייני לבד</div>
+            <p class="drop">השעה הייתה 23:47, בקופה היו 2,400 צ'יפים, וליוסי בן-עמי הייתה תוכנית. התוכנית, כך מאשרים גורמים, הייתה "וייב".</p>
+            <p>עם היד הפותחת הגרועה ביותר בפוקר, יוסי דחף את כל הערימה שלו לאמצע, נשען אחורה וניסה את מה ששלושה עדים נפרדים מתארים כ"שריקה קלילה". שום צליל לא יצא.</p>
+            <div class="pullquote">"הוא הסתכל לי ישר בעיניים ואמר 'מעולם לא הייתי בטוח יותר בשום דבר.'" — דנה</div>
+            <p>דנה, עם זוג מלכות ביד, עשתה קול מיידי. יוסי הפך את הקלפים שלו "כאילו הוא מנטרל פצצה", לדברי איתי, שביקש מאז שיוזכר בכתבה כגיבור. הוא לא.</p>
+            <p>נכון לסגירת הגיליון, יוסי טוען שהבלוף היה "השקעה ארוכת טווח בתדמית שולחן". האנליסטים שלנו מעריכים את התשואה על ההשקעה במינוס 2,400 צ'יפים. <i>המשך בעמ' 2 ← "יוסי, אתה בסדר?"</i></p>
+          </div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="grid-3">
+          <div>
+            <h3 class="h-sec"><span class="tab">הצלייה</span></h3>
+            <div class="roast">
+              <div class="mug" aria-hidden="true">🧮</div>
+              <h3>משה "המחשבון" עושה פולד שוב — ואף אחד לא מופתע</h3>
+              <p>משה עשה פולד ב-94% מהידיים העונה. הוא מביא גיליון אקסל. הוא מביא טבלת סיכויי קופה. הוא מביא נשנושים שנשקלו מראש. מה שהוא לא מביא זה אומץ.</p>
+              <p>ביום חמישי שעבר משה זרק זוג מלכים לפני הפלופ כי, ציטוט, "החדר הרגיש אגרסיבי". החדר היה נועה אוכלת בייגלה.</p>
+              <p>משה, אנחנו אוהבים אותך. אתה המארח. אבל בשלב מסוים המחשבון צריך ללחוץ על "=".</p>
+            </div>
+          </div>
+          <div class="col-rule gossip">
+            <h3 class="h-sec"><span class="tab blk">רכילות הלבד</span></h3>
+            <div class="item"><b>נצפה:</b> אבי מגגל "איך לדעת אם מישהו מבלף" בשירותים ב-22:15. הוא חזר ועשה קול על הכול. הוא הפסיד הכול.</div>
+            <div class="item"><b>צרות בגן עדן?</b> נועה ושירה הגיעו במכוניות נפרדות. גורמים אומרים שזה "על כפתור הדילר". שתיהן מסרבות להגיב. שתיהן נעצו מבטים.</div>
+            <div class="item"><b>על מי זה נראה יותר טוב:</b> איתי השיק משקפי שמש ממורכים בתוך הבית. מיד אחר כך הוא נכנס במקרר.</div>
+            <div class="blind"><b>אייטם עיוור</b> איזה שחקן קבוע הביא "בטעות" חפיסה עם אס פיק כפוף באופן חשוד? החפיסה הוחרמה כראיה.</div>
+          </div>
+          <div class="col-rule">
+            <h3 class="h-sec"><span class="tab yel">דסק הצילום</span></h3>
+            <div class="photo" style="min-height: 150px;">
+              <span class="emoji small" aria-hidden="true">🕶️🥶</span>
+            </div>
+            <div class="caption"><b>בלעדי:</b> משקפי השמש של איתי, רגעים לפני תקרית המקרר.</div>
+            <div class="photo dark" style="min-height: 150px; margin-top: 14px;">
+              <span class="emoji small" aria-hidden="true">🥣❓</span>
+            </div>
+            <div class="caption"><b>זירת הפשע:</b> קערת החומוס, נמצאה ריקה ב-21:02. החקירה נמשכת.</div>
+          </div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <h3 class="h-sec"><span class="tab">דירוג הכוח</span> <span style="font-size:18px;">שבוע 12 · ספירת צ'יפים עונתית</span></h3>
+        <div class="table-wrap">
+          <table class="ranks">
+            <thead>
+              <tr><th>#</th><th>שחקן</th><th class="hide-sm">מגמה</th><th>צ'יפים</th><th class="hide-sm">± שבועי</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="rk">1</td><td class="who">דנה "הסוגרת" <span class="note">תפסה את הבלוף של יוסי בלי למצמץ. כנראה רובוט.</span></td><td class="hide-sm"><span class="up">▲ 1</span><div class="bar"><i style="width:100%"></i></div></td><td class="num" dir="ltr">18,450</td><td class="num hide-sm up" dir="ltr">+4,200</td></tr>
+              <tr><td class="rk">2</td><td class="who">שירה <span class="note">מסוכנת בשקט. מסרבת לדבר על כפתור הדילר.</span></td><td class="hide-sm"><span class="down">▼ 1</span><div class="bar"><i style="width:84%"></i></div></td><td class="num" dir="ltr">15,600</td><td class="num hide-sm down" dir="ltr">−900</td></tr>
+              <tr><td class="rk">3</td><td class="who">נועה <span class="note">זכתה ב-3 קופות תוך כדי אכילת בייגלה. מולטיטאסקינג מפחיד.</span></td><td class="hide-sm"><span class="up">▲ 2</span><div class="bar"><i style="width:71%"></i></div></td><td class="num" dir="ltr">13,100</td><td class="num hide-sm up" dir="ltr">+2,750</td></tr>
+              <tr><td class="rk">4</td><td class="who">משה "המחשבון" <span class="note">עשה פולד עד לאמצע הטבלה. מתמטית, לא מרשים.</span></td><td class="hide-sm"><span class="same">● 0</span><div class="bar"><i style="width:58%"></i></div></td><td class="num" dir="ltr">10,700</td><td class="num hide-sm" dir="ltr">+50</td></tr>
+              <tr><td class="rk">5</td><td class="who">איתי <span class="note">משקפי שמש: 0+ צ'יפים, 1- כבוד עצמי.</span></td><td class="hide-sm"><span class="down">▼ 1</span><div class="bar"><i style="width:45%"></i></div></td><td class="num" dir="ltr">8,300</td><td class="num hide-sm down" dir="ltr">−1,100</td></tr>
+              <tr><td class="rk">6</td><td class="who">אבי <span class="note">המחקר בשירותים לא השתלם.</span></td><td class="hide-sm"><span class="same">● 0</span><div class="bar"><i style="width:31%"></i></div></td><td class="num" dir="ltr">5,750</td><td class="num hide-sm down" dir="ltr">−2,600</td></tr>
+              <tr class="shame"><td class="rk">7</td><td class="who">יוסי 🤡 <span class="note">ראו עמוד ראשון. ראו גם: טיפול.</span></td><td class="hide-sm"><span class="down">▼ 3</span><div class="bar"><i style="width:12%"></i></div></td><td class="num" dir="ltr">2,200</td><td class="num hide-sm down" dir="ltr">−2,400</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="statboxes">
+          <div class="statbox"><span class="big">4:02</span><small>ההתלבטות הארוכה (יוסי)</small></div>
+          <div class="statbox"><span class="big">94%</span><small>אחוז הפולד של משה</small></div>
+          <div class="statbox"><span class="big">0</span><small>חומוס שנשאר</small></div>
+          <div class="statbox"><span class="big">2,400</span><small>הקופה הגדולה (נ.ב.)</small></div>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="tips-wrap">
+          <h3 class="h-sec"><span class="tab">טיפים שהתקבלו השבוע</span></h3>
+          <p class="tips-intro">גולמי, לא ערוך, אנונימי ב-100%. פסיקת העורך סופית וחסרת כל משמעות משפטית.</p>
+          <ul class="tips" data-tips></ul>
+          <form class="tip-form" data-form novalidate>
+            <label for="tip-he">🕵️ שלחו טיפ</label>
+            <textarea id="tip-he" name="tip" maxlength="220" placeholder="למשל: שירה מתאמנת על פרצוף פוקר במראה של האוטו…" required></textarea>
+            <select name="who" aria-label="על מי הטיפ">
+              <option value="">על מי… (לא חובה)</option>
+              <option value="Yossi">יוסי</option><option value="Dana">דנה</option><option value="Moshe">משה</option><option value="Noa">נועה</option><option value="Shira">שירה</option><option value="Itai">איתי</option><option value="Avi">אבי</option>
+            </select>
+            <button class="btn" type="submit">הדליפו</button>
+            <p class="form-msg" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <hr class="rule-thick"><hr class="rule-thin">
+
+        <div class="grid-2">
+          <div>
+            <h3 class="h-sec"><span class="tab blk">הורוסקופ</span></h3>
+            <div class="horo">
+              <div><b>♠ פיק</b>הכוכבים אומרים פולד. הכוכבים תמיד אומרים פולד. אתם בעצם משה.</div>
+              <div><b>♥ לב</b>רומנטיקה באוויר — ליתר דיוק, בין אבי לשולחן הנשנושים.</div>
+              <div><b>♦ יהלום</b>זר גבוה יעשה לכם רייז. זו דנה. אתם תפסידו.</div>
+              <div><b>♣ תלתן</b>מרקורי בנסיגה, ולכן הפלאש לא הגיע. בטוח לא בגלל מתמטיקה.</div>
+              <div><b>🃏 ג'וקר</b>היי יוסי. קח שבוע חופש. תשתה מים.</div>
+              <div><b>🎲 הדילר</b>כוח משחית. תערבבו פעמיים בכל זאת.</div>
+            </div>
+          </div>
+          <div class="col-rule">
+            <h3 class="h-sec"><span class="tab yel">לוח מודעות</span></h3>
+            <div class="classifieds">
+              <div class="ad"><b>למכירה: קפוצ'ון מזל</b>מוזע קלות. כבר לא מביא מזל. לפנות ליוסי. מקבל צ'יפים.</div>
+              <div class="ad inv"><b>אבד: חומוס</b>נראה לאחרונה ב-20:55. עונה לשם "הטוב מהשוק". פרס: פולד חינם אחד.</div>
+              <div class="ad"><b>שיעורים פרטיים</b>למדו לבלף ב-3 צעדים פשוטים! מדריך: יוסי. אין הבטחה לתוצאות. למעשה, מובטחות תוצאות גרועות.</div>
+              <div class="ad"><b>דרוש: אומץ</b>משלם בגיליונות אקסל. ליצירת קשר: המחשבון.</div>
+              <div class="ad inv"><b>אבדות ומציאות</b>זוג משקפי שמש ממורכים, נמצאו בתוך המקרר. מקוררים קלות.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="corrections"><b>תיקונים:</b> בגיליון הקודם נכתב שאבי "כמעט ניצח ביד". מערכת ידיעות הלבד מצטערת על הטעות. אבי לא כמעט ניצח ביד.</div>
+
+        <div class="issue-foot">
+          <span>ידיעות הלבד · גיליון 12</span>
+          <span>נוצר על ידי עורך ה-AI של The Gazette</span>
+          <span>הגיליון הבא: יום חמישי, אחרי הריבר</span>
+        </div>
+      </article>
+
+      <div class="below-sample">
+        <p>Your group deserves this level of journalism.</p>
+        <a class="btn" href="#pricing">Start your Gazette — from $3</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <strong>Prototype</strong> — all names and content are fictional sample data
+  <div>Prototype, demo content</div>
+</footer>
+
+<script>
+(function () {
+  // Seeded tips; each has EN + HE text so both editions render them.
+  var tips = [
+    { en: "Yossi practiced his 'poker face' in the elevator. A neighbor asked if he was okay.", he: "יוסי תרגל 'פרצוף פוקר' במעלית. שכן שאל אותו אם הוא בסדר.", who: "Yossi", verdict: "confirmed" },
+    { en: "Moshe brought a laminated pot-odds chart. Laminated.", he: "משה הביא טבלת סיכויי קופה מנוילנת. מנוילנת.", who: "Moshe", verdict: "confirmed" },
+    { en: "I have reason to believe Noa ate the hummus. Her pretzels were suspiciously clean.", he: "יש לי סיבה להאמין שנועה אכלה את החומוס. הבייגלה שלה היו נקיים באופן חשוד.", who: "Noa", verdict: "investigating" },
+    { en: "Avi asked if a straight beats a flush. Twice. Same night.", he: "אבי שאל אם סטרייט מנצח פלאש. פעמיים. באותו ערב.", who: "Avi", verdict: "confirmed" },
+    { en: "Dana has never lost a coin flip. Dana may be a witch.", he: "דנה מעולם לא הפסידה בהטלת מטבע. ייתכן שדנה מכשפה.", who: "Dana", verdict: "unverified" },
+    { en: "Itai claims the sunglasses were 'for the glare from the lamp.' There is no lamp.", he: "איתי טוען שהמשקפיים היו 'בגלל הסינוור מהמנורה'. אין מנורה.", who: "Itai", verdict: "debunked" }
+  ];
+  var names = { Yossi: "יוסי", Dana: "דנה", Moshe: "משה", Noa: "נועה", Shira: "שירה", Itai: "איתי", Avi: "אבי" };
+  var L = {
+    en: {
+      about: "Re: ", anon: "Anonymous",
+      verdicts: { confirmed: "✔ Confirmed", investigating: "🔎 Investigating", unverified: "❓ Unverified", debunked: "✘ Debunked", fresh: "🆕 Just in" },
+      ok: "Tip received! The editor is cackling. It's been added to the list.",
+      empty: "A tip needs words. Even Yossi's bluff had words."
+    },
+    he: {
+      about: "על: ", anon: "אנונימי",
+      verdicts: { confirmed: "✔ אומת", investigating: "🔎 בבדיקה", unverified: "❓ לא מאומת", debunked: "✘ הופרך", fresh: "🆕 חם מהתנור" },
+      ok: "הטיפ התקבל! העורך צוחק בקול. הוא נוסף לרשימה.",
+      empty: "טיפ צריך מילים. אפילו לבלוף של יוסי היו מילים."
+    }
+  };
+
+  function render(freshIndex) {
+    document.querySelectorAll(".issue").forEach(function (issue) {
+      var lang = issue.getAttribute("lang");
+      var t = L[lang];
+      var list = issue.querySelector("[data-tips]");
+      list.textContent = "";
+      tips.forEach(function (tip, i) {
+        var li = document.createElement("li");
+        li.className = "tip" + (i === freshIndex ? " new" : "");
+        li.style.setProperty("--r", ((i * 37) % 5 - 2) * 0.6 + "deg");
+        var text = document.createElement("div");
+        text.textContent = "“" + (tip[lang] || tip.en) + "”";
+        var meta = document.createElement("div");
+        meta.className = "meta";
+        var who = document.createElement("span");
+        who.textContent = tip.who ? t.about + (lang === "he" ? names[tip.who] : tip.who) : t.anon;
+        var v = document.createElement("span");
+        v.className = "verdict";
+        v.textContent = t.verdicts[tip.verdict];
+        meta.appendChild(who); meta.appendChild(v);
+        li.appendChild(text); li.appendChild(meta);
+        list.appendChild(li);
+      });
+    });
+  }
+
+  document.querySelectorAll("[data-form]").forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var lang = form.closest(".issue").getAttribute("lang");
+      var msg = form.querySelector(".form-msg");
+      var text = form.tip.value.trim();
+      if (!text) {
+        msg.textContent = L[lang].empty;
+        msg.classList.add("err");
+        form.tip.focus();
+        return;
+      }
+      // User tips show verbatim in both editions (no translation in the prototype).
+      tips.unshift({ en: text, he: text, who: form.who.value, verdict: "fresh" });
+      render(0);
+      form.reset();
+      msg.classList.remove("err");
+      msg.textContent = L[lang].ok;
+    });
+  });
+
+  var buttons = document.querySelectorAll(".lang-toggle button");
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var lang = btn.dataset.lang;
+      document.getElementById("issue-en").hidden = lang !== "en";
+      document.getElementById("issue-he").hidden = lang !== "he";
+      buttons.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", on);
+      });
+      var sample = document.getElementById("sample");
+      if (sample.getBoundingClientRect().top < 0) sample.scrollIntoView();
+    });
+  });
+
+  render(-1);
+})();
+</script>
+</body>
+</html>

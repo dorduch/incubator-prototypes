@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Treasure Hunter — find the thing you lost when you were eight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbf4e8;
+    --paper:#fffaf1;
+    --sand:#f1e3cc;
+    --ink:#3a2a1f;
+    --ink-soft:#6b5546;
+    --terracotta:#c8643b;
+    --terracotta-dark:#a44d29;
+    --mustard:#e2a93b;
+    --sage:#7d9a7a;
+    --sage-dark:#5b7a59;
+    --rose:#e8a5a0;
+    --line:#e5d4b8;
+    --shadow:0 1px 2px rgba(58,42,31,.06),0 8px 24px rgba(58,42,31,.08);
+    --radius:18px;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --hand:"Caveat","Comic Sans MS","Bradley Hand",cursive;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;font-family:var(--sans);color:var(--ink);line-height:1.55;
+    background:
+      radial-gradient(circle at 12% 8%,rgba(226,169,59,.14),transparent 40%),
+      radial-gradient(circle at 88% 30%,rgba(200,100,59,.10),transparent 45%),
+      var(--cream);
+  }
+  img{max-width:100%;display:block}
+  [hidden]{display:none!important}
+  a{color:var(--terracotta-dark)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+  h1{font-size:clamp(2.3rem,5.5vw,4rem)}
+  h2{font-size:clamp(1.7rem,3.4vw,2.5rem)}
+  h3{font-size:1.2rem}
+  .eyebrow{font-family:var(--hand);font-size:1.5rem;color:var(--terracotta);margin:0 0 .25em;transform:rotate(-1.5deg);display:inline-block}
+  .muted{color:var(--ink-soft)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+    font:600 1rem var(--sans);padding:.9em 1.5em;border-radius:999px;border:0;cursor:pointer;
+    text-decoration:none;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  }
+  .btn:focus-visible{outline:3px solid var(--mustard);outline-offset:3px}
+  .btn-primary{background:var(--terracotta);color:#fff;box-shadow:0 6px 0 var(--terracotta-dark)}
+  .btn-primary:hover{transform:translateY(-1px);background:#d06d44}
+  .btn-primary:active{transform:translateY(4px);box-shadow:0 2px 0 var(--terracotta-dark)}
+  .btn-ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--cream)}
+
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:20;background:rgba(251,244,232,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:.5em;font-family:var(--serif);font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--ink)}
+  .logo-mark{width:34px;height:34px;border-radius:50%;background:var(--terracotta);display:grid;place-items:center;font-size:1.1rem;box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+  .nav-links{display:flex;gap:1.4rem;align-items:center}
+  .nav-links a{color:var(--ink);text-decoration:none;font-weight:500;font-size:.95rem}
+  .nav-links a:hover{color:var(--terracotta)}
+  .nav-links .btn{padding:.55em 1.1em;font-size:.9rem;box-shadow:0 4px 0 var(--terracotta-dark)}
+  @media (max-width:720px){.nav-links a:not(.btn){display:none}}
+
+  /* hero */
+  .hero{padding:72px 0 56px}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .hero p.lead{font-size:1.2rem;color:var(--ink-soft);max-width:34em}
+  .hero h1 em{font-style:italic;color:var(--terracotta)}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0 18px}
+  .hero-note{font-size:.9rem;color:var(--ink-soft)}
+  .polaroid-stack{position:relative;height:400px}
+  .polaroid{
+    position:absolute;background:#fff;padding:14px 14px 48px;border-radius:4px;box-shadow:var(--shadow);width:230px;
+  }
+  .polaroid .ph{height:200px;border-radius:2px;display:grid;place-items:center;font-size:5rem}
+  .polaroid .cap{font-family:var(--hand);font-size:1.35rem;text-align:center;margin-top:10px;color:var(--ink)}
+  .p1{left:4%;top:30px;transform:rotate(-8deg)}
+  .p1 .ph{background:linear-gradient(135deg,#f6d6a8,#e8a5a0)}
+  .p2{right:2%;top:0;transform:rotate(6deg)}
+  .p2 .ph{background:linear-gradient(135deg,#bcd3b6,#8fb3c9)}
+  .p3{left:22%;top:150px;transform:rotate(-1deg);z-index:2}
+  .p3 .ph{background:conic-gradient(from 30deg,#f7a8b8,#fbd36b,#9fe0b0,#8ec5ff,#c8a2ff,#f7a8b8)}
+  .tape{position:absolute;top:-12px;left:50%;width:80px;height:24px;margin-left:-40px;background:rgba(226,169,59,.45);transform:rotate(-3deg)}
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr}
+    .polaroid-stack{height:340px;max-width:420px;margin:0 auto;width:100%}
+    .polaroid{width:190px}.polaroid .ph{height:160px;font-size:4rem}
+  }
+
+  section{padding:64px 0}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 40px}
+
+  /* how */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .step{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);position:relative}
+  .step .num{font-family:var(--serif);font-size:2.6rem;color:var(--mustard);line-height:1}
+  .step .ico{position:absolute;top:22px;right:22px;font-size:1.8rem}
+  @media (max-width:760px){.steps{grid-template-columns:1fr}}
+
+  /* stories */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .quote{background:#fff;border-radius:6px;padding:22px 22px 18px;box-shadow:var(--shadow);font-family:var(--hand);font-size:1.4rem;line-height:1.3;position:relative}
+  .quote:nth-child(1){transform:rotate(-1deg)}
+  .quote:nth-child(2){transform:rotate(1deg);background:#fff8df}
+  .quote:nth-child(3){transform:rotate(-.5deg)}
+  .quote small{display:block;font-family:var(--sans);font-size:.8rem;color:var(--ink-soft);margin-top:10px}
+  @media (max-width:760px){.quotes{grid-template-columns:1fr}}
+
+  /* pricing */
+  .pricing{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:780px;margin:0 auto}
+  .price-card{background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:30px;text-align:center}
+  .price-card.accent{border-color:var(--terracotta);background:#fff3ea}
+  .price{font-family:var(--serif);font-size:3.4rem;font-weight:700;line-height:1;margin:.15em 0}
+  .price-card ul{list-style:none;padding:0;margin:18px 0 0;text-align:left;color:var(--ink-soft)}
+  .price-card li{padding:6px 0 6px 28px;position:relative}
+  .price-card li::before{content:"✦";position:absolute;left:4px;color:var(--terracotta)}
+  .plus{display:none}
+  @media (max-width:680px){.pricing{grid-template-columns:1fr}}
+
+  /* form */
+  .setup{background:var(--sand);border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+  .form-card{background:var(--paper);border-radius:24px;box-shadow:var(--shadow);padding:34px;max-width:860px;margin:0 auto}
+  .form-grid{display:grid;grid-template-columns:240px 1fr;gap:28px}
+  @media (max-width:720px){.form-grid{grid-template-columns:1fr}.form-card{padding:22px}.drop{max-width:220px}}
+  .lbl{display:block;font-weight:600;margin:0 0 6px;font-size:.95rem}
+  .hint{font-size:.83rem;color:var(--ink-soft);margin-top:4px}
+  .field{margin-bottom:20px}
+  input[type=text],input[type=number],textarea{
+    width:100%;font:inherit;padding:.75em .9em;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);
+  }
+  textarea{min-height:110px;resize:vertical}
+  input:focus,textarea:focus{outline:none;border-color:var(--terracotta);box-shadow:0 0 0 4px rgba(200,100,59,.15)}
+  .drop{
+    border:2px dashed var(--terracotta);border-radius:16px;background:#fff7ef;aspect-ratio:1/1;display:grid;place-items:center;
+    text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:background .15s;
+  }
+  .drop:hover,.drop.drag{background:#ffeedd}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .drop .empty{padding:16px;color:var(--ink-soft);font-size:.9rem}
+  .drop .empty b{display:block;font-size:2.4rem;margin-bottom:6px}
+  .drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .clear-photo{margin-top:8px;background:none;border:0;color:var(--terracotta-dark);font:500 .85rem var(--sans);cursor:pointer;text-decoration:underline;padding:0}
+  .row2{display:grid;grid-template-columns:140px 1fr;gap:18px}
+  @media (max-width:480px){.row2{grid-template-columns:1fr}}
+  .budget-out{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--terracotta)}
+  input[type=range]{width:100%;accent-color:var(--terracotta);height:28px}
+  .sites{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{position:relative}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip span{
+    display:inline-flex;align-items:center;gap:.4em;padding:.5em .95em;border-radius:999px;border:1.5px solid var(--line);background:#fff;
+    cursor:pointer;font-size:.92rem;font-weight:500;user-select:none;transition:all .12s;
+  }
+  .chip input:checked + span{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .chip input:focus-visible + span{outline:3px solid var(--mustard);outline-offset:2px}
+  .chip span::before{content:"";width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor}
+  .chip input:checked + span::before{background:var(--mustard);border-color:var(--mustard)}
+  .form-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px dashed var(--line);margin-top:10px;padding-top:22px}
+  .err{color:#b3261e;font-size:.88rem;font-weight:500;min-height:1.2em}
+
+  /* dashboard */
+  #dashboard[hidden]{display:none}
+  .dash-top{display:flex;gap:22px;align-items:stretch;flex-wrap:wrap;margin-bottom:24px}
+  .target{flex:1 1 420px;display:flex;gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);align-items:center}
+  .target .ph{flex:0 0 108px;height:108px;border-radius:14px;display:grid;place-items:center;font-size:3.4rem;
+    background:conic-gradient(from 30deg,#f7a8b8,#fbd36b,#9fe0b0,#8ec5ff,#c8a2ff,#f7a8b8);box-shadow:inset 0 0 0 4px rgba(255,255,255,.55)}
+  .target h3{font-size:1.3rem;margin-bottom:.3em}
+  .status-pill{display:inline-flex;align-items:center;gap:.45em;font-size:.8rem;font-weight:600;background:#e6f0e4;color:var(--sage-dark);padding:.3em .75em;border-radius:999px}
+  .status-pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sage);animation:pulse 1.6s infinite}
+  .status-pill.found{background:#fff1d6;color:#8a5a00}
+  .status-pill.found::before{background:var(--mustard)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .stats{flex:1 1 300px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+  .stat .v{font-family:var(--serif);font-size:1.7rem;font-weight:700;line-height:1.1}
+  .stat .k{font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+  .progress{height:8px;background:var(--sand);border-radius:99px;overflow:hidden;margin-top:8px}
+  .progress i{display:block;height:100%;background:var(--terracotta);border-radius:99px}
+  .user-hunt{display:none;align-items:center;gap:14px;background:#eef4ec;border:1px solid #cfe0cb;border-radius:14px;padding:12px 16px;margin-bottom:22px;font-size:.92rem}
+  .user-hunt.show{display:flex}
+  .user-hunt .thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;flex:0 0 46px;background:#d9e7d6;display:grid;place-items:center}
+
+  .dash-grid{display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start}
+  @media (max-width:900px){.dash-grid{grid-template-columns:1fr}}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+  .panel-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px}
+  .panel-title h3{margin:0}
+  .tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:.3em .6em;border-radius:6px;background:var(--sand);color:var(--ink-soft);white-space:nowrap}
+  .timeline{list-style:none;margin:0;padding:0;position:relative;max-height:620px;overflow:auto;padding-right:4px}
+  .timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .timeline li{position:relative;padding:0 0 18px 32px;font-size:.9rem}
+  .timeline li::before{content:"";position:absolute;left:3px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2.5px solid var(--line)}
+  .timeline li.hit::before{border-color:var(--terracotta);background:var(--terracotta)}
+  .timeline li.today::before{border-color:var(--sage);background:var(--sage);box-shadow:0 0 0 4px rgba(125,154,122,.25)}
+  .timeline .d{font-weight:600}
+  .timeline .d small{font-weight:400;color:var(--ink-soft);margin-left:.35em}
+  .timeline .m{color:var(--ink-soft)}
+  .timeline .hits{color:var(--terracotta-dark);font-weight:600}
+
+  .banner{display:flex;gap:12px;align-items:flex-start;background:#fff4d9;border:1.5px solid #f0d28c;border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:.93rem}
+  .banner b{font-weight:700}
+  .context{background:#f3ece1;border-radius:12px;padding:12px 16px;font-size:.88rem;color:var(--ink-soft);margin-bottom:18px}
+  .context strong{color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media (max-width:640px){.cards{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .card .art{height:130px;position:relative;display:grid;place-items:center;font-size:3.3rem;
+    background:repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 10px,transparent 10px 20px),conic-gradient(from var(--a,30deg),#f7a8b8,#fbd36b,#9fe0b0,#8ec5ff,#c8a2ff,#f7a8b8)}
+  .card .art .noimg{position:absolute;bottom:8px;left:10px;font-size:.68rem;background:rgba(255,255,255,.85);padding:.2em .5em;border-radius:5px;color:var(--ink-soft)}
+  .conf{position:absolute;top:10px;right:10px;font-size:1rem;background:#fff;border-radius:12px;padding:.35em .6em;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.12);line-height:1.1}
+  .conf b{display:block;font-family:var(--serif);font-size:1.15rem;color:var(--sage-dark)}
+  .conf span{font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+  .card .body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .src{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);display:flex;align-items:center;gap:.4em}
+  .src .dot{width:8px;height:8px;border-radius:50%}
+  .card h4{font:600 .98rem/1.35 var(--sans);margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:6px}
+  .meta span{font-size:.75rem;background:var(--cream);border:1px solid var(--line);padding:.15em .55em;border-radius:99px;color:var(--ink-soft)}
+  .meta .over{background:#fdecea;border-color:#f3c3be;color:#a33}
+  .meta .under{background:#e9f2e7;border-color:#c9dcc4;color:var(--sage-dark)}
+  .pricing-line{display:flex;align-items:baseline;gap:8px;margin-top:auto;padding-top:6px}
+  .pricing-line .p{font-family:var(--serif);font-size:1.6rem;font-weight:700}
+  .pricing-line .s{font-size:.82rem;color:var(--ink-soft)}
+  .card .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .card .actions a{font-size:.85rem;font-weight:600;padding:.6em .9em;border-radius:10px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);flex:1;text-align:center}
+  .card .actions a:hover{border-color:var(--ink)}
+  .card .actions button{flex:1.3;font-size:.88rem;padding:.6em .9em;border-radius:10px;box-shadow:0 4px 0 var(--terracotta-dark)}
+  .card.is-found{border:2.5px solid var(--mustard);box-shadow:0 0 0 6px rgba(226,169,59,.2)}
+  .card.is-found .actions button{background:var(--mustard);box-shadow:0 4px 0 #b9851f;color:var(--ink)}
+  .card.dim{opacity:.55}
+  .found-ribbon{display:none;position:absolute;top:10px;left:-34px;background:var(--mustard);color:var(--ink);font-weight:700;font-size:.72rem;letter-spacing:.08em;padding:.3em 40px;transform:rotate(-30deg);text-transform:uppercase}
+  .card.is-found .found-ribbon{display:block}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:20px;background:rgba(58,42,31,.55)}
+  .modal.open{display:grid;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal-card{background:var(--paper);border-radius:24px;max-width:480px;width:100%;padding:34px 28px 26px;text-align:center;position:relative;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes pop{from{transform:scale(.8) rotate(-2deg);opacity:0}to{transform:none;opacity:1}}
+  .modal-card .big{font-size:4.2rem;line-height:1;margin-bottom:6px;animation:wiggle 1.2s ease-in-out infinite}
+  @keyframes wiggle{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+  .modal-card .listing{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:12px;margin:16px 0;font-size:.9rem;text-align:left}
+  .fee{display:flex;justify-content:space-between;font-size:.9rem;border-top:1px dashed var(--line);padding-top:12px;margin-top:4px;text-align:left}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .modal-close{position:absolute;top:12px;right:14px;background:none;border:0;font-size:1.5rem;cursor:pointer;color:var(--ink-soft)}
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+  .confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+  footer{padding:40px 0 50px;border-top:1px solid var(--line);text-align:center;font-size:.88rem;color:var(--ink-soft)}
+  footer .disc{display:inline-block;background:var(--sand);padding:.6em 1.1em;border-radius:99px;font-weight:500;color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true">🧭</span> Treasure Hunter</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#" data-show-dash>Example hunt</a>
+      <a class="btn btn-primary" href="#setup">Start a hunt</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">remember it?</p>
+        <h1>The thing you lost when you were eight is <em>out there</em>, somewhere.</h1>
+        <p class="lead">The bear from Grandma. The lunchbox that got left on the bus. The tape your sister borrowed in 1994. Treasure Hunter is an agent that searches second‑hand marketplaces every single day for 90 days — and taps you on the shoulder when it spots yours.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#setup">Start my hunt — $9</a>
+          <a class="btn btn-ghost" href="#" data-show-dash>See an example hunt</a>
+        </div>
+        <p class="hero-note">Pay $29 only if we find it and you say “this is the one.”</p>
+      </div>
+      <div class="polaroid-stack" aria-hidden="true">
+        <div class="polaroid p1"><div class="tape"></div><div class="ph">🚂</div><div class="cap">the wooden train, ’89</div></div>
+        <div class="polaroid p2"><div class="tape"></div><div class="ph">📼</div><div class="cap">Dad’s mixtape</div></div>
+        <div class="polaroid p3"><div class="tape"></div><div class="ph">🧸</div><div class="cap">Peace the Bear ♥</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">how it works</p>
+        <h2>You remember it. We go looking.</h2>
+        <p class="muted">No saved searches to babysit, no endless scrolling at 1 a.m. Just one patient little agent with a very good memory.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="ico">📸</span><div class="num">1</div><h3>Describe your treasure</h3><p class="muted">Upload an old photo (or a picture of one like it), tell us the year, the quirks, the colour of the tag. Set what you’d pay.</p></div>
+        <div class="step"><span class="ico">🔎</span><div class="num">2</div><h3>We hunt daily for 90 days</h3><p class="muted">Every morning the agent sweeps eBay, Poshmark, Mercari, Vinted, Etsy, FB Marketplace and Yad2 — and keeps a log you can read.</p></div>
+        <div class="step"><span class="ico">💌</span><div class="num">3</div><h3>You make the call</h3><p class="muted">Promising matches arrive with a confidence score. Tap “This is the one!” and you’re reunited. You buy direct from the seller.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORIES -->
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="quotes">
+        <div class="quote">“My mum gave mine away in a yard sale in ’98. I still think about it.”<small>— the kind of note we hear (illustrative)</small></div>
+        <div class="quote">“It had a tiny pen mark on the left ear. That’s how I’d know.”<small>— the details that matter (illustrative)</small></div>
+        <div class="quote">“I don’t need it to be mint. I need it to be <em>that one</em>.”<small>— the whole point (illustrative)</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">simple pricing</p>
+        <h2>Small to start. More only if it works.</h2>
+      </div>
+      <div class="pricing">
+        <div class="price-card">
+          <div class="muted">Start a hunt</div>
+          <div class="price">$9</div>
+          <div class="muted">one‑time, 90 days</div>
+          <ul>
+            <li>Daily searches across up to 7 marketplaces</li>
+            <li>A readable search log, every day</li>
+            <li>Matches scored against your description</li>
+          </ul>
+        </div>
+        <div class="price-card accent">
+          <div class="muted">When you find it</div>
+          <div class="price">$29</div>
+          <div class="muted">only when you say “this is the one”</div>
+          <ul>
+            <li>Charged only on a confirmed find</li>
+            <li>Item price is paid to the seller, directly</li>
+            <li>No find in 90 days? You’ve spent $9. That’s it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETUP -->
+  <section id="setup" class="setup">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">let’s begin</p>
+        <h2>Tell us about your treasure</h2>
+        <p class="muted">The more you remember, the better the hunt. (Prototype — nothing is uploaded, charged or searched.)</p>
+      </div>
+      <form class="form-card" id="huntForm" novalidate>
+        <div class="form-grid">
+          <div>
+            <label class="lbl" for="photo">Photo</label>
+            <div class="drop" id="drop">
+              <input type="file" id="photo" accept="image/*" aria-describedby="photoHint">
+              <div class="empty" id="dropEmpty"><b>🖼️</b>Drop an old photo here<br>or tap to choose</div>
+              <img id="preview" alt="Preview of your uploaded photo" hidden>
+            </div>
+            <button type="button" class="clear-photo" id="clearPhoto" hidden>Remove photo</button>
+            <p class="hint" id="photoHint">Previewed on your device only.</p>
+          </div>
+          <div>
+            <div class="field">
+              <label class="lbl" for="desc">What are we looking for?</label>
+              <textarea id="desc" placeholder="e.g. Ty Beanie Baby “Peace” the Bear — tie‑dye, embroidered peace sign on the chest, style #4053. Mine had a crease in the swing tag."></textarea>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label class="lbl" for="year">Year</label>
+                <input type="number" id="year" min="1900" max="2026" placeholder="1996" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label class="lbl" for="budget">I’d pay up to <span class="budget-out" id="budgetOut">$40</span></label>
+                <input type="range" id="budget" min="5" max="500" step="5" value="40" aria-describedby="budgetHint">
+                <p class="hint" id="budgetHint">Matches above this are still shown, just flagged.</p>
+              </div>
+            </div>
+            <div class="field">
+              <span class="lbl" id="sitesLbl">Where should we look?</span>
+              <div class="sites" role="group" aria-labelledby="sitesLbl" id="sites">
+                <label class="chip"><input type="checkbox" value="eBay" checked><span>eBay</span></label>
+                <label class="chip"><input type="checkbox" value="Poshmark" checked><span>Poshmark</span></label>
+                <label class="chip"><input type="checkbox" value="Mercari" checked><span>Mercari</span></label>
+                <label class="chip"><input type="checkbox" value="Vinted" checked><span>Vinted</span></label>
+                <label class="chip"><input type="checkbox" value="Etsy" checked><span>Etsy</span></label>
+                <label class="chip"><input type="checkbox" value="FB Marketplace"><span>FB Marketplace</span></label>
+                <label class="chip"><input type="checkbox" value="Yad2"><span>Yad2</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-foot">
+          <div>
+            <div><strong>$9</strong> today · <strong>$29</strong> only on a find</div>
+            <div class="err" id="formErr" role="alert"></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Start hunt 🧭</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" hidden>
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:28px">
+        <p class="eyebrow">example hunt</p>
+        <h2>Hunt dashboard</h2>
+        <p class="muted">Here’s what a hunt looks like a few weeks in.</p>
+      </div>
+
+      <div class="user-hunt" id="userHunt" role="status">
+        <div class="thumb" id="userThumbWrap">🧭</div>
+        <div id="userHuntText"></div>
+      </div>
+
+      <div class="dash-top">
+        <div class="target">
+          <div class="ph" aria-hidden="true">🧸</div>
+          <div>
+            <span class="status-pill" id="statusPill">Hunting daily</span>
+            <h3 style="margin-top:.5em">Ty Beanie Baby Peace the Bear (tie‑dye, style #4053, 1996/97)</h3>
+            <div class="muted" style="font-size:.88rem">Budget up to <b id="dashBudget">$40</b> · eBay, Poshmark, Mercari, Vinted, Etsy</div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">Day</div><div class="v">22<span class="muted" style="font-size:1rem">/90</span></div><div class="progress"><i style="width:24.4%"></i></div></div>
+          <div class="stat"><div class="k">Searches</div><div class="v">110</div><div class="k" style="text-transform:none;letter-spacing:0">illustrative</div></div>
+          <div class="stat"><div class="k">Matches</div><div class="v">4</div><div class="k" style="text-transform:none;letter-spacing:0">real listings</div></div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <aside class="panel" aria-labelledby="logTitle">
+          <div class="panel-title"><h3 id="logTitle">Daily search log</h3><span class="tag">Illustrative log</span></div>
+          <p class="muted" style="font-size:.82rem;margin:-4px 0 14px">Sample entries showing how the agent reports each day. Dates and counts are made up.</p>
+          <ol class="timeline" id="timeline"></ol>
+        </aside>
+
+        <div>
+          <div class="panel-title"><h3>Matches</h3><span class="tag">4 listings</span></div>
+          <div class="banner" role="note"><span aria-hidden="true">📌</span><div><b>Real listings found by a manual search on 29 Oct 2026 — prices may have changed.</b><br><span class="muted" style="font-size:.85rem">Links open the original pages. Confidence scores are illustrative, not computed.</span></div></div>
+          <div class="context">💡 <strong>Price context:</strong> completed eBay sales of Peace #4053 in late Oct 2026 ranged <strong>$0.99–$15</strong>, per the <a href="https://millennialdaydreams.com/pages/prices/peace-4053" target="_blank" rel="noopener">Millennial Daydreams price tracker</a>. Most Peace bears are common — the memories aren’t.</div>
+          <div class="cards" id="cards"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disc">Prototype — sample hunt; listings are real as of 29 Oct 2026, everything else is fictional</p>
+    <p class="disc">Prototype, demo content</p>
+    <p style="margin-top:14px">Treasure Hunter is not affiliated with eBay, Poshmark, Mercari, Vinted, Etsy, Facebook, Yad2, Ty Inc. or Millennial Daydreams.</p>
+  </div>
+</footer>
+
+<!-- found modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="big" aria-hidden="true">🧸</div>
+    <p class="eyebrow" style="margin:0">it’s you!</p>
+    <h2 id="modalTitle" style="font-size:1.9rem">Reunited, at last.</h2>
+    <p class="muted" style="margin:0">We’ve paused the hunt. Go say hello before someone else does.</p>
+    <div class="listing" id="modalListing"></div>
+    <div class="modal-actions">
+      <a class="btn btn-primary" id="modalGo" href="#" target="_blank" rel="noopener">Go to the listing ↗</a>
+      <button class="btn btn-ghost" id="modalKeep" type="button">Not quite — keep hunting</button>
+    </div>
+  </div>
+</div>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script>
+(function(){
+  var MD = "https://millennialdaydreams.com/pages/prices/peace-4053";
+  var LISTINGS = [
+    {id:"a", site:"Poshmark", dot:"#7f0353", title:'1996 Vintage Ty "Peace" Bear Beanie Babies pastel tie dye, Retired, Tag Errors',
+     price:50, ship:null, cond:null, score:92, angle:"30deg",
+     url:"https://poshmark.com/listing/1996-Vintage-Ty-Peace-Bear-Beanie-Babies-pastel-tie-dye-Retired-Tag-Errors-6340594391e053259ffb2840",
+     linkLabel:"View on Poshmark"},
+    {id:"b", site:"eBay, via Millennial Daydreams price tracker", dot:"#e53238", title:"TY Beanie Baby PEACE Tie-Dye Bear 1996 5th Gen Tag MWMT Retired Style 4053",
+     price:15.98, ship:0, cond:"New", score:88, angle:"110deg", url:MD, linkLabel:"View on tracker"},
+    {id:"c", site:"eBay, via Millennial Daydreams price tracker", dot:"#e53238", title:"Ty Beanie Baby Peace Bear 1996 PVC Pellets Evenly Split Face Bright Tie-Dye 4053",
+     price:19.95, ship:0, cond:"Pre-owned", score:84, angle:"200deg", url:MD, linkLabel:"View on tracker"},
+    {id:"d", site:"eBay, via Millennial Daydreams price tracker", dot:"#e53238", title:"TY Beanie Baby PEACE Original Double ii Surface MWMT MUSEUM QUALITY Style #4053",
+     price:34.49, ship:10.50, cond:"Pre-owned", score:79, angle:"290deg", url:MD, linkLabel:"View on tracker"}
+  ];
+  var LOG = [
+    {day:22, date:"29 Oct", today:true, msg:"Swept 5 sites, 61 new listings checked.", hits:"2 new matches on eBay (via price tracker)"},
+    {day:21, date:"28 Oct", msg:"Swept 5 sites, 48 listings. Skipped 9 “Peace” bears with the wrong tag generation."},
+    {day:20, date:"27 Oct", msg:"Swept 5 sites, 55 listings.", hits:"1 new match on eBay"},
+    {day:18, date:"25 Oct", msg:"Vinted search widened to “Ty peace bear” + “beanie tie dye”. 23 listings, nothing close."},
+    {day:15, date:"22 Oct", msg:"Swept 5 sites, 52 listings.", hits:"1 new match on eBay"},
+    {day:12, date:"19 Oct", msg:"Ignored 14 listings mentioning “rare error tag $5,000” — price outliers flagged."},
+    {day:9, date:"16 Oct", msg:"Mercari & Etsy quiet. 31 listings, closest was a 2000s Peace II."},
+    {day:5, date:"12 Oct", msg:"Swept 5 sites, 44 listings.", hits:"1 new match on Poshmark"},
+    {day:2, date:"9 Oct", msg:"Learned your description: tie‑dye, embroidered peace sign, style #4053."},
+    {day:1, date:"8 Oct", msg:"Hunt started. 90 days on the clock. 🧭"}
+  ];
+
+  var $ = function(s,el){return (el||document).querySelector(s)};
+  var budget = 40;
+  var fmt = function(n){return "$"+(n%1? n.toFixed(2) : n.toFixed(0))};
+  var fmt2 = function(n){return "$"+n.toFixed(2)};
+
+  // --- timeline
+  var tl = $("#timeline");
+  LOG.forEach(function(e){
+    var li = document.createElement("li");
+    if(e.today) li.className = "today"; else if(e.hits) li.className = "hit";
+    var d = document.createElement("div"); d.className="d";
+    d.textContent = "Day "+e.day;
+    var sm = document.createElement("small"); sm.textContent = e.date + (e.today?" · today":""); d.appendChild(sm);
+    var m = document.createElement("div"); m.className="m"; m.textContent = e.msg;
+    li.appendChild(d); li.appendChild(m);
+    if(e.hits){var h=document.createElement("div");h.className="hits";h.textContent="★ "+e.hits;li.appendChild(h);}
+    tl.appendChild(li);
+  });
+
+  // --- cards
+  var cardsEl = $("#cards");
+  function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+  function renderCards(){
+    cardsEl.innerHTML = "";
+    LISTINGS.forEach(function(l){
+      var total = l.price + (l.ship||0);
+      var c = el("article","card"); c.dataset.id = l.id;
+      var art = el("div","art"); art.style.setProperty("--a", l.angle);
+      art.appendChild(el("span",null,"🧸")).setAttribute("aria-hidden","true");
+      art.appendChild(el("span","noimg","No photo — placeholder"));
+      var conf = el("div","conf"); conf.appendChild(el("b",null,l.score+"%")); conf.appendChild(el("span",null,"illustrative score"));
+      conf.setAttribute("aria-label","Match confidence "+l.score+"%, illustrative score");
+      art.appendChild(conf);
+      art.appendChild(el("div","found-ribbon","Found!"));
+      c.appendChild(art);
+
+      var b = el("div","body");
+      var src = el("div","src"); var dot = el("span","dot"); dot.style.background=l.dot; src.appendChild(dot); src.appendChild(document.createTextNode(l.site));
+      b.appendChild(src);
+      b.appendChild(el("h4",null,l.title));
+      var meta = el("div","meta");
+      if(l.cond) meta.appendChild(el("span",null,l.cond));
+      meta.appendChild(el("span",null,"#4053"));
+      meta.appendChild(total<=budget ? el("span","under","Within budget") : el("span","over","Over budget by "+fmt2(total-budget)));
+      b.appendChild(meta);
+      var pl = el("div","pricing-line");
+      pl.appendChild(el("span","p",fmt(l.price)));
+      pl.appendChild(el("span","s", l.ship===0 ? "free shipping" : l.ship ? "+ "+fmt2(l.ship)+" shipping" : "shipping not noted"));
+      b.appendChild(pl);
+      var act = el("div","actions");
+      var a = el("a",null,l.linkLabel+" ↗"); a.href=l.url; a.target="_blank"; a.rel="noopener";
+      var btn = el("button","btn btn-primary","This is the one!"); btn.type="button";
+      btn.addEventListener("click",function(){ markFound(l.id); });
+      act.appendChild(a); act.appendChild(btn); b.appendChild(act);
+      c.appendChild(b);
+      cardsEl.appendChild(c);
+    });
+    if(foundId) applyFound();
+  }
+
+  // --- found state
+  var foundId = null, lastFocus = null;
+  var modal = $("#modal");
+  function applyFound(){
+    cardsEl.querySelectorAll(".card").forEach(function(c){
+      var isIt = c.dataset.id===foundId;
+      c.classList.toggle("is-found", isIt);
+      c.classList.toggle("dim", !!foundId && !isIt);
+      $("button",c).textContent = isIt ? "✓ Found it!" : "This is the one!";
+    });
+    var pill = $("#statusPill");
+    pill.classList.toggle("found", !!foundId);
+    pill.textContent = foundId ? "Found — hunt paused" : "Hunting daily";
+  }
+  function markFound(id){
+    foundId = id; applyFound();
+    var l = LISTINGS.filter(function(x){return x.id===id})[0];
+    var box = $("#modalListing"); box.innerHTML="";
+    box.appendChild(el("div","src",l.site));
+    var t = el("div",null,l.title); t.style.fontWeight="600"; t.style.margin="4px 0 10px"; box.appendChild(t);
+    var total = l.price+(l.ship||0);
+    var f1 = el("div","fee"); f1.appendChild(el("span",null,"Item (paid to seller)")); f1.appendChild(el("span",null,fmt2(total))); box.appendChild(f1);
+    var f2 = el("div","fee"); f2.style.borderTop="0"; f2.style.paddingTop="4px";
+    f2.appendChild(el("span",null,"Treasure Hunter finder’s fee")); f2.appendChild(el("b",null,"$29")); box.appendChild(f2);
+    var n = el("div","muted","Prototype — nothing is charged."); n.style.fontSize=".78rem"; n.style.marginTop="8px"; box.appendChild(n);
+    $("#modalGo").href = l.url;
+    lastFocus = document.activeElement;
+    modal.classList.add("open");
+    $("#modalGo").focus();
+    confetti();
+  }
+  function closeModal(){ modal.classList.remove("open"); if(lastFocus) lastFocus.focus(); }
+  $("#modalClose").addEventListener("click", closeModal);
+  modal.addEventListener("click", function(e){ if(e.target===modal) closeModal(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && modal.classList.contains("open")) closeModal(); });
+  $("#modalKeep").addEventListener("click", function(){ foundId=null; applyFound(); closeModal(); });
+
+  function confetti(){
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var box = $("#confetti"), colors=["#c8643b","#e2a93b","#7d9a7a","#e8a5a0","#8ec5ff","#c8a2ff"];
+    for(var i=0;i<90;i++){
+      var p=document.createElement("i");
+      p.style.left=Math.random()*100+"vw";
+      p.style.background=colors[i%colors.length];
+      p.style.animationDuration=(2+Math.random()*2)+"s";
+      p.style.animationDelay=(Math.random()*.5)+"s";
+      p.style.transform="rotate("+(Math.random()*360)+"deg)";
+      if(Math.random()<.3){p.style.borderRadius="50%";p.style.height="10px";}
+      box.appendChild(p);
+    }
+    setTimeout(function(){box.innerHTML="";},4800);
+  }
+
+  // --- form
+  var budgetIn = $("#budget");
+  function syncBudget(){
+    budget = +budgetIn.value;
+    $("#budgetOut").textContent = "$"+budget;
+    $("#dashBudget").textContent = "$"+budget;
+    renderCards();
+  }
+  budgetIn.addEventListener("input", syncBudget);
+
+  var photo = $("#photo"), preview = $("#preview"), drop = $("#drop"), photoData = null;
+  function showFile(file){
+    if(!file || !/^image\//.test(file.type)) return;
+    var r = new FileReader();
+    r.onload = function(ev){
+      photoData = ev.target.result;
+      preview.src = photoData; preview.hidden = false;
+      $("#dropEmpty").hidden = true; $("#clearPhoto").hidden = false;
+    };
+    r.readAsDataURL(file);
+  }
+  photo.addEventListener("change", function(){ showFile(photo.files[0]); });
+  ["dragenter","dragover"].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.add("drag");});});
+  ["dragleave","drop"].forEach(function(t){drop.addEventListener(t,function(){drop.classList.remove("drag");});});
+  drop.addEventListener("drop", function(e){ e.preventDefault(); if(e.dataTransfer.files[0]) showFile(e.dataTransfer.files[0]); });
+  $("#clearPhoto").addEventListener("click", function(){
+    photo.value=""; photoData=null; preview.hidden=true; preview.removeAttribute("src");
+    $("#dropEmpty").hidden=false; this.hidden=true;
+  });
+
+  function showDashboard(){
+    var d = $("#dashboard"); d.hidden = false;
+    requestAnimationFrame(function(){ d.scrollIntoView({behavior:"smooth",block:"start"}); });
+  }
+  document.querySelectorAll("[data-show-dash]").forEach(function(a){
+    a.addEventListener("click", function(e){ e.preventDefault(); showDashboard(); });
+  });
+
+  $("#huntForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var sites = [].map.call(document.querySelectorAll("#sites input:checked"), function(i){return i.value;});
+    var err = $("#formErr");
+    if(!sites.length){ err.textContent = "Pick at least one marketplace to search."; return; }
+    err.textContent = "";
+    var desc = $("#desc").value.trim(), year = $("#year").value.trim();
+    var txt = $("#userHuntText"); txt.innerHTML = "";
+    var strong = el("strong",null,"Your hunt is set up! ");
+    txt.appendChild(strong);
+    txt.appendChild(document.createTextNode(
+      (desc ? "“"+(desc.length>90?desc.slice(0,90)+"…":desc)+"”" : "Your treasure") +
+      (year ? " ("+year+")" : "") + " · up to $"+budget+" · "+sites.join(", ")+
+      ". In this prototype nothing is searched or charged — below is a sample hunt to show what you’d see."
+    ));
+    var thumb;
+    if(photoData){ thumb = document.createElement("img"); thumb.src = photoData; thumb.alt = ""; }
+    else { thumb = el("div",null,"🧭"); }
+    thumb.className = "thumb"; thumb.id = "userThumbWrap";
+    $("#userThumbWrap").replaceWith(thumb);
+    $("#userHunt").classList.add("show");
+    showDashboard();
+  });
+
+  renderCards();
+})();
+</script>
+</body>
+</html>
