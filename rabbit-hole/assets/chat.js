@@ -114,7 +114,7 @@
   RH.i18n();
 
   const STORE = "rh-chat-v3", DOMAIN = "rabbithole.example";
-  const cipherTxt = HE ? ["צירט", "דלפ"] : ["STF", "DTZ"];
+  const cipherTxt = HE ? ["צירט", "זחעד"] : ["STF", "DTZ"];
   const ART = {
     cipher: `<svg viewBox="0 0 300 112" preserveAspectRatio="xMidYMid slice"><rect width="300" height="112" fill="#16121c"/><g transform="translate(150 56)" fill="none"><circle r="46" stroke="#ff3b4e" stroke-width="2"/><circle r="32" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 5"/><circle r="6" fill="#ff3b4e"/></g><text x="24" y="64" fill="#ffb547" font-family="monospace" font-size="20" font-weight="700" letter-spacing="3">${cipherTxt[0]}</text><text x="214" y="64" fill="#75738a" font-family="monospace" font-size="20" font-weight="700" letter-spacing="3">${cipherTxt[1]}</text></svg>`,
     map: `<svg viewBox="0 0 300 112" preserveAspectRatio="xMidYMid slice"><rect width="300" height="112" fill="#efe6d2"/><path d="M190 0 C170 40 210 70 180 112" stroke="#9cc9d9" stroke-width="18" fill="none"/><g stroke="#fff" stroke-width="6"><path d="M0 30H300M0 80H300M70 0V112M250 0V112"/></g><rect x="20" y="44" width="110" height="56" rx="10" fill="#b9d8a6"/><ellipse cx="76" cy="72" rx="30" ry="16" fill="#9cc9d9"/><ellipse cx="80" cy="70" rx="8" ry="5" fill="#b9d8a6"/><circle cx="58" cy="70" r="2.4" fill="#fff6c9"/><circle cx="60" cy="76" r="2.4" fill="#fff6c9"/><circle cx="55" cy="74" r="2.4" fill="#fff6c9"/><circle cx="236" cy="56" r="26" fill="none" stroke="#2a2318" stroke-width="4"/><path d="M254 74l18 18" stroke="#2a2318" stroke-width="6" stroke-linecap="round"/></svg>`,

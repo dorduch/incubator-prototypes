@@ -8,8 +8,6 @@
 <title>Rabbit Hole — Turn their birthday into a 7-day mystery</title>
 <meta name="description" content="An AI game master texts your friend one puzzle a day, built from their own life. The last clue reveals your gift.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="assets/rh.css">
 <link rel="stylesheet" href="assets/landing.css">
 </head>
@@ -37,7 +35,7 @@
     <div>
       <div class="eyebrow" data-t="heroEyebrow">A 7-day birthday mystery</div>
       <h1 data-th="heroH1">Turn their birthday into a <em>week-long mystery</em>.</h1>
-      <p class="lede" data-th="heroLede">Agent Vesper, an AI game master, texts your friend one puzzle a day, built from their own life. The last clue reveals <span class="redact" id="redact">your gift</span>.</p>
+      <p class="lede" data-th="heroLede">A personal AI agent, made just for them, texts your friend one challenge a day, built from their own life. The last clue reveals <span class="redact" id="redact">your gift</span>.</p>
       <div class="hero-cta">
         <a href="#dossier" class="btn" data-t="heroCta1">Start a mystery · from $79</a>
         <a href="#demo" class="btn ghost" data-t="heroCta2">Play the 2-minute demo</a>
@@ -74,87 +72,20 @@
 <section id="dossier" style="padding-top:12px">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow" data-t="formEyebrow">Step 1 · The brief</div>
-      <h2 data-t="formH2">Tell us about your friend</h2>
-      <p class="lede" data-t="formLede">The more specific, the better the puzzles. You'll preview Day 1 before anything is sent.</p>
+      <div class="eyebrow" data-t="formEyebrow">Step 1 · Meet Vesper</div>
+      <h2 data-t="formH2">Tell Vesper about your friend</h2>
+      <p class="lede" data-t="formLede">A five-minute chat about who they are. Vesper builds an agent only they could get, and you see the whole week before anything is sent.</p>
     </div>
-    <form class="form-card" id="dossierForm" novalidate>
-      <div class="dossier-grid">
-        <div class="field">
-          <label for="f-name"><span data-t="fName">Friend's first name</span> <span class="req" aria-hidden="true">*</span></label>
-          <input class="input" id="f-name" name="name" data-t-ph="fNamePh" placeholder="e.g. Noa" autocomplete="off" maxlength="40" required aria-required="true">
-        </div>
-        <div class="field">
-          <label for="f-you"><span data-t="fYou">Your first name</span> <span class="req" aria-hidden="true">*</span></label>
-          <input class="input" id="f-you" name="you" data-t-ph="fYouPh" placeholder="e.g. Maya" autocomplete="given-name" maxlength="40" required aria-required="true" aria-describedby="f-you-h">
-          <small id="f-you-h" data-t="fYouH">Vesper tells them who sent the game on Day 1. No creepy anonymous stuff.</small>
-        </div>
-        <div class="field">
-          <label for="f-nick" data-t="fNick">Nickname</label>
-          <input class="input" id="f-nick" name="nick" data-t-ph="fNickPh" placeholder="e.g. Noodle" autocomplete="off" maxlength="40">
-        </div>
-        <div class="field">
-          <label for="f-street"><span data-t="fStreet">Street they grew up on</span> <span class="req" aria-hidden="true">*</span></label>
-          <input class="input" id="f-street" name="street" data-t-ph="fStreetPh" placeholder="e.g. Hadekel" autocomplete="off" maxlength="40" required aria-required="true" aria-describedby="f-street-h">
-          <small id="f-street-h" data-t="fStreetH">This becomes their Day 1 cipher.</small>
-        </div>
-        <div class="field he-only" role="radiogroup" aria-labelledby="f-g-l">
-          <span class="flabel" id="f-g-l">איך וספר תפנה אליהם?</span>
-          <div class="chips" id="genderChips"><button type="button" data-g="f" aria-pressed="true">בלשון נקבה</button><button type="button" data-g="m" aria-pressed="false">בלשון זכר</button></div>
-        </div>
-        <div class="field">
-          <span class="flabel" id="f-story-l" data-t="fStory">Story</span>
-          <div class="chips" id="storyChips" role="group" aria-labelledby="f-story-l"></div>
-        </div>
-        <div class="field full">
-          <label for="f-jokes" data-t="fJokes">An inside joke</label>
-          <textarea class="input" id="f-jokes" name="jokes" data-t-ph="fJokesPh" placeholder="e.g. Three ducks walk into a falafel stand… nobody else knows the ending" maxlength="300"></textarea>
-        </div>
-        <div class="field full">
-          <label for="f-gift"><span data-t="fGift">The gift, and how it's revealed</span> <span class="req" aria-hidden="true">*</span></label>
-          <textarea class="input" id="f-gift" name="gift" data-t-ph="fGiftPh" placeholder="e.g. Concert tickets. The final answer is the seat number." maxlength="300" required aria-required="true"></textarea>
-        </div>
-      </div>
-      <p class="form-error" id="formError" role="alert"></p>
+    <div class="form-card builder-cta">
+      <ol class="bsteps">
+        <li><b data-t="b1h">Stories, not forms</b><span data-t="b1p">A habit, a memory, a place, what they're into. Vesper asks once more when an answer is thin.</span></li>
+        <li><b data-t="b2h">You check every fact</b><span data-t="b2p">The agent can only say what you confirmed. Anything off limits stays off limits.</span></li>
+        <li><b data-t="b3h">Meet their agent</b><span data-t="b3p">Three characters made for them. Pick one, chat with it, then play the whole week yourself.</span></li>
+        <li><b data-t="b4h">The gift stays sealed</b><span data-t="b4p">The agent never sees it. It appears only on the last day.</span></li>
+      </ol>
       <div class="form-foot">
         <div class="summary" id="formSummary"></div>
-        <button class="btn" type="submit" data-t="fSubmit">Preview their Day 1 →</button>
-      </div>
-    </form>
-
-    <div class="preview" id="preview" tabindex="-1" aria-labelledby="pvTitle">
-      <div class="pv-head"><h3 id="pvTitle" data-t="pvTitle">Day 1 preview</h3><span class="pv-stamp" data-t="pvStamp">PREVIEW · NOT SENT</span></div>
-      <div class="pv-grid">
-        <div class="mini">
-          <div class="plabel"><span>Chat preview</span><span id="pvFor"></span></div>
-          <div class="mphone" style="transform:none"><div class="mscreen" style="height:auto;min-height:420px">
-            <div class="mhead"><div class="c-ava sm" aria-hidden="true">V</div><div><b>Vesper</b><small data-t="online">online</small></div></div>
-            <div class="mbody" id="pvMsgs" style="justify-content:flex-start"></div>
-          </div></div>
-        </div>
-        <div class="pv-side">
-          <p data-t="pvExplain">This is what lands on their phone on the morning of Day 1. Here's the cipher Vesper made from their street:</p>
-          <div class="minicipher">
-            <div class="lbl" data-t="pvSee">What they'll see</div>
-            <div class="tiles" id="pvCipher"></div>
-            <div class="lbl" style="margin-top:12px" data-t="pvTry">Try it: turn the wheel</div>
-            <div class="tiles dec" id="pvDecoded" aria-live="polite"></div>
-            <div class="ctrl">
-              <button type="button" class="iconbtn" id="pvMinus" data-t-aria="pvMinus" aria-label="Shift back">−</button>
-              <b id="pvShift">0</b>
-              <button type="button" class="iconbtn" id="pvPlus" data-t-aria="pvPlus" aria-label="Shift forward">+</button>
-            </div>
-          </div>
-          <div class="pv-actions">
-            <button type="button" class="btn green" id="approveBtn" data-t="pvApprove">Looks good — approve</button>
-            <button type="button" class="btn ghost" id="editBtn" data-t="pvEdit">Edit details</button>
-          </div>
-          <div class="approved" id="approved" role="status" aria-live="polite" tabindex="-1">
-            <div class="stamp" data-t="pvApprovedStamp">APPROVED</div>
-            <h4 id="apTitle"></h4>
-            <p id="apText"></p>
-          </div>
-        </div>
+        <a class="btn" href="builder.html" id="builderLink" data-t="fSubmit">Start with Vesper →</a>
       </div>
     </div>
   </div>
@@ -171,7 +102,7 @@
         <h3 data-t="t1Name">Field Agent</h3>
         <div class="price"><span data-t="t1Price">$79</span> <small data-t="perOp">/ one mystery</small></div>
         <ul>
-          <li data-t="t1a">5 days, one mission each morning</li>
+          <li data-t="t1a">7 days, one mission each morning</li>
           <li data-t="t1b">Cipher, map and photo mini-games</li>
           <li data-t="t1c">Live in-character replies and hints</li>
           <li data-t="t1d">Digital finale: a reveal page for your gift</li>
@@ -179,7 +110,7 @@
         <button class="btn ghost" type="button" data-pick="field" data-t="t1Btn">Choose Field Agent</button>
       </div>
       <div class="tier featured" data-tier="full">
-        <div class="badge" data-t="badge">MOST CHOSEN</div>
+        <div class="badge" data-t="badge">RECOMMENDED</div>
         <h3 data-t="t2Name">Full Operation</h3>
         <div class="price"><span data-t="t2Price">$149</span> <small data-t="perOp">/ one mystery</small></div>
         <ul>
