@@ -7,8 +7,6 @@
 <script>(function(){try{var q=new URLSearchParams(location.search).get("lang"),l=q||localStorage.getItem("rh-lang")||"en";if(l!=="he")l="en";if(q)localStorage.setItem("rh-lang",l);var h=document.documentElement;h.lang=l;h.dir=l==="he"?"rtl":"ltr"}catch(e){}})()</script>
 <title>The Vault — Rabbit Hole</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22none%22 stroke=%22%23ff3b4e%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225%22 fill=%22%23ff3b4e%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="../assets/rh.css">
 <style>
   body{background:#07070b;transition:background 1.2s}
@@ -52,6 +50,12 @@
   .tapcue{margin:4px 0 0;color:var(--muted);font-size:14px;min-height:22px}
   .open .tapcue{color:var(--amber)}
   #spinBtn{margin-top:6px;min-width:220px}
+  .stamps{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:2px 0 8px}
+  .stampin{min-height:44px;border-radius:10px;border:1px dashed rgba(255,181,71,.6);background:rgba(255,181,71,.08);color:var(--amber);font:800 12.5px var(--mono);letter-spacing:.08em;padding:8px 12px;transition:transform .25s var(--ease),opacity .3s,border-color .3s;direction:ltr}
+  .stampin:hover:not(:disabled){transform:translateY(-2px);border-style:solid}
+  .stampin[aria-pressed="true"]{opacity:.45;border-style:solid;border-color:var(--green);color:var(--green);transform:scale(.94)}
+  .stampin .sk{display:block;font:600 10.5px var(--sans);letter-spacing:0;color:var(--dim);margin-top:2px}
+  .open .stamps,.spin .stamps{display:none}
 
   .after{display:none;text-align:start;margin-top:8px}
   .after.show{display:grid;gap:16px;animation:rise .6s var(--ease) both}
@@ -117,8 +121,9 @@
     </button>
     <div class="vault" style="background:none;box-shadow:none;pointer-events:none" aria-hidden="true"><div class="door" id="door"><div class="dial" id="dial"><i></i><b>V</b></div></div></div>
   </div>
-  <p class="tapcue" id="cue" aria-live="polite" data-t="cue0">The dial is waiting for you.</p>
-  <button class="btn amber" id="spinBtn" type="button" data-t="spin">🔓 Crack the vault</button>
+  <p class="tapcue" id="cue" aria-live="polite" data-t="cue0">Your three stamps are the combination. Tap each one into the dial.</p>
+  <div class="stamps" id="stamps" role="group" data-t-aria="stampsAria" aria-label="Your stamps"></div>
+  <button class="btn amber" id="spinBtn" type="button" data-t="spin" disabled>🔓 Crack the vault</button>
 
   <div class="after" id="after">
     <section id="noteSec" aria-labelledby="noteH">
@@ -179,7 +184,7 @@
     en: {
       doc: "The Vault — Rabbit Hole", back: "Back to chat", tag: "DAY 7 · EYES ONLY", eyes: "FINAL FILE · EYES ONLY",
       title0: "Clearance granted", lede0: "Three missions, three stamps. Someone who loves you left something in here.",
-      cue0: "The dial is waiting for you.", spin: "🔓 Crack the vault", spinning: "Cracking…",
+      cue0: "Your three stamps are the combination. Tap each one into the dial.", cueReady: "Three stamps in. The dial is yours.", stampsAria: "Your stamps", stampIn: "Put stamp {code} into the dial", skippedLbl: "with help", spin: "🔓 Crack the vault", spinning: "Cracking…",
       title1: "The vault is open", lede1: "There's an envelope inside, sealed with a V.", cue1: "Tap the envelope 👆",
       title2: "Happy birthday, Agent Noa 🎉", lede2: "The last clue was never a puzzle. It was this.", cue2: "",
       envAria: "Open the envelope", letterPeek: "♥ Maya", forNoa: "FOR NOA",
@@ -197,7 +202,7 @@
     he: {
       doc: "הכספת — Rabbit Hole", back: "חזרה לצ׳אט", tag: "יום 7 · לעינייך בלבד", eyes: "התיק האחרון · לעינייך בלבד",
       title0: "הסיווג אושר", lede0: "שלוש משימות, שלוש חותמות. מישהי שאוהבת אותך השאירה פה משהו.",
-      cue0: "החוגה מחכה לך.", spin: "🔓 לפרוץ את הכספת", spinning: "פורצים…",
+      cue0: "שלוש החותמות שלך הן הצירוף. הקישי על כל אחת כדי להכניס אותה לחוגה.", cueReady: "שלוש חותמות בפנים. החוגה שלך.", stampsAria: "החותמות שלך", stampIn: "הכנסת החותמת {code} לחוגה", skippedLbl: "בעזרה", spin: "🔓 לפרוץ את הכספת", spinning: "פורצים…",
       title1: "הכספת פתוחה", lede1: "יש בפנים מעטפה, חתומה באות V.", cue1: "הקישי על המעטפה 👆",
       title2: "יום הולדת שמח, הסוכנת נועה 🎉", lede2: "הרמז האחרון אף פעם לא היה חידה. הוא היה זה.", cue2: "",
       envAria: "פתיחת המעטפה", letterPeek: "♥ מאיה", forNoa: "לנועה",
@@ -224,6 +229,22 @@
   const setText = n => { $("#title").textContent = RH.t("title" + n); $("#lede").textContent = RH.t("lede" + n); $("#cue").textContent = RH.t("cue" + n); };
 
   document.body.classList.add("dim");
+
+  // The week pays off: the stamps from the earlier missions are the vault's combination.
+  const P = RH.prog(), stampsEl = $("#stamps");
+  function paintStamps() {
+    stampsEl.innerHTML = ["cipher", "map", "photo"].map(k => { const s = P[k] || {}; return `<button type="button" class="stampin" data-k="${k}" aria-pressed="false" aria-label="${RH.esc(RH.t("stampIn", { code: s.code || k }))}">${RH.esc(s.code || k)}${s.assisted ? `<span class="sk">${RH.esc(RH.t("skippedLbl"))}</span>` : ""}</button>`; }).join("");
+    spinBtn.disabled = true;
+  }
+  stampsEl.addEventListener("click", e => {
+    const b = e.target.closest(".stampin"); if (!b || b.getAttribute("aria-pressed") === "true") return;
+    b.setAttribute("aria-pressed", "true"); b.disabled = true; RH.sfx("clunk"); RH.buzz(20);
+    if ($$(".stampin", stampsEl).every(x => x.getAttribute("aria-pressed") === "true")) {
+      spinBtn.disabled = false; $("#cue").textContent = RH.t("cueReady"); RH.sfx("ok"); spinBtn.focus({ preventScroll: true });
+    }
+  });
+  paintStamps();
+
   spinBtn.addEventListener("click", () => {
     spinBtn.disabled = true; spinBtn.textContent = RH.t("spinning");
     stage.classList.add("spin");
@@ -256,7 +277,7 @@
   $("#replay").addEventListener("click", () => {
     timers.forEach(clearTimeout); timers.length = 0;
     stage.className = "stage"; env.classList.remove("opened"); env.tabIndex = -1; setBolts(true);
-    spinBtn.hidden = false; spinBtn.disabled = false; spinBtn.textContent = RH.t("spin");
+    spinBtn.hidden = false; spinBtn.textContent = RH.t("spin"); paintStamps();
     $("#after").classList.remove("show"); $("#vcard").classList.remove("show");
     document.body.classList.remove("lit"); document.body.classList.add("dim");
     setText(0); window.scrollTo({ top: 0, behavior: "smooth" });
